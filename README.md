@@ -633,12 +633,7 @@ eudaimonia to a repository of its own on 2026-09-14.*
 
 ## How this repository is maintained
 
-This repository is part of the **Eunoia ecosystem** and follows its shared
-repository policy, kept by [anoieu](https://github.com/ajreynol/anoieu) in
-[`docs/policy.md`](https://github.com/ajreynol/anoieu/blob/main/docs/policy.md).
-It came under that policy on 2026-09-14, on being promoted out of eudaimonia, and
-was checked against it the same day — `policy_check.py --root` from an anoieu
-checkout is what a reader runs to see whether this paragraph is still true.
+This repository is part of the **Eunoia ecosystem**.
 
 **Written by AI agents, under light human supervision.** A human directs the
 work, decides what this repository is for, and reads what is published here;

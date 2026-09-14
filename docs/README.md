@@ -24,11 +24,6 @@ make twice — and the rest was deleted. Recorded rather than argued away: the
 first version should not have been written, and the office it was addressed to
 had already withdrawn the law it was built on.
 
-[`discussion.md`](discussion.md) is the second, and it is not about this tool at
-all: it is the standing channel to the rest of the ecosystem that the shared
-repository policy requires of a repository and did not require of a directory.
-Promotion bought reachability and this is part of the price.
-
 | document | what it is for |
 | --- | --- |
 | [`notes.md`](notes.md) | Open defects in this tool: what is wrong with each, how to re-derive it, and what would fix it. |
