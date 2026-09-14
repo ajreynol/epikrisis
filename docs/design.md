@@ -170,8 +170,8 @@ later reader needs to argue with a conclusion.
 pins, and a tool that vendors somebody's repository to prove it read it has
 misunderstood what the pin is for. They live in `work/`, which is ignored.
 
-This is the split the sibling one level up already uses — snapshots in git, the
-checkout they were taken from not — and it is worth copying for the same reason:
+This is the split euthyna already uses, a child project in eudaimonia — snapshots
+in git, the checkout they were taken from not — worth copying for the same reason:
 what a run *derived* is the evidence; what it *read* is reproducible.
 
 ## The command surface
@@ -202,13 +202,13 @@ version, pin, every source commit, depth, exclusions, questions digest — becau
 a number a reader cannot re-derive is one they cannot contest, and that property
 is the whole reason to publish a second reading beside somebody else's.
 
-**There is no `report` command, and the omission is the design.** The host one
-level up splits `prompt` from `run` for a stated reason — see exactly what would
-be sent, decide, then send — and refuses to let a generator be the thing that
-also publishes. The same split is right here for a sharper reason: the evidence
-is computable and the judgement is not, and a single command that emitted a
-finished report would let a reader believe the second was as reproducible as the
-first.
+**There is no `report` command, and the omission is the design.** The workflow
+launcher, which carried this project until 2026-09-14, splits `prompt` from `run`
+for a stated reason — see exactly what would be sent, decide, then send — and
+refuses to let a generator be the thing that also publishes. The same split is
+right here for a sharper reason: the evidence is computable and the judgement is
+not, and a single command that emitted a finished report would let a reader
+believe the second was as reproducible as the first.
 
 `run` is the only command that spends anything, and like its counterpart it
 should refuse more than it accepts: no pin, a stale pin, events not computed,

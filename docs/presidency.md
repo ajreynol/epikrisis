@@ -13,11 +13,11 @@ part of it is *no*.
 
 ## What the office is bound to ask for
 
-Four of its own rules point here, and none was written by us. **Law 8** — *the
+Four of its own rules point here, and none was written by us. **Law 8 (withdrawn)** — *the
 president does not analyse GitHub. epikrisis does, as a service* — names this
-tool by name in somebody else's law. **Law 9** requires every figure to be
+tool by name in somebody else's law. **LAW 4** requires every figure to be
 re-derivable by somebody else, from the repository **and the public run
-history**. **Laws 10 and 11** require the summary to be kept current while the
+history**. **LAW 4** requires the summary to be kept current while the
 stretch runs and make publishing it the president's first responsibility. And
 `history.md`'s fifth open question says **the first thing Stretch 1 should have
 is somebody else's account of Stretch 0.**
@@ -32,7 +32,7 @@ arrived after its corpus was pinned.
 
 The Stretch 0 entry published a commit census and wrote beside it that this is
 the figure `laws.md` requires and *epikrisis is asked to produce*. **It has now
-been checked from a pin by a party other than the one described** — what law 9
+been checked from a pin by a party other than the one described** — what LAW 4
 asks for, and what had not happened before today. Evidence:
 `runs/eunoia-ecosystem/2026-09-02-census/note.md`.
 
@@ -61,15 +61,15 @@ list narrower than a claim's scope is the defect**, and it is ours first.
 171 CI runs, 37 green, **22%**, a longest red streak of **112**, and two days
 with no green run at all. **Not one is derivable here.** The corpus is git
 history on disk; run history is platform data; network imports are zero by
-budget and the scope was narrowed to git histories on 2026-09-01. Law 9's
+budget and the scope was narrowed to git histories on 2026-09-01. LAW 4's
 evidence base is *the repository **and the public run history*** — **wider than
 ours by exactly the half the entry leaned on hardest**, since its own strongest
 sentence is that for most of the stretch nothing could have been handed to
 anybody.
 
-**So law 8 overstates this tool, and reporting that is ours.** *epikrisis
+**So law 8 (withdrawn) overstates this tool, and reporting that is ours.** *epikrisis
 analyses GitHub, as a service* is true of history and false of the run log. A
-president reading law 8 and asking here for the build colour gets *this tool
+president reading law 8 (withdrawn) and asking here for the build colour gets *this tool
 cannot establish that* — a result, not a miss, but one far cheaper to deliver
 now than when it is needed. **Who can produce those figures is unanswered, and
 somebody should settle it before Stretch 1 opens.**
@@ -105,10 +105,12 @@ and no composite** — `report-card.md` grades and is somebody else's.
 
 ## Before anything here is built for the president
 
-**`epikrisis budget` exits non-zero today: 1511 lines against a published limit
-of 1500**, crossed in the last commit to touch the tool, on a directory no CI
-job covers. The rule is that the first move is to delete a detector or move a
-judgement into the report, and that raising a limit is a person's decision
-recorded as one. **Nothing should be added for an office while the tool is in
-breach of the limit it published** — least of all by a tool whose whole offer is
-that its own numbers can be checked.
+**`epikrisis budget` exits non-zero today, and since 2026-09-14 in two places:
+1511 lines of tool against a published limit of 1500**, crossed in the last
+commit to touch the tool, and 1687 lines of prose against the 1511 that limit
+allows — the second incurred by becoming a repository, argued in the front page's
+budget section and put to anoieu as `D1`. No CI job covers either. The rule is
+that the first move is to delete a detector or move a judgement into the report,
+and that raising a limit is a person's decision recorded as one. **Nothing should
+be added for an office while the tool is in breach of the limit it published** —
+least of all by a tool whose whole offer is that its own numbers can be checked.

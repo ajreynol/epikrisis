@@ -6,10 +6,11 @@ page is everything that stands in for that.
 
 ## The failure this is arranged against
 
-The host one level up states it about its own findings register: the failure mode
-of a document like that written by an agent is **a list of flattering
-observations**. That register is about a family the writer belongs to. This
-project's output is about a subject the writer has no stake in, which removes one
+The workflow launcher, which carried this project until 2026-09-14, states it
+about its own findings register: the failure mode of a document like that written
+by an agent is **a list of flattering observations**. That register is about a
+family the writer belongs to. This project's output is about a subject the writer
+has no stake in, which removes one
 source of flattery and adds a worse one — the pull toward a *tidy* story, in
 which a history has themes, the themes have lessons, and every event supports
 one.
@@ -109,10 +110,12 @@ rules apply:
    family grading itself with its own instrument produces something useful to the
    family and worthless to anybody else, and the moment it is quoted outward it
    becomes advertising.
-3. **The instrument is a subject too.** This directory, and the launcher that
-   carries it, are inside the ecosystem being read. A report on the ecosystem
-   that does not notice its own author is a report with a hole in exactly the
-   place the reader is standing.
+3. **The instrument is a subject too.** This repository is inside the ecosystem
+   being read, and since 2026-09-14 it is a repository rather than a directory
+   two levels inside one — so an ecosystem subject whose source list does not
+   carry it is now narrower than its own claim. A report on the ecosystem that
+   does not notice its own author is a report with a hole in exactly the place
+   the reader is standing.
 
 ## Calibration: can it find what a person would find?
 

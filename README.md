@@ -1,32 +1,47 @@
 # Epikrisis
 
-A **child project of a child project**: it sits inside
-[the workflow launcher](../../README.md), which sits inside Eudaimonia. Its
-subject is what the launcher's subject becomes later — the launcher is about the
-first hour of a tool's life, and this is about reading the whole of one
-backwards and saying what happened and how it went.
+A **repository of the Eunoia ecosystem**. Until 2026-09-14 it was a child
+project of a child project, at `tools/workflow-launcher/tools/epikrisis` inside
+[eudaimonia][]; the history came with it, and the paths in it are this
+repository's own.
 
 Its question is not *what does this code do*. It is: **what were the events, and
 what has the way this thing evolved done well and badly?**
 
-## Why it is here rather than one level up
+[eudaimonia]: https://github.com/ajreynol/eudaimonia
+[the workflow launcher]: https://github.com/ajreynol/eudaimonia/tree/main/tools/workflow-launcher
 
-The host asks a question it has no instrument for. Its findings register is
-described on its own front page as *what is captured across the ecosystem, what
-is retyped, and what is not in the record at all* — the gap between what a
-project's history **says** happened and what its tree **shows** happened,
-answered by hand, once, by reading. That gap is the central mechanism here.
+## Where it came from, why it moved, and what the move does not mean
 
-Its stretch goal needs the same instrument: that somebody starts a real
-repository through the launcher and the result is better than what they would
-have typed, *measured by what the first week of that repository needed
-corrected*. Nothing here can measure that, and the shape of the missing thing is
-to read a history and say what happened and what went badly. So this is the
-launcher's own unmeasured claim, given a tool.
+**The debt to [the workflow launcher][] is unchanged, and it runs in one
+direction.** The launcher is about the first hour of a tool's life; this is about
+reading the whole of one backwards. Its findings register is described on its own
+front page as *what is captured across the ecosystem, what is retyped, and what
+is not in the record at all* — the gap between what a project's history **says**
+happened and what its tree **shows** happened, answered by hand, once, by
+reading. That gap is the central mechanism here. Its stretch goal needs the same
+instrument: that somebody starts a real repository through it and the result is
+better than what they would have typed, *measured by what the first week of that
+repository needed corrected*. Nothing here can measure that, and moving out did
+not settle it — if this repository is deleted, that goal is exactly as unmeasured
+as it is today, which is to say nothing breaks, because nothing was ever
+measured.
 
-**That is an intellectual debt in one direction and nothing else.** If this
-directory is deleted the launcher's stretch goal is exactly as unmeasured as it
-is today, which is to say: nothing breaks, because nothing was ever measured.
+**Why it moved: reachability, and not merit.** anoieu asked as `D20` and staged
+it as `B23` — this is the ecosystem's only history analysis, anoieu's `laws.md`
+requires a president to quote it, and it sat where the ecosystem's own inventory
+validator could not list it, a child whose parent is a child. **A tool other
+repositories are expected to rely on should not be findable only by knowing where
+somebody filed it.** Eudaimonia's argument for the old nesting — the host asks a
+question it has no instrument for, and this is the instrument — is the paragraph
+above, it was good, and it was outweighed by a law written against a tool nobody
+could find.
+
+**What the move does not mean.** It is not the graduation named under *How it
+ends*: that one means somebody outside the family wanted to run this on a subject
+of their own, and nobody has. It is not evidence the work is good — two runs,
+both self-assessments, is still the whole of the record. What changed is where
+the tree sits and who can see it.
 
 ## The charter
 
@@ -87,8 +102,8 @@ full: a responsibility and not a rank, and being relied on makes it one.
 - **Publishing about somebody else's project without asking.** Inherited, not
   invented: see below.
 - **Generating the report.** The pipeline assembles evidence and checks a report
-  against it. It does not write the narrative — the split is the host's own, and
-  the reasons are in [docs/design.md](docs/design.md).
+  against it. It does not write the narrative — the split is the launcher's own,
+  and the reasons are in [docs/design.md](docs/design.md).
 - **Prediction.** What a project should do next is not this. Every claim is about
   what happened, and the tense is the boundary.
 - **Grading the ecosystem outward.** A run whose subject is a tree this family
@@ -179,7 +194,7 @@ happened, in what order, and what the way they changed did well and badly —
 answered from the trees, with every claim resting on evidence a reader can
 re-derive.
 
-The precedent is one level up and one subject over: a sibling child project
+The precedent is one subject over: **euthyna**, a child project in eudaimonia,
 holds the audit of what a proof development is *made of*, statically. This is
 the same shape asked of a trajectory rather than an artifact.
 
@@ -191,8 +206,8 @@ the same shape asked of a trajectory rather than an artifact.
 - **Grading any tree that has not agreed to be read.** The constraint above
   governs; a run on somebody else's subject is internal by default.
 - **Anything about people.** Enforced by the schema, not by discipline.
-- **Speaking for its parents.** Its conclusions are not eudaimonia's positions
-  and never leave by machine.
+- **Speaking for anybody else.** Its conclusions are not eudaimonia's positions,
+  not anoieu's, and not the ecosystem's, and none of them leave by machine.
 - **Auditing itself into significance.** Every run whose subject includes this
   family is marked a self-assessment, a self-assessment with no negative
   findings is void, and its conclusions are never cited outward — not as
@@ -275,11 +290,11 @@ Three obligations follow, none optional:
 - **State the limit out loud.** *This tool cannot establish that* is a result,
   given as freely as any other; answering a smaller question because the
   machinery reaches it is the failure the guardrail below names.
-- **Speak.** Silence is also a way of being wrong. This directory is two hops
-  from anywhere its output could matter and has already recorded that a finding
-  can die in that chain unnoticed. Holding evidence that bears on a live
-  decision and saying nothing is not modesty: the duty forbidding overclaiming
-  is the one requiring volunteering.
+- **Speak.** Silence is also a way of being wrong. The chain from here to
+  anywhere the output could matter was two hops, and it was recorded here that a
+  finding could die in it unnoticed; the move shortened it to one. Holding
+  evidence that bears on a live decision and saying nothing is not modesty: the
+  duty forbidding overclaiming is the one requiring volunteering.
 
 ### The tense boundary, applied to the occasion
 
@@ -351,6 +366,18 @@ proves that check can fail:
 detector whose candidates are always dropped, or to move a judgement out of the
 code and into the report where a reader can disagree with it. Raising a number
 is a person's decision and is recorded as one.
+
+**It is in breach twice today, and the second one is the promotion's bill.** The
+tool is 1,511 lines against 1,500, crossed in the last commit to touch it. Prose
+is 1,687 against the 1,511 the first number allows, because becoming a repository
+required two documents the shared policy asks of a repository and asked of no
+directory — a maintenance note and a correspondence file — and the counter reads
+every `.md` under `docs/` as prose about the tool. **A channel to other
+repositories is not an account of this one.** So either the counter is wrong or
+the limit is, one is a change to a tool already over its own line budget and the
+other is a number, **and both are a person's decision rather than an agent's.**
+Neither was taken here. `D1` puts it to anoieu, whose policy the second half of
+the bill is for.
 
 ### And the other half, which is not negotiable either
 
@@ -454,7 +481,7 @@ Concretely, and these bind before the first run:
   anything shared in confidence. Public history in the form its authors published
   it, and nothing else.
 - **A run on somebody else's subject is internal by default.** Nothing about
-  cvc5 leaves this directory without going through the ordinary reporting
+  cvc5 leaves this repository without going through the ordinary reporting
   discipline and, per the position above, without asking. There is no route by
   which an assessment of another project's evolution becomes a public artifact on
   this project's own initiative.
@@ -467,13 +494,14 @@ The most interesting subject available is somebody else's, the analysis is cheap
 and the output would be publishable and would get read. Every part of that is the
 reason to write the rule down before the first run rather than after it.
 
-The general position is open with the ecosystem as topic `D1` in the parent's
-correspondence, and this directory did not raise it and cannot: it is two levels
-inside a repository, and everything it wants to say travels by a person, up
-through the launcher, up through Eudaimonia, and out. Two hops rather than one is
-a feature — speculative work should find correspondence expensive — and a risk,
-because a finding can die in the chain and nobody would notice. Recorded here so
-that if one does, it was predicted.
+The general position is open with the ecosystem as topic `D1` in eudaimonia's
+correspondence — raised by the tree this used to sit in, because this one could
+not raise anything: two levels inside a repository, everything it wanted to say
+travelling by a person up through the launcher, up through Eudaimonia, and out.
+**That chain is now one hop** and this repository keeps
+[its own correspondence](docs/discussion.md). The risk recorded then — that a
+finding dies in the chain and nobody notices — is smaller and is not gone:
+nothing leaves here by machine, and a person still carries it.
 
 ## The name
 
@@ -495,38 +523,52 @@ tool cannot back, it is the wrong name.
 It is deliberately not **historia** — the account of what happened — because a
 name that needs no explanation is not following the ecosystem's convention, and
 because the account is only half of this. It is deliberately distinct from
-**euthyna**, the audit at end of term, which is taken and is a sibling one level
-up: that one asks what an artifact is *made of*, statically. This one asks what a
-trajectory *did*. Adjacent, and not the same question.
+**euthyna**, the audit at end of term, which is taken and is a child project in
+eudaimonia: that one asks what an artifact is *made of*, statically. This one
+asks what a trajectory *did*. Adjacent, and not the same question.
 
-The register of names is anoieu's and `epikrisis` is not in it. Adding a line is
-a person's edit in somebody else's tree; nothing here makes it, and until
-somebody does, the name is used here and claimed nowhere.
+The register of names is anoieu's. `epikrisis` reaches it only as a row in the
+table of names chosen in somebody else's tree, recorded there as *proposed for a
+repository of its own* — a proposal that has now been acted on, in an entry that
+has not moved. Correcting it is a person's edit in somebody else's tree; nothing
+here makes it, and until somebody does, the name is used here and claimed
+nowhere.
 
-## An island, two levels down
+## Still an island, and now a checked one
 
 Nothing in the launcher links here, imports from here, or runs anything here, and
-nothing in Eudaimonia does either. This directory is on no build path, in no CI
+nothing in Eudaimonia does either. This repository is on no build path, in no CI
 job, in no generated document, and deleting it changes nothing anywhere —
-deleting it is the test, and it has to pass against **both** ancestors.
+deleting it is the test, and it still has to pass against both former ancestors.
 
 It reads whatever it likes: checkouts staged elsewhere on disk, this family's
 own trees, published history. It writes only inside itself.
 
-**The policy checker cannot see this level.** It enumerates child projects one
-directory deep, so the charter rules it enforces — a stated boundary, an
-explained name, an island or a recorded exception — are not enforced here. This
-README is written to satisfy them anyway, and that is the whole of the guarantee:
-if it drifts, no program will say so.
+**A program checks this page now, and that is the substantive change.** The old
+position was one directory deeper than anoieu's `policy_check.py` enumerates, so
+the rules it enforces were not enforced here, and what stood in place of a
+guarantee was a sentence saying that if this README drifted no program would say
+so. It runs against a checkout at `--root`; it was run on the day of the move and
+**it failed here in five places**. What it found, and what was done about each, is
+[docs/discussion.md](docs/discussion.md). It is no longer this page's word for it.
 
-**The count is a measurement, and it is not flattering.** Eudaimonia now carries
-four speculative directories and this is the fifth thing under `tools/`, against
-one framework that actually ships. The ecosystem has a name for what that looks
-like from outside — a tree becoming a speculation warehouse — and it was raised
-as a reason to refuse a child project elsewhere, not as a compliment. Nothing
-here disputes it. The honest response is that the count is visible, that each of
-the five states an ending, and that the ending most of them should reach is
-retirement rather than graduation.
+**There are two copies of this tool and the second is not ours to delete.**
+Eudaimonia still tracks the whole of it at
+`tools/workflow-launcher/tools/epikrisis`, byte-identical at the moment of the
+move: promotion was a copy, so the ecosystem's only history analysis now exists
+twice, once where nothing can list it. **This copy is the authoritative one**, by
+the decision that made it a repository. Removing the other is eudaimonia's edit
+in eudaimonia's tree, it is raised there rather than performed here, and until it
+happens a reader can find a stale front page by the route the old one documents.
+
+**And the count that was unflattering has not improved by moving.** The old
+paragraph here observed that eudaimonia was carrying four speculative directories
+against one framework that ships — a tree becoming a speculation warehouse, in
+the ecosystem's own phrase, raised elsewhere as a reason to refuse a child
+project rather than as a compliment. Promotion subtracts one from that count and
+adds a repository to the ecosystem's, which is the same measurement wearing
+different clothes. Two runs, both self-assessments. The ending this should still
+expect is retirement, and **a repository is a more expensive thing to retire.**
 
 ## Later: the postmortem on the commits themselves
 
@@ -570,6 +612,12 @@ project's findings register is maintained and the rest is dropped; or it is
 **retired in place**, with a line here saying what the design got wrong, which is
 the ending to expect.
 
+**Moving to a repository of its own is what the shared policy calls graduation,
+and this page does not get to call it that.** That test is the boundary; the test
+written here is that somebody outside the family wanted this, and nobody has. So
+all three endings stay open, and the middle one got dearer: folding back is now a
+decision between two repositories rather than a directory being deleted.
+
 A fourth, specific to this one: **retired at the first real run**, because the
 detectors found nothing a person reading the log would not have found faster.
 That is a live possibility, it is what the calibration step in
@@ -578,7 +626,22 @@ result rather than a failure.
 
 Going quiet is not one of them.
 
-*Started 2026-09-01 by the maintainer, in an explicit instruction. Nothing has
-been run and nothing has been cached, deliberately: the design is the
-deliverable, and evidence gathered before the boundary in it is agreed would be
-evidence nobody could check.*
+*Started 2026-09-01 by the maintainer, in an explicit instruction, on the
+principle that the design was the deliverable and that evidence gathered before
+the boundary in it was agreed would be evidence nobody could check. Two runs have
+been made since, both self-assessments, both under `runs/`. Promoted out of
+eudaimonia to a repository of its own on 2026-09-14.*
+
+## How this repository is maintained
+
+This repository is part of the **Eunoia ecosystem** and follows its shared
+repository policy, kept by [anoieu](https://github.com/ajreynol/anoieu) in
+[`docs/policy.md`](https://github.com/ajreynol/anoieu/blob/main/docs/policy.md).
+It came under that policy on 2026-09-14, on being promoted out of eudaimonia, and
+was checked against it the same day — `policy_check.py --root` from an anoieu
+checkout is what a reader runs to see whether this paragraph is still true.
+
+**Written by AI agents, under light human supervision.** A human directs the
+work, decides what this repository is for, and reads what is published here;
+nobody vets the internal design, and nothing here is carried into another project
+without review.

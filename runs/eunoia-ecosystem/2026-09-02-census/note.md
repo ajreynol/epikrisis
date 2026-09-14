@@ -63,7 +63,7 @@ already exists inside the census**, in the tree that declined to join.
 **Not a verdict on anybody's tree**, and `ethos` has not agreed to be read: what
 is above is a check of a claim made *about* that tree by somebody else, and it
 goes to a person rather than outward. **Not a correction to `history.md`** —
-only the president may write that file, its own law 4 requires the demonstration
+only the president may write that file, its own LAW 4 requires the demonstration
 to travel with the edit, and this is the demonstration and not the edit. **Not a
 finding this tool can take credit for**: the pipeline missed it, and the reason
 it missed it is that a subject's source list was narrower than a claim's scope.
