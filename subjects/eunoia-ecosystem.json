@@ -22,6 +22,14 @@
     {
       "id": "koine",
       "origin": "https://github.com/ajreynol/koine"
+    },
+    {
+      "id": "kanon",
+      "origin": "https://github.com/ajreynol/kanon"
+    },
+    {
+      "id": "epikrisis",
+      "origin": "https://github.com/ajreynol/epikrisis"
     }
   ],
   "exclude": [
@@ -30,10 +38,10 @@
     ".lake/"
   ],
   "not_in_corpus": [
-    "ethos, which holds the proof checker and the compiler, is not read here: it is somebody else's tree, a run over one is internal by default, and this run's evidence is committed. Its footing in the ecosystem's own inventory is candidate, not member -- a fact this subject was written without checking. The effect is that the ecosystem's history as this run sees it is missing one of the two trees holding its executable artifacts.",
+    "ethos, which holds the proof checker and the compiler, is not read here: it is somebody else's tree, a run over one is internal by default, and this run's evidence is committed. Its footing in the ecosystem's own inventory is candidate rather than member, so it is outside the member set as well as outside this corpus -- but the effect is that the ecosystem's history as this run sees it is missing one of the two trees holding its executable artifacts.",
     "issue trackers, pull requests and discussion threads, for every source, by design",
     "anything unpublished, absolutely",
-    "the source list here is hand-written and the inventory is the authority: this run reads logos, whose footing is candidate rather than member, and does not read ethos, also a candidate. The set is therefore not the ecosystem's own set, which is the `repo-added` failure mode occurring in the run that states it."
+    "the source list here is hand-written and the inventory is the authority. This run reads seven of the ten repositories the register records as members, and does not read aisthesis, eschaton or tachyon. The set is therefore still not the ecosystem's own set, which is the `repo-added` failure mode occurring in the run that states it."
   ],
   "thresholds": {
     "prefix_depth": 1,
@@ -41,14 +49,14 @@
     "rewrite_window_days": 7
   },
   "inventory": {
-    "source": "anoieu",
-    "path": "tools/ecosystem.json",
+    "source": "kanon",
+    "path": "scripts/ecosystem/ecosystem.json",
     "track": [
       "status",
       "proposed",
       "parent"
     ],
-    "note": "the ecosystem keeps one footing per tool in this file; its git history is the status-transition record, and reading it is the only reason this run can tell joining apart from repository creation"
+    "note": "the ecosystem keeps one footing per tool in this file, and its git history is the status-transition record; reading it is the only reason this run can tell joining apart from repository creation. kanon is therefore a source of this subject because the register is in its tree: an inventory read from a repository this run does not pin would be read at whatever HEAD had become, which is a corpus nobody measured."
   },
   "prose_is_product": [
     "anoieu"

@@ -635,9 +635,18 @@ def detect_inventory(corpus, frm, inv):
     path = inv["path"]
     track = inv.get("track", ["status"])
     src = next((x for x in corpus["sources"] if x["id"] == inv["source"]), None)
-    verify_pin(repo, src) if src else None
+    if not src:
+        raise SystemExit(f"epikrisis: the inventory is in {inv['source']}, a "
+                         "source this subject does not read, so it has no pin")
+    verify_pin(repo, src)
+    # A register that has moved to another repository still has its whole
+    # history here, and reading that reports the last state it held in this
+    # tree as the arrangement's current one -- confidently, and wrong.
+    if not git_ok(repo, "cat-file", "-e", f"{src['commit']}:{path}")[0]:
+        raise SystemExit(f"epikrisis: {inv['source']}:{path} is not at the pin; "
+                         "the inventory has moved and this run cannot see it")
     revs = git(repo, "log", "--reverse", "--format=%H %ad", "--date=short",
-               (src["commit"] if src else "HEAD"), "--", path).splitlines()
+               src["commit"], "--", path).splitlines()
     first_commit = {s["id"]: s["first_commit"] for s in corpus["sources"]}
     ev, k, unreadable = [], 0, 0
     prev = None
@@ -957,11 +966,10 @@ def check_problems(rd):
         if A.get("direction") not in ("well", "badly"):
             bad.append(f"{A['id']} has no direction")
     if not any(A.get("direction") == "badly" for A in assessments):
-        bad.append("no assessment in the `badly` direction: a run with nothing "
+        bad.append("self-assessment with no negative findings is void"
+                   if corpus.get("self") else
+                   "no assessment in the `badly` direction: a run with nothing "
                    "negative is a failed run, not a clean subject")
-    if corpus.get("self") and not any(A.get("direction") == "badly"
-                                      for A in assessments):
-        bad.append("self-assessment with no negative findings is void")
     unaccounted = [i for i in events
                    if i not in cited
                    and not any(i in A.get("rests_on", []) for A in assessments)

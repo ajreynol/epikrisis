@@ -111,11 +111,12 @@ rules apply:
    family and worthless to anybody else, and the moment it is quoted outward it
    becomes advertising.
 3. **The instrument is a subject too.** This repository is inside the ecosystem
-   being read, and since 2026-09-14 it is a repository rather than a directory
-   two levels inside one — so an ecosystem subject whose source list does not
-   carry it is now narrower than its own claim. A report on the ecosystem that
-   does not notice its own author is a report with a hole in exactly the place
-   the reader is standing.
+   being read, so an ecosystem subject's source list carries it and a report on
+   the ecosystem assesses it along with everything else. A report that does not
+   notice its own author is a report with a hole in exactly the place the reader
+   is standing. **This is a floor and not a pass:** the source list still reaches
+   seven of the ten repositories the register records as members, which each
+   subject's `not_in_corpus` states and neither subject has fixed.
 
 ## Calibration: can it find what a person would find?
 

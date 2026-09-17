@@ -2,6 +2,9 @@ name: anoieu
 
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   policy:
     runs-on: ubuntu-latest
@@ -10,9 +13,11 @@ jobs:
       - name: the policy, at the commit this repository pins
         env:
           # The checker this repository is held to. Moved by a commit here, and
-          # only to a commit where anoieu's own CI is green.
-          ANOIEU_REV: dbb9337
+          # only to a commit where the checker's own CI is green.
+          ANOIEU_REV: 154228a
         run: |
-          git clone --quiet https://github.com/ajreynol/anoieu /tmp/anoieu
-          git -C /tmp/anoieu checkout --quiet "$ANOIEU_REV"
-      - run: python3 /tmp/anoieu/tools/policy_check.py --root .
+          git clone --quiet https://github.com/ajreynol/anoieu /tmp/checker
+          git -C /tmp/checker checkout --quiet "$ANOIEU_REV"
+      # Contract 1 fixes which requirements apply and which of them block, so a
+      # later contract cannot arrive here without a commit in this repository.
+      - run: python3 /tmp/checker/scripts/policy_check.py --policy-version 1 --root .

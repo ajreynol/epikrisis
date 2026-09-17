@@ -24,16 +24,6 @@
     "quiet_min_days": 3,
     "rewrite_window_days": 7
   },
-  "inventory": {
-    "source": "anoieu",
-    "path": "tools/ecosystem.json",
-    "track": [
-      "status",
-      "proposed",
-      "parent"
-    ],
-    "note": "the ecosystem keeps one footing per tool in this file and its git history is the status-transition record; for a single-tree run it is also the only place a cross-tree event leaves a dated trace"
-  },
   "prose_is_product": [
     "anoieu"
   ],

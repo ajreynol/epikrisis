@@ -91,8 +91,8 @@ that was never recorded as one, and inferring status changes from prose diffs is
 exactly the model-reads-the-text step this design refuses. It is a fact about the
 subject, it is reportable as one, and the observation was carried as a proposal
 to the tree that keeps those records — at the time through the parent, by a
-person, as topic `D3`; the route from here is now direct and still runs by a
-person. Whether anything changes is theirs to decide, and this catalogue
+person, as `eudaimonia-D3`; the route from here is now direct and still runs by
+a person. Whether anything changes is theirs to decide, and this catalogue
 describes what is derivable today either way.
 
 ## The threshold problem

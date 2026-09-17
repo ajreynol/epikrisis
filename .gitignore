@@ -13,10 +13,9 @@ work/
 scratch/
 *.local.md
 
-# Python bytecode. `tools/martyria/sleep.py` is the only module here that is
-# imported rather than run, and importing it writes a cache beside it. One such
-# file arrived tracked when the child projects moved in, from a tree that had
-# always ignored it -- it is derived from a file already in git, and nothing
-# reads it.
+# Python bytecode. Derived from files already in git, written beside whatever
+# imported them, and read by nothing. One such file arrived tracked from a tree
+# that had always ignored it, which is why this entry exists rather than being
+# assumed.
 __pycache__/
 *.pyc

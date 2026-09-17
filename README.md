@@ -24,6 +24,13 @@ spanning several repositories, with configuration in [`subjects/`](subjects/).
 | `prompt` and `check` | Evidence assembled for a separately written report, plus checks on its citations, assessments, and treatment of unused candidates. |
 | `ratio`, `panel`, and `recent` | Code/prose counts, activity by path prefix, and recent work grouped into sessions. |
 | `detectors` and `budget` | The detector catalogue with known failure modes, and checks on implementation size and dependencies. |
+| `subjects` and `selftest` | What is defined and what each subject reads, and a proof that `check` and `budget` can fail rather than only pass. |
+
+**The command surface is defined in [the pipeline design](docs/design.md), and
+that page is the ground truth.** The table above and the tool's own `--help` are
+copies of it. **Nothing compares them**, so a command added to one and not the
+others is drift that has not been reported yet; that is stated here rather than
+left for a reader to discover.
 
 For an example of the historical account this tooling is intended to support,
 see **[anoieu's `history.md`](https://github.com/ajreynol/anoieu/blob/main/docs/history.md)**,
@@ -133,8 +140,11 @@ events first, judgement grounded in them.[^origins]
 
 ## How this repository is maintained
 
-This repository is part of the **Eunoia ecosystem** and follows its
-[shared repository policy](https://github.com/ajreynol/anoieu/blob/dbb9337/docs/policy.md).
+This repository is part of the **Eunoia ecosystem** and follows its shared
+repository policy, kept by [kanon](https://github.com/ajreynol/kanon) in
+[`docs/policy.md`](https://github.com/ajreynol/kanon/blob/main/docs/policy.md).
+Its mechanical half is decided on every push by the checker
+[`.github/workflows/anoieu.yml`](.github/workflows/anoieu.yml) names.
 
 **Written by AI agents, under light human supervision.** A human directs the
 work, decides what this repository is for, and reads what is published here;

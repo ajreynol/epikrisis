@@ -39,20 +39,30 @@ about them are load-bearing and are called out where they occur.
 ```json
 {
   "subject": "cvc5",
-  "kind": "tool",
+  "kind": "tool | ecosystem",
+  "self": false,
   "pinned": "2026-09-01",
   "tool_version": "<epikrisis revision>",
+  "date_field": "committer date, --date=short, as git reports it",
   "sources": [
     { "id": "cvc5", "origin": "<url>", "commit": "<sha>",
       "first_commit": "<date>", "last_commit": "<date>", "commits": 0 }
   ],
+  "exclude": ["<path prefix>"],
   "thresholds": { "...": 0 },
   "questions_digest": "<sha256 of questions.md>",
-  "thresholds_changed_after_events": false
+  "thresholds_changed_after_events": false,
+  "detectors_implemented": ["<name>"],
+  "detectors_not_implemented": { "<name>": "<why not>" },
+  "not_in_corpus": ["<what this run cannot see, declared in the subject>"]
 }
 ```
 
-Two fields exist to catch this tool cheating on itself:
+`detectors_not_implemented` and `not_in_corpus` are in the manifest for the
+same reason the failure modes are in the catalogue: a run records what it could
+not look for, so a gap is visible in the evidence rather than only in a
+document beside it. Two further fields exist to catch this tool cheating on
+itself:
 
 - **`questions_digest`** pins the pre-registered questions to the run. Questions
   added after the evidence was seen change the digest, so the report carries
@@ -66,7 +76,8 @@ Two fields exist to catch this tool cheating on itself:
 ### 2. `events.jsonl` — candidates, one per line
 
 ```json
-{ "id": "E0044", "detector": "rewrite", "detector_version": 1,
+{ "id": "anoieu-rewrite-0044", "detector": "rewrite", "detector_version": 1,
+  "source": "anoieu",
   "at": { "commit": "<sha>", "date": "<date>" },
   "span": { "from": "<sha>", "to": "<sha>" },
   "paths": ["<path prefix>"],
@@ -74,6 +85,12 @@ Two fields exist to catch this tool cheating on itself:
   "evidence": ["<sha>"],
   "selected": null, "reason": null }
 ```
+
+**An event id carries the source and the detector that made it**, as
+`<source>-<detector>-<n>`; an ecosystem's cross-tree detectors use `eco` in
+place of a source. It is the one place in the evidence where a reader can see
+*who says so* without opening another file, and stage 6 reads the same shape
+when it resolves a citation.
 
 **There is no author field, and that is the point.** Names are read in stage 1
 and do not enter stage 2's output; what may travel is a count or a stable
@@ -90,11 +107,15 @@ judgement and belongs to stage 5.
 What the subject says happened, extracted verbatim with its source location.
 
 ```json
-{ "id": "C0007",
-  "source": { "path": "<path>", "line": 0, "commit": "<sha>" },
+{ "id": "C0007", "source": "<source id>",
+  "at": { "path": "<path>", "line": 0 },
   "kind": "release-note | dated-topic | checkbox | register-entry | retirement",
-  "asserted": "<date>", "text": "<verbatim>", "about": ["<path or source id>"] }
+  "asserted": "<date or null>", "text": "<verbatim, truncated to 300>" }
 ```
+
+The location is a path and a line **in the source's tree at the pinned
+commit**, which the manifest already names once; repeating it per claim would
+be a second place for it to be wrong.
 
 This stage is **extraction, not computation**, and the distinction is honest
 rather than pedantic: which sentences in a tree are claims about its own history
@@ -111,10 +132,10 @@ most of it is already structured enough to extract without heuristics.
 ### 4. `delta.json` — where the record and the tree disagree
 
 ```json
-{ "matched":      [ { "event": "E0012", "claim": "C0007", "lag_days": 3 } ],
+{ "matched":      [ { "event": "anoieu-birth-0012", "claim": "C0007", "lag_days": 3 } ],
   "declared_only": ["C0031"],
-  "derived_only":  ["E0044"],
-  "disagreeing":   [ { "event": "E0009", "claim": "C0002", "lag_days": 214 } ] }
+  "derived_only":  ["anoieu-rewrite-0044"],
+  "disagreeing":   [ { "event": "anoieu-death-0009", "claim": "C0002", "lag_days": 214 } ] }
 ```
 
 Three classes, and they are the analysis rather than an input to it:
@@ -135,7 +156,7 @@ assessment:
 
 ```json
 { "id": "A3", "direction": "well | badly",
-  "claim": "<one sentence>", "rests_on": ["E0012", "C0007"],
+  "claim": "<one sentence>", "rests_on": ["anoieu-birth-0012", "C0007"],
   "falsified_by": "<what would show this is wrong>",
   "confidence": "low | medium | high", "scope": "<what it does not cover>" }
 ```
@@ -170,25 +191,34 @@ later reader needs to argue with a conclusion.
 pins, and a tool that vendors somebody's repository to prove it read it has
 misunderstood what the pin is for. They live in `work/`, which is ignored.
 
-This is the split euthyna already uses, a child project in eudaimonia — snapshots
-in git, the checkout they were taken from not — worth copying for the same reason:
-what a run *derived* is the evidence; what it *read* is reproducible.
+This is the split euthyna uses, a child project in eudaimonia (read
+2026-09-17) — snapshots in git, the checkout they were taken from not — worth
+copying for the same reason: what a run *derived* is the evidence; what it
+*read* is reproducible.
 
 ## The command surface
 
 ```
 epikrisis subjects              # what is defined, and what each reads
-epikrisis pin      <subject>    # check out the trees; write corpus.json
+epikrisis detectors             # the catalogue, each with its failure mode
+epikrisis pin      <subject>    # stage the trees at HEAD; write corpus.json
 epikrisis events   <subject>    # run the detectors
 epikrisis record   <subject>    # extract the declared record
 epikrisis delta    <subject>    # join; classify
 epikrisis prompt   <subject>    # the assembled evidence and questions; sends nothing
-epikrisis run      <subject>    # hand that prompt to an agent
-epikrisis check    <run>        # stage 6, over what came back
+epikrisis check    <subject>    # stage 6, over the report written from that prompt
 epikrisis ratio    <subject>    # lines of tool against lines about tools
 epikrisis panel    <subject>    # per-prefix position as of the pin
-epikrisis detectors             # the catalogue, each with its failure mode
+epikrisis recent   <subject>    # recent commits as sessions, and what each detector saw
+epikrisis selftest              # prove `check` and `budget` can fail
+epikrisis budget                # what the implementation is allowed to become
 ```
+
+Every command taking a `<subject>` takes `--run <stamp>` as well, and uses the
+newest run without it. The six that read a checkout — `pin`, `events`,
+`record`, `ratio`, `panel`, `recent` — require `--from <dir>`, a directory
+holding one checkout per source id, and refuse without it: this reads mirrors
+somebody already has and never fetches.
 
 **`ratio` and `panel` are measures, not stages.** They read the same pin and
 write beside the evidence, and neither feeds the delta. `panel` reports, per
@@ -203,17 +233,21 @@ a number a reader cannot re-derive is one they cannot contest, and that property
 is the whole reason to publish a second reading beside somebody else's.
 
 **There is no `report` command, and the omission is the design.** The workflow
-launcher, which carried this project until 2026-09-14, splits `prompt` from `run`
-for a stated reason — see exactly what would be sent, decide, then send — and
-refuses to let a generator be the thing that also publishes. The same split is
-right here for a sharper reason: the evidence is computable and the judgement is
-not, and a single command that emitted a finished report would let a reader
-believe the second was as reproducible as the first.
+launcher this project grew inside splits `prompt` from `run` for a stated
+reason — see exactly what would be sent, decide, then send — and refuses to let
+a generator be the thing that also publishes (eudaimonia's
+`tools/workflow-launcher`, read 2026-09-17). The same split is right here for a
+sharper reason: the evidence is computable and the judgement is not, and a
+single command that emitted a finished report would let a reader believe the
+second was as reproducible as the first.
 
-`run` is the only command that spends anything, and like its counterpart it
-should refuse more than it accepts: no pin, a stale pin, events not computed,
-questions whose digest does not match the manifest, a subject marked `self`
-without the stricter checks enabled.
+**There is no `run` command either, so nothing here spends anything.** `prompt`
+prints the evidence and the questions and stops; a person carries them. A
+command that handed the prompt to an agent would be the only one in this tool
+that cost something, and if it is ever written it should refuse more than it
+accepts: no pin, a stale pin, events not computed, questions whose digest does
+not match the manifest, a subject marked `self` without the stricter checks
+enabled.
 
 ## Where the two subject kinds diverge
 
@@ -251,6 +285,7 @@ rather than an error, which is the kind that survives review.
 | a project that develops in branches | the quiet detector fires on active work | stated as a known false positive; no fix |
 | force-pushed history | a pin stops resolving | pins are recorded by sha and a run that cannot resolve one fails rather than substituting |
 | **the trees move under a run** | every stage after `pin` re-reads whatever HEAD has become, while the manifest still names the old sha — so the report describes a corpus that was never measured | every stage reads **at the pinned commit**, and refuses to run if the repository no longer contains it. This was not true of the first version: three runs were derived from moved trees before anybody checked, which is why the row exists |
+| **a register moves to another repository** | the history of the file stays in the tree it left, so the detector reads it up to the day of the move and reports the last state it held *there* as the arrangement's current one. Nothing is missing from the output and nothing errors | the inventory must resolve **at the pin**, in a source this subject reads, and a run whose register is not there fails and names the path. Found 2026-09-17, when the ecosystem's register moved from anoieu to kanon and the subject files went on naming the old address |
 
 The last row is the general rule this design takes from the family it sits in: a
 run that cannot reproduce its evidence **fails**, and does not fall back to

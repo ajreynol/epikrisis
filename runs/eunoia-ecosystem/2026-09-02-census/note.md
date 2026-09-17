@@ -45,7 +45,18 @@ catalogue produces it:**
 | | |
 | --- | --- |
 | `ethos`, agent trailers in the census window | **1** — `24d02c47`, 2026-09-01, *Finalize eoc compiler (#236)* |
-| `ethos`, agent trailers across its whole history | **32**, first on **2024-01-24** |
+| `ethos`, agent trailers across its whole history | **22**, first on **2026-05-11** |
+
+> **Corrected 2026-09-17, and the correction is left visible.** The second row
+> first read **32, first on 2024-01-24**. That count was every
+> `Co-authored-by:` trailer in the tree, and most of the early ones name a
+> person: at `ethos` `6e70e0a7`, read 2026-09-17, **2,410 commits carry 37
+> co-author trailers, of which 22 name an agent family.** The 2024-01-24
+> trailer is one of the people. The hand-read that produced the original row
+> used a looser test than `ai-attribution`'s own — which matches the *name*
+> field against a family list and would have got it right — so this repository
+> published, about somebody else's tree, the error its own detector exists to
+> avoid. The window row is unchanged and was re-derived.
 
 **So the count is four rather than three, and they are not all in one
 repository.** The commit totals in the census are confirmed exactly — 186, 68,
@@ -55,8 +66,10 @@ that does not hold.
 **The interesting half is not the arithmetic.** The census concludes that the
 record says a person wrote all of it, *because nothing in the commit format was
 asked to record the difference.* One tree in its own table has been recording
-that difference since January 2024 — **the practice the entry says is missing
-already exists inside the census**, in the tree that declined to join.
+that difference since **May 2026** — **the practice the entry says is missing
+already exists inside the census**, in the tree that declined to join. It is
+four months of practice rather than the two years first published here, which
+weakens the point without removing it.
 
 ## What this note is not
 
