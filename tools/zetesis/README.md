@@ -60,7 +60,7 @@ position holds is ours to fix rather than to work around.
 So the ecosystem's Greek naming convention turns out to have had a second
 justification nobody had written down: **an unusual name reads unambiguously and
 greps unambiguously, and those are the same property.** It is recorded where the
-convention lives, in kanon's [`tools/ynoia/names.md`](https://github.com/ajreynol/kanon/blob/main/tools/ynoia/names.md).
+convention lives, in kanon's [naming guidance](https://github.com/ajreynol/kanon/blob/main/tools/ynoia/proposals.md#arguing-about-names).
 
 **Then it was called `apodeixis`, and that was worse.** The agent picked the
 replacement itself, checked that the name was free in this ecosystem's register,
