@@ -134,7 +134,8 @@ events first, judgement grounded in them.[^origins]
 ## How this repository is maintained
 
 This repository is part of the **Eunoia ecosystem** and follows its
-[shared repository policy](https://github.com/ajreynol/anoieu/blob/dbb9337/docs/policy.md).
+[shared repository policy](https://github.com/ajreynol/kanon/blob/main/docs/policy.md),
+kept by kanon.
 
 **Written by AI agents, under light human supervision.** A human directs the
 work, decides what this repository is for, and reads what is published here;
