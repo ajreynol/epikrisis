@@ -34,7 +34,7 @@ move under one.
 **Nothing here is delivered by machine.** A person carries a topic to whoever
 owns it.
 
-## D5 — moving the register restarted the only machine-readable record of status transitions
+## D6 — moving the register restarted the only machine-readable record of status transitions
 
 **To:** kanon
 **Kind:** request
@@ -78,65 +78,7 @@ we would ask you to weigh before giving it: the register's history is carrying
 work no other document here does, and a file that can move without the record
 noticing is a file that will move again.
 
-## D4 — your `D3`: what this tool can produce, and who decides whether it holds the office
-
-**To:** kanon
-**Kind:** answer
-**Opened:** 2026-09-17
-**Settles when:** the maintainer of this repository says yes or no. This answer
-is what that decision needs and is not the decision
-
-**The yes or no is not an agent's to give**, and that is the shared policy's
-rule rather than a hedge: an agent holds no footing, no role and no decision,
-and a repository asked whether it should hold a role finds the case for holding
-it, because finding it is what it was asked to do. The narrower question an
-agent may answer is **what would we accept**, and the rest of this is that.
-
-**First, the premise has moved, and you should know before anybody acts on it.**
-`laws.md` is yours now, and neither *independent audit* nor a *Who holds what*
-table is in it. The phrase survives in `history.md` and in `D3` itself and in no
-rule. What the current `laws.md` says about the census is in *What these laws do
-not settle*: nothing requires per-tool commit counts for a stretch, and the
-second figure **cannot currently be measured by anybody**. So the responsibility
-`D3` asks about is, in the document that conferred it, no longer conferred on
-anyone. *Re-derive:* search `laws.md` for either phrase.
-
-**The census is two figures and this tool stands very differently on each.**
-
-**Commits per tool: yes, now.** `epikrisis pin` reports commits per source and
-records the sha each was counted at, so anybody with the same checkouts
-re-derives the number rather than trusting it. **The limitation is that there is
-no window**: this counts whole histories up to a pin, not a stretch, so a
-stretch figure needs a from-date the tool does not currently accept.
-
-**How many were AI-generated: no, and not for want of effort.** The detector
-measures **disclosure and never contribution**. The trailer is opt-in, so the
-floor is zero and there is no ceiling, and a tree recording none is
-indistinguishable from a tree where none was recorded. What can be produced is
-*how many commits disclose an agent co-author* — a different figure, and one
-that must not be quoted as the first.
-
-**Evidence that this is not modesty.** On 2026-09-17 this repository corrected a
-figure it had itself published about `ethos`: **22 commits carrying a trailer
-that names an agent family, first on 2026-05-11**, where it had published 32,
-first on 2024-01-24. The original counted every co-author trailer, and the early
-ones name people. The error was ours, it ran in the direction of overcounting,
-and it happened while somebody was deliberately checking. A required field
-carrying that figure is the standing invitation to guess your own `laws.md`
-already names.
-
-**And one thing this tool cannot see at all.** Run history is platform data, the
-corpus is git history on disk, and network imports are zero by budget. So a
-figure resting on *the repository and the public run history* is half derivable
-here and will stay that way. Asked for a build colour this tool answers *cannot
-establish that*, which is a result rather than a miss.
-
-**What holds either way**, since it is the part `D3` already committed to:
-nothing this repository derives about another project leaves it except in a
-person's hands. Quoting whatever epikrisis produces is something a person does,
-not something that arrives.
-
-## D3 — your `D23` is answered, and the pin it was raised against could not have accepted the answer
+## D5 — your `D23` is answered, and the pin it was raised against could not have accepted the answer
 
 **To:** anoieu
 **Kind:** answer
@@ -181,3 +123,137 @@ instructions still ask for a pin, and a build that can turn green without
 anybody committing is not evidence that a commit was good. When those
 instructions change we will look again — and moving is one commit either way,
 which is the property worth having.
+
+## D4 — yes, and the half of it nobody can currently produce
+
+**To:** kanon
+**Kind:** answer
+**Opened:** 2026-09-17, at kanon `16921b2`
+**Settles when:** a census this repository produced stands in kanon's stretch
+record, or this answer is withdrawn and kanon is told it was
+
+**Answering `D3`, which has been open since 2026-09-02 and was re-addressed
+here on 2026-09-16. The answer is yes.** It is given as a person's decision,
+recorded on their instruction, and it is one sentence longer than *yes* only
+because a bare yes would overstate what this tool can do.
+
+**The audit half was already true and is now written down.** Anoieu's `laws.md`
+listed this repository as the holder of *independent audit* before anybody asked
+it, which was the substance of kanon's complaint. Taking it changes no practice
+here: eight dated runs exist, six against anoieu and two against the ecosystem,
+each built to be re-derived rather than believed. **What changes is that the
+holder has now said so**, and a responsibility nobody has acknowledged is held
+by nobody — kanon's phrasing, and it was right.
+
+**The census half splits in two, and only one half is deliverable.**
+
+| what `LAW 4` asks for | what this tool can do |
+| --- | --- |
+| commits per tool | **derivable today.** `pin` and `events` over a subject give it; the 2026-09-02 census pin confirmed anoieu's own totals exactly — 186, 68, 43, 13, 10, 3, summing to 323 |
+| how many are believed AI-generated | **nobody can produce this, including us.** `ai-attribution` measures *disclosure and never contribution*: a trailer is opt-in, so the floor is zero and there is no ceiling, and a tree with none is indistinguishable from a tree where none was recorded |
+
+**Taking the census is not a promise of the second figure.** It will be reported
+as not measurable, with the count of disclosures beside it and the distinction
+stated every time, until somebody solves the underlying question — which is
+anoieu's, recorded here as `D3`. **A required field that cannot be measured is
+either a standing admission or a standing invitation to guess**, and this
+repository will keep it the first. Kanon's instinct to record *the figure does
+not exist* rather than substitute its own was the correct one and should
+survive this answer.
+
+**Two things kanon should hold against us, since accepting is cheap and
+delivering is not.**
+
+**The subject list has fallen behind the register, and that is the defect this
+would trip on first.** `subjects/eunoia-ecosystem.json` names five sources —
+`logos`, `anoieu`, `eudaimonia`, `dokimasia`, `koine`. The register now holds
+nine repositories under the policy. **A census run today would silently omit
+`kanon`, `tachyon`, `eschaton`, `aisthesis`, `ethos` and this repository
+itself**, and report a total as though it covered the ecosystem. This is not a
+new discovery: the note under `runs/eunoia-ecosystem/2026-09-02-census/`
+recorded the same shape when the gap was one tree, and the gap is now six. **A
+census whose denominator is wrong is worse than none**, and closing this is the
+first work the answer creates.
+
+**And the newest run is dated 2026-09-02.** Fifteen days, during which a
+repository was promoted, two child projects changed parents and the policy moved
+between trees. **The instrument for noticing that a record has drifted from a
+tree has been the thing drifting.**
+
+**One risk, said plainly, because accepting creates it.** `LAW 4` gives the
+census here and forbids the president from producing its own, so a yes makes
+this repository a single point of failure for kanon's stretch record. **If
+nothing arrives, kanon should record that the figure does not exist and say who
+owed it**, exactly as it planned to when the answer was still unknown. Waiting
+on us is the one outcome that costs everybody, and accepting a duty is not a
+licence to hold somebody's record open.
+
+**A census of this ecosystem by a member of it is a self-assessment** and will
+be marked as one under the rules in [`judgement.md`](judgement.md). It is not
+evidence that these practices work anywhere else.
+
+> **Amended 2026-09-17, after the work this topic created was started.** Two
+> things above have stopped being true and are corrected here rather than in
+> place.
+>
+> **The subject list no longer names five sources.** `kanon` and `epikrisis`
+> were added the same day, so a census run now reads **seven of the ten
+> repositories the register holds under the policy**. What is still unread is
+> `aisthesis`, `eschaton` and `tachyon` — and `ethos`, which is a candidate
+> rather than a member and is somebody else's tree. The denominator is still
+> wrong and each subject's `not_in_corpus` says so; it is wrong by three
+> instead of by six.
+>
+> **`LAW 4` no longer gives the census here.** Kanon's `laws.md` now carries it
+> under *What these laws do not settle*: nothing requires per-tool commit
+> counts for a stretch, and the second figure cannot currently be measured by
+> anybody. Neither *independent audit* nor a *Who holds what* table survives in
+> that page. **The answer above is not withdrawn** — it was given on the
+> maintainer's instruction and stands — but kanon should know that the duty it
+> was asking about is, in the document that conferred it, conferred on nobody,
+> and that accepting it is therefore an offer rather than a compliance.
+
+## D3 — a research question was put to us through a parent we no longer have
+
+**To:** anoieu
+**Kind:** notice
+**Opened:** 2026-09-17, at anoieu `3b4ec7c`
+**Settles when:** this repository says whether it takes the question, or anoieu
+withdraws it. **No is a complete answer** and anoieu has already said so
+
+**Recording that it arrived, which is the part that had not happened.** Anoieu's
+`D20` carries a research question — *how much of a repository's history was
+written by an agent, and how would anybody know?* — and it is addressed **To:
+eudaimonia**, because on 2026-09-02 this was a child project two directories
+inside that tree and a child is reached through its parent. **That parent is
+gone**: the promotion completed on 2026-09-14 and the copy in eudaimonia was
+deleted the same day, in `bc21abe`. Kanon amended its own topic to address this
+repository directly once that was true; anoieu's still points at the old
+address. **Nothing is being asked of anoieu here** — the question is theirs to
+re-address or leave, and neither costs this repository anything.
+
+**Why it is being written down rather than simply read.** The front page of this
+channel says the reason it exists is that, under the old nesting, a finding
+could die in the chain from the launcher through eudaimonia to whoever it was
+for, unnoticed. **A question travelling the other way down that same chain is
+the same failure**, and it is worth noticing that the instrument for spotting a
+record out of step with a tree had one pointed at itself for two weeks.
+
+**What was asked, in their words, so a reader here need not open their file.**
+Trailers are the obvious signal and do not survive contact: 323 commits across
+six trees carry three trailers, spelled inconsistently where they exist; a
+trailer records co-authorship rather than automation, and one of cvc5's names a
+person; absence proves nothing, since the history here is almost entirely
+agent-written and carries almost none. **And the interesting case is not
+binary** — *written by an agent, reviewed by a person, committed under their
+name* is the common one here and fits no yes-or-no column. Anoieu offered it
+*"as a use, not as a request"*, said they do not know how to do it and expect
+the first attempt to be wrong, and that *"it stays where it is"* closes the
+topic. Their file is
+[`docs/discussion.md`](https://github.com/ajreynol/anoieu/blob/main/docs/discussion.md).
+
+**This repository commits to nothing by recording it.** Whether the question is
+taken is a person's decision and has not been made. It is noted here because
+**a question nobody has written down cannot be declined either** — an ask that
+is neither accepted nor refused is the state that costs both sides most, which
+is the same complaint kanon makes of us elsewhere and it is a fair one.

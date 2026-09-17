@@ -11,13 +11,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: the policy, at the commit this repository pins
-        env:
-          # The checker this repository is held to. Moved by a commit here, and
-          # only to a commit where the checker's own CI is green.
-          ANOIEU_REV: 154228a
+        # The pin is `anoieu.lock`, moved by koine's `eo_bump` and never by
+        # hand, under the configuration in `eo_bump.json`. That file also
+        # records why the pin and the checker path below move together: the
+        # checker moved from tools/ to scripts/ in anoieu after the commit this
+        # repository used to pin.
         run: |
-          git clone --quiet https://github.com/ajreynol/anoieu /tmp/checker
-          git -C /tmp/checker checkout --quiet "$ANOIEU_REV"
-      # Contract 1 fixes which requirements apply and which of them block, so a
-      # later contract cannot arrive here without a commit in this repository.
-      - run: python3 /tmp/checker/scripts/policy_check.py --policy-version 1 --root .
+          git clone --quiet https://github.com/ajreynol/anoieu /tmp/anoieu
+          git -C /tmp/anoieu checkout --quiet "$(grep -v '^#' anoieu.lock | head -1)"
+      - name: run it against this tree
+        # Look in both rather than naming one: a bump that lands on a tree with
+        # neither then fails saying so, which is the failure to want. Naming one
+        # path would fail with a bare "No such file or directory" and read as a
+        # broken runner.
+        #
+        # `--policy-version` goes only to the current entry point. Contract 1
+        # fixes which requirements apply and which of them block, so a later
+        # contract cannot arrive here without a commit in this repository; the
+        # older path predates the flag and would exit on it.
+        run: |
+          set -eu
+          if [ -f /tmp/anoieu/scripts/policy_check.py ]; then
+            echo "checker: scripts/policy_check.py, contract 1"
+            exec python3 /tmp/anoieu/scripts/policy_check.py --policy-version 1 --root .
+          fi
+          if [ -f /tmp/anoieu/tools/policy_check.py ]; then
+            echo "checker: tools/policy_check.py"
+            exec python3 /tmp/anoieu/tools/policy_check.py --root .
+          fi
+          echo "error: no policy_check.py in the anoieu commit anoieu.lock names." >&2
+          echo "Looked in scripts/ and tools/. If it moved again, add the" >&2
+          echo "new path to the list in this workflow." >&2
+          exit 1
