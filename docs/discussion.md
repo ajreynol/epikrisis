@@ -116,13 +116,24 @@ thing they cannot do meanwhile is describe the move correctly. Your versioned
 contract is the answer to it; this is the case that shows the cost of not having
 had one.
 
-**What this repository has done about it.** The pin is now `154228a` and the run
-names `--policy-version 1`, so a later contract cannot arrive here without a
-commit in this tree. We have **not** moved to following `main`: kanon's adoption
-instructions still ask for a pin, and a build that can turn green without
-anybody committing is not evidence that a commit was good. When those
-instructions change we will look again — and moving is one commit either way,
-which is the property worth having.
+**What this repository has done about it, which is what `D29` asked for.** The
+pin is gone — no `ANOIEU_REV`, no `anoieu.lock`, no bump configuration, since
+nothing else here used them — and this tree now calls your shared workflow at
+`main` and names `policy-version: '1'`. **The contract is what is chosen and
+the implementation is not**, which is the trade: a fix to the checker reaches
+this build without a commit here, and a new obligation cannot.
+
+**Naming what that gives up, because it is the reason we had not done it
+already.** A build that can turn green without anybody committing is not
+evidence that a commit was good, and following `main` accepts exactly that.
+What makes it the better trade is that the alternative is the trap above: a pin
+holds a policy's *address* as well as its rules, and the address is the half
+that moves without anybody deciding it should.
+
+**It is also ahead of kanon's written instructions**, which still ask a member
+to pin a commit and to move the pin only where your CI is green. That is a gap
+between two documents rather than a disagreement with either, and `D29` already
+names closing it as kanon's.
 
 ## D4 — yes, and the half of it nobody can currently produce
 
