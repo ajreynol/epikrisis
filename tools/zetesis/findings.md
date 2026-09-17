@@ -30,7 +30,7 @@ that are appended to and never rewritten. **It keeps no account of its inputs.**
 The prompts a person actually typed, turn by turn, are not tracked and never
 were.
 
-**Evidence:** [`../../docs/protocols.md`](../../docs/protocols.md) already
+**Evidence:** kanon's [`docs/protocols.md`](https://github.com/ajreynol/kanon/blob/main/docs/protocols.md) already
 concedes it, in the sequence describing how a tool starts: *a person points it
 in a direction, with whatever prompts that takes. This step is invisible
 afterwards — it leaves no artifact — which is worth remembering when reading the
@@ -130,7 +130,7 @@ counter-case is found by looking rather than by stumbling.
 **What:** every register in this family records what the *tools* did. The
 person directing them appears only where their action is entangled with an
 agent's. The mid-stream commit noted in
-[`../../docs/protocols.md`](../../docs/protocols.md) is the first fault recorded
+kanon's [`docs/protocols.md`](https://github.com/ajreynol/kanon/blob/main/docs/protocols.md) is the first fault recorded
 here that is **purely the prompter's**, and it went into a maintenance page
 rather than into any register of conduct — because no register has a slot for
 it.

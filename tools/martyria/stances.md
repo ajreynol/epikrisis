@@ -246,7 +246,7 @@ below is re-derivable from this repository at the commit that records it.*
 **Our stance: hand it on, for three reasons.**
 
 **1. One repository holds most of the ecosystem, and that is not what anybody
-joined.** Of the **28 roles** in [`roles.md`](../../docs/roles.md), **15 sit in
+joined.** Of the **28 roles** in [`roles.md`](https://github.com/ajreynol/kanon/blob/main/docs/roles.md), **15 sit in
 anoieu's tree** — 8 held by anoieu itself and 7 by its own child projects. The
 next largest holder outside it has **3**. Of the **22 items on the board, 21
 name anoieu** as an entity. **An arrangement where every outstanding question
@@ -290,7 +290,7 @@ correction gets more expensive every stretch and never gets cheaper.**
 
   > **Overtaken on 2026-09-16, and this stance was right to worry.** The role
   > `R30` was widened from mediating the report card to writing it, and the page
-  > moved to [`../stathmos/report-card.md`](../stathmos/report-card.md) — which
+  > moved to kanon's [`tools/stathmos/report-card.md`](https://github.com/ajreynol/kanon/blob/main/tools/stathmos/report-card.md) — which
   > is a child project of the repository currently holding the office. **The
   > grading of everybody now sits in the tree of the party being graded**, which
   > is the exact arrangement this bullet refused. It is recorded here rather

@@ -8,10 +8,10 @@ in the moment it is least convenient.
 
 ## Why this is not the findings ledger
 
-The ledger in [`../../docs/reports/`](https://github.com/ajreynol/anoieu/blob/main/docs/reports/reports.md) carries
+The ledger in anoieu's [`docs/reports/`](https://github.com/ajreynol/anoieu/blob/main/docs/reports/reports.md) carries
 defects **we** found in **somebody else's** files. This is the other direction
 and it has never had a channel. That gap is already written down as one:
-[`../../docs/protocols.md`](../../docs/protocols.md) records that findings do
+kanon's [`docs/protocols.md`](https://github.com/ajreynol/kanon/blob/main/docs/protocols.md) records that findings do
 not all come from our checks, that some will come from a project telling us
 something is wrong with our own record, and that those have no row to hang off.
 This is the row.
@@ -62,5 +62,5 @@ Each entry carries the same six fields, in the same order:
 
 ---
 
-*No reports. The invitation is [`D18`](../../docs/discussion.md) and it has been
+*No reports. The invitation is [`D18`](https://github.com/ajreynol/kanon/blob/main/docs/discussion.md) and it has been
 open since 2026-09-02.*

@@ -2,12 +2,29 @@
 
 **Eunoia listing:** unadvertised
 
-A **child project** under [`docs/policy.md`](../../docs/policy.md). Started by a
-human, read-only, and not part of the governance commands this repository ships.
-Deleting this directory changes no running command. **This is not an island:**
-kanon names this project on its front page to distinguish housed work from
-required reading. That reference remains an island exception; this project is
-unadvertised in ecosystem listings.
+**Moved to epikrisis on 2026-09-17** in `fbde388`, with its sibling
+[`../martyria/`](../martyria/README.md). It was held in anoieu until 2026-09-15
+and in kanon until the move. Earlier pages retain their original context and
+dates: where one says *this repository*, it means the one that held the project
+when the entry was written.
+
+A **child project** under kanon's [`docs/policy.md`](https://github.com/ajreynol/kanon/blob/main/docs/policy.md). Started
+by a human, read-only, and not part of what this repository ships. Deleting this
+directory changes no running command.
+
+**It is an island, and that is a change.** Nothing in epikrisis names this
+directory in code, on the front page or in the documentation index. The earlier
+charter recorded an exception — kanon naming this project on its front page, to
+distinguish housed work from required reading — and that exception has lapsed
+twice over: the reference is no longer in kanon's README, and the project is no
+longer in kanon's tree.
+
+**What still names it is the inventory, and that is not an exception.** Kanon's
+register records this project with `epikrisis` as its parent, as it records
+every child project in the ecosystem. That is the inventory doing its job from
+another tree; it is not this repository advertising the directory, and it
+neither makes the project depend on anything nor makes anything depend on it.
+It remains unadvertised in ecosystem listings.
 
 ## The name
 
@@ -43,7 +60,7 @@ position holds is ours to fix rather than to work around.
 So the ecosystem's Greek naming convention turns out to have had a second
 justification nobody had written down: **an unusual name reads unambiguously and
 greps unambiguously, and those are the same property.** It is recorded where the
-convention lives, in [`../ynoia/names.md`](../ynoia/names.md).
+convention lives, in kanon's [`tools/ynoia/names.md`](https://github.com/ajreynol/kanon/blob/main/tools/ynoia/names.md).
 
 **Then it was called `apodeixis`, and that was worse.** The agent picked the
 replacement itself, checked that the name was free in this ecosystem's register,
@@ -161,7 +178,7 @@ it is a question about this tree.
 
 ## Siblings, and the two speeds
 
-**The claim is that this project and [`../../docs/vision.md`](../../docs/vision.md)
+**The claim is that this project and kanon's [`docs/vision.md`](https://github.com/ajreynol/kanon/blob/main/docs/vision.md)
 are siblings**, and it is worth being exact about the sense, because one reading
 of it is true and load-bearing and another is false.
 
@@ -192,9 +209,9 @@ is attention over text and every ambiguity is a branch discovered late.
 **Three brakes now exist and they are not the same brake**, which is worth
 saying because the fourth one somebody invents will overlap unless the first
 three are laid out. The science-fiction essay in [aisthesis](https://github.com/ajreynol/aisthesis)
-limits how far ahead we may **plan**;
-[`INST-3`](../../docs/maintenance.md#inst-3--do-not-outrun-your-own-understanding) limits how fast we
-may **move**, and its rule is *go only as fast as you understand*; this limits
+limits how far ahead we may **plan**; kanon's
+[`INST-3`](https://github.com/ajreynol/kanon/blob/main/docs/maintenance.md#inst-3--do-not-outrun-your-own-understanding)
+limits how fast we may **move**, and its rule is *go only as fast as you understand*; this limits
 what we may claim without being able to **show** it. Range, rate, evidence.
 Against one accelerator, which is the kernel.
 
@@ -244,9 +261,9 @@ that forbids an unbacked claim about our behaviour forbids an unbacked claim
 about proof checking.
 
 **It is a hypothesis and is currently unsupported**, and saying so is the test
-of whether the discipline is real. The account it is about,
-[`../ynoia/why-eunoia.md`](../ynoia/why-eunoia.md), now opens with an assessment
-of what stands behind each of its own claims — which is exactly the transfer the
+of whether the discipline is real. The account it is about, kanon's
+[`tools/ynoia/why-eunoia.md`](https://github.com/ajreynol/kanon/blob/main/tools/ynoia/why-eunoia.md), now opens with an
+assessment of what stands behind each of its own claims — which is exactly the transfer the
 hypothesis predicts. **But that assessment was written after the guidelines and
 by the same hand**, so it is as consistent with the discipline working as with
 the discipline being applied because somebody asked for it. One instance,
@@ -264,7 +281,8 @@ land, and noticing them is a reason those registers exist.
 
 ## What this does not slow down
 
-**Research.** The account in [`../ynoia/why-eunoia.md`](../ynoia/why-eunoia.md)
+**Research.** The account in kanon's
+[`tools/ynoia/why-eunoia.md`](https://github.com/ajreynol/kanon/blob/main/tools/ynoia/why-eunoia.md)
 argues about how this ecosystem is arranged and what a researcher starting a new
 tool would be building into. **Nothing here gates it, and nothing here should.**
 
@@ -297,7 +315,7 @@ category error**, and it would be the first thing to report under `D18`.
   become the thing it was watching for.
 - **It does not judge another repository's conduct.** What may be published
   about somebody else's work is governed by
-  [`../../docs/reports/reporting-policy.md`](https://github.com/ajreynol/anoieu/blob/main/docs/reports/reporting-policy.md)
+  anoieu's [`docs/reports/reporting-policy.md`](https://github.com/ajreynol/anoieu/blob/main/docs/reports/reporting-policy.md)
   and nothing here loosens it.
 - **It gates nothing.** No commit, no stretch and no handoff waits on this
   directory, and if one ever does, it has stopped being a child project.
@@ -311,7 +329,7 @@ category error**, and it would be the first thing to report under `D18`.
 **Started 2026-09-02**, by the maintainer, at their explicit instruction —
 which is the only way one of these may begin.
 
-The register has three entries and **the standard is unwritten**, so
+The register has six entries and **the standard is unwritten**, so
 nothing here can yet answer the question at the top. The first finding is the
 one that prompted the project: the record accounts for what this repository
 produced and not for what it was asked, which is a gap in exactly the place an

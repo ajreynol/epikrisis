@@ -467,7 +467,7 @@ agent that did not grep the neighbouring trees, and a reviewer who did not check
 that it had.**
 
 **What happened:** this project needed a name. An agent proposed
-`apodeixis`, checked [the ecosystem's register](../ynoia/names.md), found it
+`apodeixis`, checked [the ecosystem's register](https://github.com/ajreynol/kanon/blob/main/tools/ynoia/names.md), found it
 neither taken nor reserved, and took it. **It did not grep the neighbouring
 trees.** `apodeixis` was already the name of a child project in eudaimonia, and
 that project's own README states that the name *is used here and claimed

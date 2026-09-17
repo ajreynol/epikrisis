@@ -1,5 +1,5 @@
 {
-  "_": "The human's working window. See sleep.py, and INST-1 in docs/maintenance.md.",
+  "_": "The human's working window. See sleep.py, and INST-1 in kanon's docs/maintenance.md.",
   "human": "ajreynol",
   "timezone": null,
   "_timezone": "An IANA name such as \"America/Chicago\". null means: use whatever local time this machine reports, which is right on a workstation and wrong in a container.",

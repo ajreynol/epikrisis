@@ -12,3 +12,11 @@ work/
 # for one machine. The shared repository policy asks for both by name.
 scratch/
 *.local.md
+
+# Python bytecode. `tools/martyria/sleep.py` is the only module here that is
+# imported rather than run, and importing it writes a cache beside it. One such
+# file arrived tracked when the child projects moved in, from a tree that had
+# always ignored it -- it is derived from a file already in git, and nothing
+# reads it.
+__pycache__/
+*.pyc
