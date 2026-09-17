@@ -12,9 +12,23 @@ making assessments that others can inspect and contest.
 
 ## The GitHub history analyzer
 
-[`bin/epikrisis`](bin/epikrisis) is a Python command-line tool that reads local
-Git checkouts at pinned commits. It supports individual repositories and subjects
-spanning several repositories, with configuration in [`subjects/`](subjects/).
+**[`history_analyzer/`](history_analyzer/) is the whole of it** — the tool, what
+it reads, and what it has produced. It is a directory rather than a scattering
+of top-level ones because this repository intends to carry more than one
+analysis, and a second tool arriving into a flat tree is the point at which
+every path and every link has to move at once.
+
+| under `history_analyzer/` | what it holds |
+| --- | --- |
+| `bin/epikrisis` | the program: one Python file, standard library only |
+| `subjects/` | what may be analysed — the repositories a run reads, and the settings it reads them under |
+| `questions.md` | the questions, pre-registered, with their digest pinned into every run |
+| `calibration/` | what a reader predicted before the detectors ran, and how that scored |
+| `runs/` | the committed evidence and the reports written from it |
+
+The program reads local Git checkouts at pinned commits. It supports individual
+repositories and subjects spanning several repositories, with configuration in
+[`history_analyzer/subjects/`](history_analyzer/subjects/).
 
 | Tooling | What it provides |
 | --- | --- |
@@ -26,7 +40,7 @@ spanning several repositories, with configuration in [`subjects/`](subjects/).
 | `detectors` and `budget` | The detector catalogue with known failure modes, and checks on implementation size and dependencies. |
 | `subjects` and `selftest` | What is defined and what each subject reads, and a proof that `check` and `budget` can fail rather than only pass. |
 
-**The command surface is defined in [the pipeline design](docs/design.md), and
+**The command surface is defined in [the pipeline design](history_analyzer/docs/design.md), and
 that page is the ground truth.** The table above and the tool's own `--help` are
 copies of it. **Nothing compares them**, so a command added to one and not the
 others is drift that has not been reported yet; that is stated here rather than
@@ -35,13 +49,13 @@ left for a reader to discover.
 For an example of the historical account this tooling is intended to support,
 see **[anoieu's `history.md`](https://github.com/ajreynol/anoieu/blob/main/docs/history.md)**,
 which records repository development and ecosystem events. For a worked analyzer
-output, see the [anoieu report](runs/anoieu/2026-09-01/report.md) and its
-[accompanying evidence](runs/anoieu/2026-09-01/).
+output, see the [anoieu report](history_analyzer/runs/anoieu/2026-09-01/report.md) and its
+[accompanying evidence](history_analyzer/runs/anoieu/2026-09-01/).
 
 The analyzer is experimental. Its completed assessments cover anoieu and the
 Eunoia ecosystem and are marked as self-assessments. Known limitations include
 missed governance events and unreliable event-to-claim matching; see
-[open defects](docs/notes.md) before relying on the results.
+[open defects](history_analyzer/docs/notes.md) before relying on the results.
 
 ## Using it
 
@@ -49,33 +63,33 @@ Requires Python 3 and Git, with no third-party Python dependencies. The analyzer
 reads existing local checkouts and makes no network requests.
 
 ```sh
-python3 bin/epikrisis subjects
-python3 bin/epikrisis detectors
+python3 history_analyzer/bin/epikrisis subjects
+python3 history_analyzer/bin/epikrisis detectors
 ```
 
 Before starting a run, review the subject configuration and write the questions
-in [`questions.md`](questions.md). For the supplied `anoieu` subject, place a
+in [`history_analyzer/questions.md`](history_analyzer/questions.md). For the supplied `anoieu` subject, place a
 full checkout at `/path/to/checkouts/anoieu`, then run from this repository:
 
 ```sh
-python3 bin/epikrisis pin anoieu --from /path/to/checkouts
-python3 bin/epikrisis events anoieu --from /path/to/checkouts
-python3 bin/epikrisis record anoieu --from /path/to/checkouts
-python3 bin/epikrisis delta anoieu
-python3 bin/epikrisis prompt anoieu
+python3 history_analyzer/bin/epikrisis pin anoieu --from /path/to/checkouts
+python3 history_analyzer/bin/epikrisis events anoieu --from /path/to/checkouts
+python3 history_analyzer/bin/epikrisis record anoieu --from /path/to/checkouts
+python3 history_analyzer/bin/epikrisis delta anoieu
+python3 history_analyzer/bin/epikrisis prompt anoieu
 ```
 
 `pin` records the checkout's current commit and creates a dated directory under
-`runs/anoieu/`. Subsequent commands use the newest run unless given
+`history_analyzer/runs/anoieu/`. Subsequent commands use the newest run unless given
 `--run <stamp>`. The prompt prints evidence and questions for a writer; the
 analyzer does not generate the narrative. Write the report and assessment files
-using the [report requirements](docs/judgement.md), then validate them with
-`python3 bin/epikrisis check anoieu --run <stamp>`.
+using the [report requirements](history_analyzer/docs/judgement.md), then validate them with
+`python3 history_analyzer/bin/epikrisis check anoieu --run <stamp>`.
 
 An existing report can be checked directly:
 
 ```sh
-python3 bin/epikrisis check anoieu --run 2026-09-01
+python3 history_analyzer/bin/epikrisis check anoieu --run 2026-09-01
 ```
 
 ## Toward Eunoia's judicial branch
@@ -122,13 +136,15 @@ something useful that they did not already know.
 
 ## Documentation
 
-Start with the [documentation index](docs/README.md), or go directly to:
+Start with the [documentation index](docs/README.md), which names everything in
+the repository. The analyzer's own documents sit with the analyzer, under
+[`history_analyzer/docs/`](history_analyzer/docs/):
 
-- [Pipeline design](docs/design.md): evidence, outputs, and the boundary with judgement.
-- [Detector catalogue](docs/events.md): event definitions, thresholds, and failure modes.
-- [Report requirements](docs/judgement.md): assessments, falsifiers, and self-assessment rules.
-- [Open defects](docs/notes.md): current limitations and how to reproduce them.
-- [Runs](runs/): committed evidence and reports.
+- [Pipeline design](history_analyzer/docs/design.md): evidence, outputs, and the boundary with judgement.
+- [Detector catalogue](history_analyzer/docs/events.md): event definitions, thresholds, and failure modes.
+- [Report requirements](history_analyzer/docs/judgement.md): assessments, falsifiers, and self-assessment rules.
+- [Open defects](history_analyzer/docs/notes.md): current limitations and how to reproduce them.
+- [Runs](history_analyzer/runs/): committed evidence and reports.
 
 ## The name
 

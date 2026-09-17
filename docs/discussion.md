@@ -27,7 +27,7 @@ Topics epikrisis has open with other tools in the Eunoia ecosystem, in the forma
 the shared repository policy sets out. Newest first.
 
 **This is not where findings live.** A finding is about a subject this tool
-analysed and belongs in the run that produced it, under `runs/`. What is here is
+analysed and belongs in the run that produced it, under `history_analyzer/runs/`. What is here is
 everything else: what this repository wants from another, and what is about to
 move under one.
 
@@ -47,7 +47,7 @@ of footing leaves a dated, machine-readable trace.** Everything else — a name
 moving from reserved to taken, a role changing hands, a child project
 graduating — is a sentence in prose, and no program can date a sentence. This
 tool reads the register's history for exactly that reason, and
-[`events.md`](events.md) says so: for an ecosystem subject it is the primary
+[`events.md`](../history_analyzer/docs/events.md) says so: for an ecosystem subject it is the primary
 event class and everything else in the catalogue is secondary.
 
 **The move split that history in two, and neither half says so.**
@@ -200,7 +200,7 @@ on us is the one outcome that costs everybody, and accepting a duty is not a
 licence to hold somebody's record open.
 
 **A census of this ecosystem by a member of it is a self-assessment** and will
-be marked as one under the rules in [`judgement.md`](judgement.md). It is not
+be marked as one under the rules in [`judgement.md`](../history_analyzer/docs/judgement.md). It is not
 evidence that these practices work anywhere else.
 
 > **Amended 2026-09-17, after the work this topic created was started.** Two
@@ -213,7 +213,11 @@ evidence that these practices work anywhere else.
 > `aisthesis`, `eschaton` and `tachyon` — and `ethos`, which is a candidate
 > rather than a member and is somebody else's tree. The denominator is still
 > wrong and each subject's `not_in_corpus` says so; it is wrong by three
-> instead of by six.
+> instead of by six. Both files have also moved: the subjects are now at
+> `history_analyzer/subjects/` and the census note at
+> `history_analyzer/runs/eunoia-ecosystem/2026-09-02-census/`, since the
+> analyzer and everything it reads were gathered under one directory on
+> 2026-09-17. The paths in the body above are the addresses as they stood.
 >
 > **`LAW 4` no longer gives the census here.** Kanon's `laws.md` now carries it
 > under *What these laws do not settle*: nothing requires per-tool commit

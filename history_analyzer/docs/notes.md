@@ -65,7 +65,7 @@ risk**, and it should be said in advance rather than discovered in a report.
 ## `budget` is in breach, in two places
 
 **1519 lines of tool against a published limit of 1500**, re-derived with
-`python3 bin/epikrisis budget` on 2026-09-17. The prose half is not in breach;
+`python3 history_analyzer/bin/epikrisis budget` on 2026-09-17. The prose half is not in breach;
 that command prints both numbers and is the only place either should be read
 from, since a figure copied into prose is one more thing to go stale.
 

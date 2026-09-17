@@ -189,12 +189,20 @@ later reader needs to argue with a conclusion.
 
 **Not committed:** the checkouts. They are large and re-fetchable from the
 pins, and a tool that vendors somebody's repository to prove it read it has
-misunderstood what the pin is for. They live in `work/`, which is ignored.
+misunderstood what the pin is for. **Nothing here writes them either** — every
+stage is pointed at mirrors somebody already has with `--from`, and `work/` is
+ignored so that a person may keep them inside this tree without committing
+them.
 
 This is the split euthyna uses, a child project in eudaimonia (read
 2026-09-17) — snapshots in git, the checkout they were taken from not — worth
 copying for the same reason: what a run *derived* is the evidence; what it
 *read* is reproducible.
+
+**Paths on this page and its siblings are relative to `history_analyzer/`**,
+which is where the analyzer and everything it reads and writes live. Commands
+are shown from the repository root, as the front page shows them, so that one
+can be pasted and the other read.
 
 ## The command surface
 
