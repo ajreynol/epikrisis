@@ -33,6 +33,9 @@ import sys
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RUNS = os.path.join(HERE, "runs")
 REPO = "https://github.com/ajreynol/epikrisis/blob/main"
+# GitHub serves a directory under /tree/ and redirects /blob/ to it. Emitting
+# the redirect costs a round trip on every evidence link on the index.
+TREE = "https://github.com/ajreynol/epikrisis/tree/main"
 
 # Prose that is a run's own output. Anything else in a run directory is evidence
 # and is linked as a file rather than rendered as a page.
@@ -338,7 +341,7 @@ def main():
         for f in sorted(os.listdir(r["dir"])):
             if f.endswith(".svg"):
                 shutil.copy(os.path.join(r["dir"], f), dst)
-        ev = f'<a href="{REPO}/history_analyzer/runs/{rel}">evidence</a>'
+        ev = f'<a href="{TREE}/history_analyzer/runs/{rel}">evidence</a>'
         rows.append(
             f"<tr><td><code>{html.escape(r['subject'])}</code></td>"
             f"<td><code>{html.escape(r['stamp'])}</code></td>"
