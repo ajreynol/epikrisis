@@ -278,7 +278,36 @@ font-weight:600}
 .stat span{display:block;font-size:.83rem;color:var(--ink2);line-height:1.42}
 .stat i{display:block;margin-top:9px;font-style:normal;font-family:var(--mono);
 font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
-.mast{padding:56px 0 0}
+.mast{padding:60px 0 8px;border-bottom:1px solid var(--rule);margin-bottom:10px}
+.mast h1{margin:.28em 0 .4em}
+.lede{font-family:var(--serif);font-size:1.2rem;line-height:1.5;color:var(--ink2);
+max-width:62ch}
+.lede p{margin:0 0 .7em}
+section{margin:0 0 12px;padding:34px 0 0}
+section h2{margin-top:0}
+section h2 a{color:inherit;text-decoration:none}
+section h2 a:hover{color:var(--derived)}
+.sec-blurb{color:var(--ink3);font-size:.93rem;max-width:66ch;margin:-.3em 0 1.4em}
+.hero{padding:30px 0 6px}
+.hero h2{border-bottom:0;font-size:2rem;padding-bottom:0;margin-bottom:.35em}
+.hero .blurb{max-width:66ch;color:var(--ink2);margin-bottom:1.4em}
+.hero .blurb p{margin:0 0 .8em}
+.hero .eyebrow{margin-bottom:.7em}
+.cta{margin:.2em 0 0;font-weight:600}
+.cta a{text-decoration:none}
+.cta a:hover{text-decoration:underline}
+.cards{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));
+margin-bottom:.6em}
+.card{display:block;text-decoration:none;color:inherit;background:var(--surface);
+border:1px solid var(--rule);border-left:3px solid var(--derived);border-radius:8px;
+padding:17px 19px}
+.card.flat{border-left-color:var(--rule2)}
+.card:hover{border-color:var(--rule2);background:var(--surface2)}
+.card:hover h3{color:var(--derived)}
+.card h3{font-family:var(--sans);font-size:1rem;font-weight:650;margin:0 0 .4em}
+.card p{font-size:.88rem;color:var(--ink2);margin:0}
+.card .where{display:block;margin-top:.8em;font-family:var(--mono);font-size:.66rem;
+letter-spacing:.08em;color:var(--ink3)}
 .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
 text-transform:uppercase;color:var(--ink3)}
 .crumb{margin:26px 0 0;font-family:var(--mono);font-size:.76rem;color:var(--ink3)}
@@ -351,9 +380,10 @@ def main():
     shutil.rmtree(out, ignore_errors=True)
     os.makedirs(out)
 
-    rows, pages = [], 0
+    rows, pages, built = [], 0, []
     for r in sorted(runs(), key=lambda r: (r["stamp"], r["subject"]), reverse=True):
         c, rel = r["corpus"], f"{r['subject']}/{r['stamp']}"
+        built.append(r)
         dst = os.path.join(out, rel)
         os.makedirs(dst, exist_ok=True)
         n = sum(s["commits"] for s in c["sources"])
@@ -381,40 +411,98 @@ def main():
             f"<td>{' &middot; '.join(links) if links else '&mdash;'} "
             f"&middot; {ev}</td></tr>")
 
-    idx = f"""<div class="mast">
-<div class="eyebrow">epikrisis &middot; history analyzer</div>
-<h1>What these repositories did, on evidence a reader can re-derive</h1>
-<p>Epikrisis reads the git histories of the <strong>Eunoia ecosystem</strong> at pinned
-commits and asks what happened, what worked, what went wrong, and where the recorded
-account differs from the tree. Every run below is committed: the evidence, the report
-written from it, and the reason every candidate event was cited or dropped.</p>
-</div>
+    # ---- the landing page: editorial copy from site.json, figures from runs
+    cfg_p = os.path.join(HERE, "site.json")
+    cfg = json.load(open(cfg_p)) if os.path.exists(cfg_p) else {}
+    by = {(r["subject"], r["stamp"]): r for r in built}
 
-<blockquote class="q alert important"><p><strong>These are self-assessments, and their
-conclusions do not travel.</strong> The subject of each run is a family of trees that
-contains this tool, so each is marked <code>self</code> and its findings are never cited
-outward &mdash; not as evidence that these practices work, not in a vision document, not
-in a README. A family grading itself with its own instrument produces something useful to
-the family and worthless to anybody else. <strong>What is addressed to a reader from
-outside is the method</strong>: the
-<a href="{REPO}/history_analyzer/docs/design.md">pipeline design</a>, the
-<a href="{REPO}/history_analyzer/docs/events.md">detector catalogue</a> with its failure
-modes, the <a href="{REPO}/history_analyzer/docs/judgement.md">report requirements</a>,
-and the <a href="{REPO}/history_analyzer/docs/notes.md">open defects</a>. Read the runs as
-worked examples of that method, not as findings you should believe.</p></blockquote>
+    def doc_href(it):
+        key = (it["subject"], it["stamp"])
+        if key not in by or it["doc"] not in by[key]["prose"]:
+            raise SystemExit("site: site.json points at %s/%s/%s, which this "
+                             "build does not produce"
+                             % (it["subject"], it["stamp"], it["doc"]))
+        return "%s/%s/%s.html" % (it["subject"], it["stamp"], it["doc"][:-3])
 
-<h2 id="runs">Runs</h2>
-<p>Newest first. Sources and commits are read from each run&rsquo;s own
-<code>corpus.json</code>; a run with no prose reached the evidence stages and was
-never written up.</p>
-<div class="tw"><table><thead><tr><th>subject</th><th>pinned</th><th>sources</th>
-<th>commits</th><th>what there is to read</th></tr></thead>
-<tbody>{''.join(rows)}</tbody></table></div>
-"""
+    esc = html.escape
+    parts = ['<div class="mast">'
+             '<div class="eyebrow">%s</div><h1>%s</h1>'
+             '<div class="lede">%s</div></div>'
+             % (esc(cfg.get("tagline", "epikrisis")),
+                esc(cfg.get("title", "epikrisis")),
+                convert(cfg.get("lede", ""), "site.json", ""))]
+
+    hl = cfg.get("highlight")
+    if hl:
+        href = doc_href(hl)
+        base = "%s/%s" % (hl["subject"], hl["stamp"])
+        tiles = "".join(
+            '<div class="stat h"><b>%s</b><span>%s</span></div>'
+            % (esc(t["n"]), inline(t["cap"], base)) for t in hl.get("stats", []))
+        fig = ""
+        if hl.get("figure"):
+            fig = ('<picture><source media="(prefers-color-scheme: dark)" '
+                   'srcset="%s/%s-dark.svg">'
+                   '<img alt="Commits per repository across the two stretches, '
+                   'three panels sharing a row order." src="%s/%s-light.svg">'
+                   '</picture>' % (base, hl["figure"], base, hl["figure"]))
+        parts.append(
+            '<section class="hero"><div class="eyebrow">%s</div>'
+            '<h2><a href="%s">%s</a></h2><div class="blurb">%s</div>'
+            '<div class="stats">%s</div>%s'
+            '<p class="cta"><a href="%s">%s &rarr;</a></p></section>'
+            % (esc(hl.get("eyebrow", "")), href, esc(hl.get("title", "")),
+               convert(hl.get("blurb", ""), "site.json", base), tiles, fig,
+               href, esc(hl.get("cta", "Read it"))))
+
+    for sec in cfg.get("sections", []):
+        cards = "".join(
+            '<a class="card" href="%s"><h3>%s</h3><p>%s</p>'
+            '<span class="where">%s &middot; %s</span></a>'
+            % (doc_href(it), esc(it["title"]),
+               inline(it["blurb"], "%s/%s" % (it["subject"], it["stamp"])),
+               esc(it["subject"]), esc(it["stamp"])) for it in sec["items"])
+        parts.append('<section><h2>%s</h2><p class="sec-blurb">%s</p>'
+                     '<div class="cards">%s</div></section>'
+                     % (esc(sec["title"]), inline(sec.get("blurb", ""), ""), cards))
+
+    if cfg.get("method"):
+        cards = "".join(
+            '<a class="card flat" href="%s/%s"><h3>%s</h3><p>%s</p></a>'
+            % (REPO, m["href"], esc(m["title"]), inline(m["blurb"], ""))
+            for m in cfg["method"])
+        parts.append(
+            '<section><h2>How it works</h2><p class="sec-blurb">Read these rather '
+            'than the findings if you have arrived from outside this ecosystem: '
+            'the conclusions here are a family grading itself, and do not travel. '
+            'The method does.</p><div class="cards">%s</div></section>' % cards)
+
+    parts.append(
+        '<section><h2>Everything else</h2><p class="sec-blurb">Twelve runs are '
+        'committed and most were never written up: a pin and its candidate '
+        'events, kept so a later reader can tell what was looked at. '
+        '<a href="runs.html">The full listing</a> says which carry prose, and '
+        'links the evidence behind each.</p></section>')
+
     open(os.path.join(out, "index.html"), "w").write(
-        page("epikrisis — history reports", idx, "",
-             "Reports on how the Eunoia ecosystem's repositories evolved, each "
-             "built from committed evidence at pinned commits."))
+        page(cfg.get("title", "epikrisis"), "\n".join(parts), "",
+             "How the repositories of the Eunoia ecosystem have developed, "
+             "measured from their git histories at pinned commits."))
+
+    # ---- the run listing: the internal view, on its own page
+    listing = ('<h1>Every run</h1><p class="lede">One row per pinned corpus. '
+               'Sources and commits are read from each run’s own '
+               '<code>corpus.json</code>; a run with no prose reached the '
+               'evidence stages and was never written up. Newest first.</p>'
+               '<div class="tw"><table><thead><tr><th>subject</th><th>pinned</th>'
+               '<th>sources</th><th>commits</th><th>what there is to read</th>'
+               '</tr></thead><tbody>%s</tbody></table></div>' % "".join(rows))
+    open(os.path.join(out, "runs.html"), "w").write(
+        page("Every run — epikrisis", listing,
+             '<div class="crumb"><a href="index.html">&larr; epikrisis</a></div>',
+             "Every pinned corpus epikrisis has produced, and its evidence."))
+    pages += 1
+
     print(f"  {pages} prose page(s) and an index for {len(rows)} run(s) -> {out}")
 
 

@@ -8,6 +8,7 @@ construct stops the build instead of being guessed at.
     python3 -m unittest discover -s history_analyzer/tests
 """
 import importlib.machinery
+import json
 import importlib.util
 import os
 import re
@@ -79,11 +80,22 @@ class Site(unittest.TestCase):
                         bad.append(f"{os.path.relpath(p, self.out)} -> {t}")
         self.assertEqual(bad, [])
 
-    def test_every_run_with_a_corpus_reaches_the_index(self):
-        idx = open(os.path.join(self.out, "index.html")).read()
+    def test_every_run_with_a_corpus_reaches_the_listing(self):
+        # The index is a landing page and names a chosen few; runs.html is the
+        # page that must account for all of them.
+        listing = open(os.path.join(self.out, "runs.html")).read()
         for r in site.runs():
-            self.assertIn(r["stamp"], idx, f"{r['subject']}/{r['stamp']} missing")
-            self.assertIn(r["subject"], idx)
+            self.assertIn(r["stamp"], listing, f"{r['subject']}/{r['stamp']} missing")
+            self.assertIn(r["subject"], listing)
+
+    def test_the_index_reaches_every_document_site_json_advertises(self):
+        idx = open(os.path.join(self.out, "index.html")).read()
+        cfg = json.load(open(os.path.join(site.HERE, "site.json")))
+        items = [cfg["highlight"]] + [i for s in cfg["sections"] for i in s["items"]]
+        for it in items:
+            href = f"{it['subject']}/{it['stamp']}/{it['doc'][:-3]}.html"
+            self.assertIn(href, idx)
+            self.assertTrue(os.path.exists(os.path.join(self.out, href)))
 
     def test_nothing_is_dropped_from_a_source_document(self):
         for r in site.runs():
