@@ -73,6 +73,7 @@ evidence — a pin and its candidates, with nothing anybody wrote.
 | | |
 | --- | --- |
 | **[Stretch 2 — case study](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size: the **per-repository commit census** for kanon's term, nine defects the run exposed, five things worth measuring next, and advice. **Not a report** — [`judgement.md`](history_analyzer/docs/judgement.md) forbids a report from saying what a subject should do next, which is why the advice lives beside one instead of inside it. Renders on GitHub, charts included. |
+| **[Snapshot history — Stretch 1 and Stretch 2](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/stretches.md)** | The two presidential terms compared at one pin — 439 commits against 221, and the eleven days of the first that carried none. |
 | [Stretch 2 — report](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/report.md) | The report for the same run. Ten sources, 1,355 commits, eleven assessments, `check` accepted. |
 | [anoieu — report](history_analyzer/runs/anoieu/2026-09-01/report.md) | The first report this tool produced, with its [evidence](history_analyzer/runs/anoieu/2026-09-01/). The worked example. |
 | [ecosystem — report](history_analyzer/runs/eunoia-ecosystem/2026-09-01/report.md) | The first ecosystem report. Five sources, 889 commits. |

@@ -39,9 +39,10 @@ TREE = "https://github.com/ajreynol/epikrisis/tree/main"
 
 # Prose that is a run's own output. Anything else in a run directory is evidence
 # and is linked as a file rather than rendered as a page.
-PROSE = ("case-study.md", "report.md", "note.md")
+PROSE = ("case-study.md", "stretches.md", "report.md", "note.md")
 
-TITLES = {"report.md": "Report", "case-study.md": "Case study", "note.md": "Note"}
+TITLES = {"report.md": "Report", "case-study.md": "Case study",
+          "stretches.md": "Snapshot history", "note.md": "Note"}
 
 
 # ------------------------------------------------------------------ markdown
@@ -61,7 +62,7 @@ REFUSE = [
 BLOCK = re.compile(r"^(#{1,3} |\||>|```|<|-{3,}$|\d+\. |[-*] )")
 
 RAW_OK = ("<picture>", "</picture>", "<source", "<img", "<details", "</details>",
-          "<summary", "</summary>")
+          "<summary", "</summary>", "<div", "</div>")
 
 
 def inline(s, rel):
@@ -150,7 +151,10 @@ def convert(text, where, rel):
             th = "".join(f"<th>{inline(c, rel)}</th>" for c in head)
             tb = "".join("<tr>" + "".join(f"<td>{inline(c, rel)}</td>" for c in r)
                          + "</tr>" for r in body)
-            out.append(f'<div class="tw"><table><thead><tr>{th}</tr></thead>'
+            # An empty header row means the table is a key/value block rather
+            # than data, and is laid out as one.
+            cls = "tw facts" if not "".join(head).strip() else "tw"
+            out.append(f'<div class="{cls}"><table><thead><tr>{th}</tr></thead>'
                        f"<tbody>{tb}</tbody></table></div>")
             i = j
         elif ln.startswith(">"):
@@ -205,59 +209,87 @@ def convert(text, where, rel):
 
 CSS = """
 :root{--paper:#fcfcfb;--surface:#f4f4f2;--surface2:#ebebe8;--ink:#15181d;
---ink2:#3e454f;--ink3:#6b737f;--rule:#d8d8d4;--derived:#2470B8;--hand:#A8721C;
+--ink2:#3e454f;--ink3:#6b737f;--rule:#d8d8d4;--rule2:#b9bab6;
+--derived:#2470B8;--derived-soft:#e2edf8;--hand:#A8721C;--hand-soft:#f6eddc;
 --warn:#8a5a12;--warnbg:#f6eddc;--note:#1d5a8a;--notebg:#e2edf8;
 --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
 --sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
 --paper:#12151a;--surface:#191d23;--surface2:#222730;--ink:#e7e9ec;--ink2:#b3b9c2;
---ink3:#848b96;--rule:#2c313a;--derived:#4694D8;--hand:#B5842B;
+--ink3:#848b96;--rule:#2c313a;--rule2:#3d434e;
+--derived:#4694D8;--derived-soft:#16283a;--hand:#B5842B;--hand-soft:#2c2415;
 --warn:#d8a24a;--warnbg:#2c2415;--note:#7ab3e0;--notebg:#16283a}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
 font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
-.wrap{max-width:860px;margin:0 auto;padding:0 24px 88px}
+.wrap{max-width:880px;margin:0 auto;padding:0 24px 96px}
 h1,h2,h3{font-family:var(--serif);font-weight:600;text-wrap:balance;
-line-height:1.16;letter-spacing:-.012em;margin:2.1em 0 .6em}
-h1{font-size:clamp(1.95rem,1.3rem+2vw,2.9rem);margin:1.2em 0 .5em}
-h2{font-size:1.5rem;padding-bottom:.28em;border-bottom:2px solid var(--ink)}
-h3{font-size:1.06rem;font-family:var(--sans)}
-p,ul,ol{margin:0 0 1.05em}
-a{color:var(--derived)}
-code{font-family:var(--mono);font-size:.87em;background:var(--surface2);
+line-height:1.14;letter-spacing:-.014em;margin:2.3em 0 .6em}
+h1{font-size:clamp(2rem,1.3rem+2.3vw,3.1rem);margin:.5em 0 .55em;line-height:1.06}
+h2{font-size:1.62rem;padding-bottom:.3em;border-bottom:2px solid var(--ink)}
+h3{font-size:1.05rem;font-family:var(--sans);font-weight:650;margin:2em 0 .45em}
+p,ul,ol{margin:0 0 1.1em}
+li{margin-bottom:.4em}
+a{color:var(--derived);text-underline-offset:2px}
+strong{font-weight:650;color:var(--ink)}
+code{font-family:var(--mono);font-size:.86em;background:var(--surface2);
 padding:.1em .34em;border-radius:3px}
-pre{background:var(--surface);border:1px solid var(--rule);border-radius:6px;
-padding:14px 16px;overflow-x:auto}
-pre code{background:none;padding:0;font-size:.84rem}
-.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:7px;
-background:var(--surface);margin:0 0 1.3em}
+pre{background:var(--surface);border:1px solid var(--rule);border-radius:7px;
+padding:14px 17px;overflow-x:auto;margin:0 0 1.3em}
+pre code{background:none;padding:0;font-size:.83rem;line-height:1.55}
+.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:8px;
+background:var(--surface);margin:0 0 1.4em}
 table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:520px}
-th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--rule);
+th,td{padding:10px 15px;text-align:left;border-bottom:1px solid var(--rule);
 vertical-align:top}
-thead th{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;
+thead th{font-family:var(--mono);font-size:.67rem;letter-spacing:.1em;
 text-transform:uppercase;color:var(--ink3);font-weight:500;
 background:var(--surface2);white-space:nowrap}
 tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface2)}
 td:not(:first-child){font-variant-numeric:tabular-nums}
-blockquote.q{margin:0 0 1.3em;padding:2px 20px;border-left:3px solid var(--rule);
+/* The facts block under the title: a two-column table with an empty header. */
+.facts table{min-width:0;font-size:.85rem}
+.facts thead{display:none}
+.facts td:first-child{font-family:var(--mono);font-size:.74rem;
+letter-spacing:.05em;color:var(--ink3);white-space:nowrap;width:1%}
+.facts td:not(:first-child){font-variant-numeric:normal}
+blockquote.q{margin:0 0 1.4em;padding:2px 20px;border-left:3px solid var(--rule);
 color:var(--ink2)}
-blockquote.alert{padding:15px 20px;border-radius:0 6px 6px 0}
+blockquote.alert{padding:16px 21px;border-radius:0 7px 7px 0}
 blockquote.important,blockquote.warning,blockquote.caution{
 border-left-color:var(--warn);background:var(--warnbg)}
 blockquote.note,blockquote.tip{border-left-color:var(--note);background:var(--notebg)}
 blockquote.q>*:last-child{margin-bottom:0}
-picture,img{display:block;max-width:100%;height:auto;margin:0 0 1.3em}
-hr{border:0;border-top:1px solid var(--rule);margin:2.4em 0}
+picture,img{display:block;max-width:100%;height:auto;margin:.4em 0 1.4em}
+hr{border:0;border-top:1px solid var(--rule);margin:2.6em 0}
+/* Stat tiles. GitHub strips the class and renders the content plainly, which is
+   the intended degradation: the same words, without the grid. */
+.stats{display:grid;gap:14px;margin:0 0 1.5em;
+grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.stat{border:1px solid var(--rule);border-left:3px solid var(--rule2);
+border-radius:6px;padding:15px 17px;background:var(--surface)}
+.stat.d{border-left-color:var(--derived)}
+.stat.h{border-left-color:var(--hand)}
+.stat b{display:block;font-family:var(--serif);font-size:2.1rem;line-height:1.04;
+letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-bottom:5px;
+font-weight:600}
+.stat span{display:block;font-size:.83rem;color:var(--ink2);line-height:1.42}
+.stat i{display:block;margin-top:9px;font-style:normal;font-family:var(--mono);
+font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
 .mast{padding:56px 0 0}
 .eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
 text-transform:uppercase;color:var(--ink3)}
-.crumb{margin-bottom:26px;font-size:.85rem;color:var(--ink3)}
-footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--rule);
+.crumb{margin:26px 0 0;font-family:var(--mono);font-size:.76rem;color:var(--ink3)}
+.crumb a{color:var(--ink3)}
+footer{margin-top:72px;padding-top:20px;border-top:1px solid var(--rule);
 font-family:var(--mono);font-size:.73rem;color:var(--ink3);line-height:1.7}
 :focus-visible{outline:2px solid var(--derived);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:640px){.wrap{padding:0 18px 72px}.mast{padding-top:36px}}
 """
+
 
 
 def page(title, body, crumb="", desc=""):

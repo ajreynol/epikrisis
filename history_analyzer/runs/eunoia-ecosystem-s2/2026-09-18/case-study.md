@@ -89,6 +89,13 @@ at the same commits `corpus.json` pins. Stretch 2 opened at kanon `7eb9973`,
 | aisthesis | 9 | 8 | 4% |
 | **total** | **1,355** | **221** | |
 
+<div class="stats">
+<div class="stat d"><b>1,355</b><span>commits across ten member repositories, 2026-03-03 to 2026-09-18</span><i>corpus.json</i></div>
+<div class="stat d"><b>52.5%</b><span>of the whole recorded history is <code>logos</code> alone — 711 commits</span><i>corpus.json</i></div>
+<div class="stat h"><b>221</b><span>commits in Stretch 2, the term that opened 2026-09-15 16:15:45 −05:00</span><i>hand-read</i></div>
+<div class="stat h"><b>38%</b><span>of them landed in <code>kanon</code>, the tree that governs the others</span><i>hand-read</i></div>
+</div>
+
 **Commits believed AI-generated: not measurable, by anybody, including this
 tool.** Disclosure is measurable and is reported beside the count every time it
 is asked for: five commits of 1,355 have ever carried an agent trailer, and

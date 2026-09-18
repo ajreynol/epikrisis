@@ -39,6 +39,11 @@ THEMES = {
 # checks against their own surface. They carry provenance and never rank:
 # `derived` is what the pipeline produced, `declared` is what somebody counted.
 
+# A three-panel figure at full panel width renders wider than any page that
+# carries it, and the browser scales the text down with it. Panels get narrower
+# as they get more numerous so the type stays the size it was designed at.
+WIDTHS = {1: 460, 2: 400, 3: 300}
+GAPS = {1: 60, 2: 60, 3: 34}
 PANEL_W, GAP, LEFT, ROW_H, TOP = 400, 60, 20, 25, 116
 LBL_W, VAL_W = 76, 40
 MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace"
@@ -86,6 +91,9 @@ def panel(x, rows, title, sub, colour, t, foot, emphasise):
 
 
 def render(mode, panels, heading, subheading, alt, n_rows):
+    global PANEL_W, GAP
+    PANEL_W = WIDTHS.get(len(panels), 260)
+    GAP = GAPS.get(len(panels), 30)
     t = THEMES[mode]
     w = LEFT * 2 + len(panels) * PANEL_W + (len(panels) - 1) * GAP
     h = TOP + n_rows * ROW_H + 50
@@ -116,52 +124,74 @@ def main():
     ids = [s["id"] for s in order]
     total = sum(s["commits"] for s in order)
 
-    panels = [dict(
-        rows=[(s["id"], s["commits"]) for s in order],
-        title="Whole history, to the pin",
-        sub=f"{total:,} commits · derived from corpus.json",
-        colour="derived", emphasise={ids[0]},
-        foot=f"max {order[0]['commits']:,} — {ids[0]} is "
-             f"{100*order[0]['commits']/total:.1f}% of all of it")]
-    alt = ("Commits per repository. Whole history: "
-           + ", ".join(f"{s['id']} {s['commits']}" for s in order)
-           + f" — {total:,} total.")
+    def corpus_panel():
+        return dict(
+            rows=[(s["id"], s["commits"]) for s in order],
+            title="Whole history, to the pin",
+            sub=f"{total:,} commits \u00b7 derived from corpus.json",
+            colour="derived", emphasise={ids[0]},
+            foot=f"max {order[0]['commits']:,} \u2014 {ids[0]} is "
+                 f"{100*order[0]['commits']/total:.1f}% of all of it"), \
+            ("Whole history: " + ", ".join(f"{s['id']} {s['commits']}"
+                                           for s in order) + f" \u2014 {total:,} total.")
 
+    def series_panel(ser):
+        if not ser.get("command"):
+            raise SystemExit(f"figures: series {ser['id']!r} states no command "
+                             "that produces it; a hand-read series without its "
+                             "derivation is not renderable here")
+        vals = ser["values"]
+        missing = [i for i in ids if i not in vals]
+        if missing:
+            raise SystemExit(f"figures: series {ser['id']!r} is missing "
+                             f"{', '.join(missing)}; a panel drawn over a "
+                             "different set than the pin is a chart nobody "
+                             "measured")
+        rows = [(i, vals[i]) for i in ids]
+        st = sum(v for _, v in rows)
+        top = max(rows, key=lambda r: r[1])
+        return dict(
+            rows=rows, title=ser["label"],
+            sub=f"{st:,} commits \u00b7 {ser.get('provenance', 'declared')}",
+            colour="declared",
+            emphasise={top[0]} | {i for i, v in rows if v == 0},
+            foot=f"max {top[1]:,} \u2014 hatched = zero in the window"), \
+            (f" {ser['label']}: " + ", ".join(f"{i} {v}" for i, v in rows)
+             + f" \u2014 {st:,} total.")
+
+    available = {"corpus": corpus_panel}
+    declared = []
     fp = os.path.join(rd, "figures.json")
     if os.path.exists(fp):
-        for ser in json.load(open(fp))["series"]:
-            if not ser.get("command"):
-                raise SystemExit(f"figures: series {ser['id']!r} states no "
-                                 "command that produces it; a hand-read series "
-                                 "without its derivation is not renderable here")
-            vals = ser["values"]
-            missing = [i for i in ids if i not in vals]
-            if missing:
-                raise SystemExit(f"figures: series {ser['id']!r} is missing "
-                                 f"{', '.join(missing)}; a panel drawn over a "
-                                 "different set than the pin is a chart nobody "
-                                 "measured")
-            rows = [(i, vals[i]) for i in ids]
-            st = sum(v for _, v in rows)
-            top = max(rows, key=lambda r: r[1])
-            panels.append(dict(
-                rows=rows, title=ser["label"],
-                sub=f"{st:,} commits · {ser.get('provenance','declared')}"
-                    f" · {ser['command']}",
-                colour="declared",
-                emphasise={top[0]} | {i for i, v in rows if v == 0},
-                foot=f"max {top[1]:,} — hatched = zero in the window"))
-            alt += (f" {ser['label']}: "
-                    + ", ".join(f"{i} {v}" for i, v in rows)
-                    + f" — {st:,} total.")
+        spec = json.load(open(fp))
+        for ser in spec.get("series", []):
+            available[ser["id"]] = (lambda s=ser: series_panel(s))
+            declared.append(ser["id"])
+        # Without an explicit list there is one figure holding everything, which
+        # is what the first version of this did and what the existing runs expect.
+        figures = spec.get("figures") or [
+            {"name": "census", "panels": ["corpus"] + declared}]
+    else:
+        figures = [{"name": "census", "panels": ["corpus"]}]
 
-    heading = f"Commits per repository, {corpus['subject']}"
     sub = (f"{len(ids)} sources at the {corpus['pinned']} pin. Same order in "
            f"every panel; each panel has its own scale.")
-    for mode in ("light", "dark"):
-        out = os.path.join(rd, f"census-{mode}.svg")
-        open(out, "w").write(render(mode, panels, heading, sub, alt, len(ids)))
-        print(f"  wrote {out}")
+    for fig in figures:
+        unknown = [p for p in fig["panels"] if p not in available]
+        if unknown:
+            raise SystemExit(f"figures: figure {fig['name']!r} names panel(s) "
+                             f"{', '.join(unknown)}, which nothing declares")
+        panels, alt = [], "Commits per repository."
+        for name in fig["panels"]:
+            panel_, a = available[name]()
+            panels.append(panel_)
+            alt += " " + a
+        heading = fig.get("heading",
+                          f"Commits per repository, {corpus['subject']}")
+        for mode in ("light", "dark"):
+            out = os.path.join(rd, f"{fig['name']}-{mode}.svg")
+            open(out, "w").write(render(mode, panels, heading, sub, alt, len(ids)))
+            print(f"  wrote {out}")
 
 
 if __name__ == "__main__":

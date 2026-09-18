@@ -1,17 +1,81 @@
 {
-  "_why": "Panels this pipeline cannot derive. The analyzer has no window and reports over whole histories up to the pin, so a stretch-scoped count is read by hand; it is declared here with the command that produces it so a chart drawn from it is re-derivable, and is coloured and labelled as declared rather than derived wherever it is drawn.",
+  "_why": "Panels this pipeline cannot derive. The analyzer has no window and reports over whole histories up to the pin, so every stretch-scoped count is read by hand; each is declared with the command that produces it, counted at the commit corpus.json pins for that source, and drawn as declared rather than derived wherever it appears.",
   "series": [
     {
-      "id": "stretch2",
-      "label": "Stretch 2, the current term",
+      "id": "stretch1",
+      "label": "Stretch 1, anoieu's term",
       "provenance": "hand-read",
-      "command": "git rev-list --count --since=2026-09-15T16:15:45-05:00 HEAD",
-      "note": "Stretch 2 opened at kanon 7eb9973, the commit in which the register first read `status: president` against kanon. Counted in each checkout at the commit corpus.json pins for it.",
+      "command": "git rev-list --count --since=2026-08-29 --until=2026-09-15T16:15:45-05:00 <pin>",
+      "note": "2026-08-29 through 2026-09-15 16:15:45 -05:00, the whole term as anoieu's own history.md dates it: eighteen calendar days, ended by the manual handoff to kanon.",
       "values": {
-        "logos": 0, "anoieu": 20, "kanon": 85, "eudaimonia": 26,
-        "dokimasia": 9, "koine": 28, "tachyon": 25, "epikrisis": 9,
-        "eschaton": 11, "aisthesis": 8
+        "logos": 15,
+        "anoieu": 241,
+        "kanon": 20,
+        "eudaimonia": 71,
+        "dokimasia": 43,
+        "koine": 13,
+        "tachyon": 12,
+        "epikrisis": 23,
+        "eschaton": 0,
+        "aisthesis": 1
       }
+    },
+    {
+      "id": "stretch1-published",
+      "label": "Stretch 1, as its own record counts it",
+      "provenance": "hand-read",
+      "command": "git rev-list --count --since=2026-08-29 --until=2026-09-03 <pin>",
+      "note": "2026-08-29 to 2026-09-02, the five-day window anoieu's history.md publishes under `The commit census, this stretch`. Five of the term's eighteen days.",
+      "values": {
+        "logos": 13,
+        "anoieu": 217,
+        "kanon": 14,
+        "eudaimonia": 70,
+        "dokimasia": 43,
+        "koine": 13,
+        "tachyon": 0,
+        "epikrisis": 20,
+        "eschaton": 0,
+        "aisthesis": 0
+      }
+    },
+    {
+      "id": "stretch2",
+      "label": "Stretch 2, kanon's term",
+      "provenance": "hand-read",
+      "command": "git rev-list --count --since=2026-09-15T16:15:45-05:00 <pin>",
+      "note": "Stretch 2 opened at kanon 7eb9973, the commit in which the register first read `status: president` against kanon. Unfinished at the pin.",
+      "values": {
+        "logos": 0,
+        "anoieu": 20,
+        "kanon": 85,
+        "eudaimonia": 26,
+        "dokimasia": 9,
+        "koine": 28,
+        "tachyon": 25,
+        "epikrisis": 9,
+        "eschaton": 11,
+        "aisthesis": 8
+      }
+    }
+  ],
+  "figures": [
+    {
+      "name": "census",
+      "heading": "Commits per repository, Eunoia ecosystem",
+      "panels": [
+        "corpus",
+        "stretch2"
+      ]
+    },
+    {
+      "name": "stretches",
+      "heading": "Two stretches, and the window one of them published",
+      "panels": [
+        "stretch1",
+        "stretch1-published",
+        "stretch2"
+      ]
     }
   ]
 }
