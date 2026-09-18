@@ -119,12 +119,47 @@ def render(mode, panels, heading, subheading, alt, n_rows):
     return "\n".join(o) + "\n"
 
 
-def main():
-    if len(sys.argv) != 2:
-        raise SystemExit("usage: figures <run-dir>")
-    rd = sys.argv[1]
-    corpus = json.load(open(os.path.join(rd, "corpus.json")))
-    order = sorted(corpus["sources"], key=lambda s: -s["commits"])
+def figure_data(corpus, spec, fig):
+    """The table, totals and chart must count the same repositories and pins."""
+    sources = list(corpus["sources"])
+    series = {s["id"]: dict(s, values=dict(s["values"]))
+              for s in spec.get("series", [])}
+    for name in fig["panels"]:
+        if name != "corpus" and name not in series:
+            raise SystemExit(f"figures: unknown panel {name}")
+    if fig.get("include_tracked"):
+        context = {s["id"]: s for s in spec.get("context", {}).get("repositories", [])}
+        tracked = corpus.get("commit_tracking", {}).get("sources", [])
+        if not tracked or set(context) - {s["id"] for s in tracked}:
+            raise SystemExit("figures: tracked repository pins are missing")
+        for src in tracked:
+            if any(s["id"] == src["id"] for s in sources):
+                raise SystemExit(f"figures: duplicate repository {src['id']}")
+            for panel in fig["panels"]:
+                if panel == "corpus":
+                    continue
+                counts = context.get(src["id"], {})
+                key = panel.replace("-", "_")
+                if (counts.get("pin"), counts.get("ref")) != (src["commit"], src["ref"]):
+                    raise SystemExit(f"figures: {src['id']} window counts do not match its pin")
+                if key not in counts:
+                    raise SystemExit(f"figures: {src['id']} has no count for {panel}")
+                series[panel]["values"][src["id"]] = counts[key]
+            sources.append(src)
+    order = sorted(sources, key=lambda s: -s["commits"])
+    for panel in fig["panels"]:
+        if panel == "corpus":
+            continue
+        if panel not in series:
+            raise SystemExit(f"figures: unknown panel {panel}")
+        missing = [s["id"] for s in order if s["id"] not in series[panel]["values"]]
+        if missing:
+            raise SystemExit(f"figures: {panel} missing counts for {', '.join(missing)}")
+    return order, series
+
+
+def build_figure(corpus, spec, fig):
+    order, series = figure_data(corpus, spec, fig)
     ids = [s["id"] for s in order]
     total = sum(s["commits"] for s in order)
 
@@ -164,37 +199,34 @@ def main():
              + f" \u2014 {st:,} total.")
 
     available = {"corpus": corpus_panel}
-    declared = []
-    fp = os.path.join(rd, "figures.json")
-    if os.path.exists(fp):
-        spec = json.load(open(fp))
-        for ser in spec.get("series", []):
-            available[ser["id"]] = (lambda s=ser: series_panel(s))
-            declared.append(ser["id"])
-        # Without an explicit list there is one figure holding everything, which
-        # is what the first version of this did and what the existing runs expect.
-        figures = spec.get("figures") or [
-            {"name": "census", "panels": ["corpus"] + declared}]
-    else:
-        figures = [{"name": "census", "panels": ["corpus"]}]
+    for ser in series.values():
+        available[ser["id"]] = (lambda s=ser: series_panel(s))
+    sub = (f"{len(ids)} repositories at the {corpus['pinned']} pin. "
+           + ("cvc5 and ethos: main. " if fig.get("include_tracked") else "")
+           + "Same row order; each panel has its own scale.")
+    panels, alt = [], "Commits per repository."
+    for name in fig["panels"]:
+        panel_, a = available[name]()
+        panels.append(panel_)
+        alt += " " + a
+    return panels, sub, alt, len(ids)
 
-    sub = (f"{len(ids)} sources at the {corpus['pinned']} pin. Same order in "
-           f"every panel; each panel has its own scale.")
+
+def main():
+    if len(sys.argv) != 2:
+        raise SystemExit("usage: figures <run-dir>")
+    rd = sys.argv[1]
+    corpus = json.load(open(os.path.join(rd, "corpus.json")))
+    fp = os.path.join(rd, "figures.json")
+    spec = json.load(open(fp)) if os.path.exists(fp) else {}
+    figures = spec.get("figures") or [
+        {"name": "census", "panels": ["corpus"] + [s["id"] for s in spec.get("series", [])]}]
     for fig in figures:
-        unknown = [p for p in fig["panels"] if p not in available]
-        if unknown:
-            raise SystemExit(f"figures: figure {fig['name']!r} names panel(s) "
-                             f"{', '.join(unknown)}, which nothing declares")
-        panels, alt = [], "Commits per repository."
-        for name in fig["panels"]:
-            panel_, a = available[name]()
-            panels.append(panel_)
-            alt += " " + a
-        heading = fig.get("heading",
-                          f"Commits per repository, {corpus['subject']}")
+        panels, sub, alt, n_rows = build_figure(corpus, spec, fig)
+        heading = fig.get("heading", f"Commits per repository, {corpus['subject']}")
         for mode in ("light", "dark"):
             out = os.path.join(rd, f"{fig['name']}-{mode}.svg")
-            open(out, "w").write(render(mode, panels, heading, sub, alt, len(ids)))
+            open(out, "w").write(render(mode, panels, heading, sub, alt, n_rows))
             print(f"  wrote {out}")
 
 

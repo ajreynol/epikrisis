@@ -24,6 +24,8 @@ Stdlib only, no network. The output directory is a build artifact and is not
 committed; CI builds it and GitHub Pages serves it.
 """
 import html
+import importlib.machinery
+import importlib.util
 import json
 import os
 import re
@@ -31,6 +33,10 @@ import shutil
 import sys
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_loader = importlib.machinery.SourceFileLoader("epikrisis_figures", os.path.join(HERE, "bin", "figures"))
+_spec = importlib.util.spec_from_loader(_loader.name, _loader)
+figures = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(figures)
 RUNS = os.path.join(HERE, "runs")
 REPO = "https://github.com/ajreynol/epikrisis/blob/main"
 # GitHub serves a directory under /tree/ and redirects /blob/ to it. Emitting
@@ -405,6 +411,30 @@ def tracked_commits(c, detail=False):
             '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div></aside>')
 
 
+def overview(corpus, spec, fig):
+    sources, series = figures.figure_data(corpus, spec, fig)
+    windows = [p for p in fig["panels"] if p != "corpus"]
+    totals = {"repositories": len(sources), "all_time": sum(s["commits"] for s in sources)}
+    totals.update({p: sum(series[p]["values"][s["id"]] for s in sources) for p in windows})
+    tracked = {s["id"] for s in corpus.get("commit_tracking", {}).get("sources", [])}
+    rows = []
+    for src in sources:
+        label = src["id"] + (f" ({src['ref']})" if src["id"] in tracked else "")
+        url = src["origin"].rstrip("/") + "/commit/" + src["commit"]
+        counts = [src["commits"]] + [series[p]["values"][src["id"]] for p in windows]
+        rows.append(f'<tr><td><a href="{html.escape(url)}">{html.escape(label)}</a></td>'
+                    + "".join(f"<td>{n:,}</td>" for n in counts) + "</tr>")
+    table = ('<div class="tw"><table id="commit-overview"><thead><tr>'
+             '<th>repository</th><th>whole history</th>'
+             + "".join(f'<th>{html.escape(series[p]["label"])}</th>' for p in windows)
+             + '</tr></thead><tbody>' + "".join(rows) + '</tbody><tfoot><tr>'
+             '<th>Total, all repositories shown</th>'
+             + "".join(f'<td><strong>{totals[p]:,}</strong></td>'
+                       for p in ["all_time"] + windows)
+             + '</tr></tfoot></table></div>')
+    return table, totals
+
+
 def main():
     if len(sys.argv) != 2:
         raise SystemExit("usage: site <out-dir>")
@@ -473,24 +503,35 @@ def main():
     if hl:
         href = doc_href(hl)
         base = "%s/%s" % (hl["subject"], hl["stamp"])
-        tiles = "".join(
-            '<div class="stat %s"><b>%s</b><span>%s</span></div>'
-            % (esc(t.get("cls", "h")), esc(t["n"]), inline(t["cap"], base))
-            for t in hl.get("stats", []))
-        fig = ""
+        run = by[(hl["subject"], hl["stamp"])]
+        table, totals, fig = "", {}, ""
         if hl.get("figure"):
+            spec = json.load(open(os.path.join(run["dir"], "figures.json")))
+            definition = next(f for f in spec["figures"] if f["name"] == hl["figure"])
+            table, totals = overview(run["corpus"], spec, definition)
+            panels, sub, alt, count = figures.build_figure(run["corpus"], spec, definition)
+            # Rebuild the homepage chart from the same data as its table and tiles.
+            for mode in ("light", "dark"):
+                target = os.path.join(out, base, f"{hl['figure']}-{mode}.svg")
+                open(target, "w").write(figures.render(
+                    mode, panels, definition["heading"], sub, alt, count))
             fig = ('<picture><source media="(prefers-color-scheme: dark)" '
                    'srcset="%s/%s-dark.svg">'
-                   '<img alt="Commits per repository across the two stretches, '
-                   'three panels sharing a row order." src="%s/%s-light.svg">'
-                   '</picture>' % (base, hl["figure"], base, hl["figure"]))
+                   '<img alt="%s" src="%s/%s-light.svg">'
+                   '</picture>' % (base, hl["figure"], esc(alt), base, hl["figure"]))
+        tiles = "".join(
+            '<div class="stat %s"><b>%s</b><span>%s</span></div>'
+            % (esc(t.get("cls", "h")),
+               f'{totals[t["measure"]]:,}' if "measure" in t else esc(t["n"]),
+               inline(t["cap"], base))
+            for t in hl.get("stats", []))
         parts.append(
             '<section class="hero"><div class="eyebrow">%s</div>'
             '<h2><a href="%s">%s</a></h2><div class="blurb">%s</div>'
-            '<div class="stats">%s</div>%s'
+            '<div class="stats">%s</div>%s%s'
             '<p class="cta"><a href="%s">%s &rarr;</a></p></section>'
             % (esc(hl.get("eyebrow", "")), href, esc(hl.get("title", "")),
-               convert(hl.get("blurb", ""), "site.json", base), tiles, fig,
+               convert(hl.get("blurb", ""), "site.json", base), tiles, fig, table,
                href, esc(hl.get("cta", "Read it"))))
 
     for sec in cfg.get("sections", []):

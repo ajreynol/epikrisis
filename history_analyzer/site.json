@@ -2,35 +2,35 @@
   "_why": "The editorial copy for the published index, kept beside the runs rather than inside bin/site, so what the front page says is a file somebody edits and not a string in a program. Every figure it shows is still read from a run's own evidence.",
   "title": "epikrisis \u2014 how the Eunoia ecosystem is developing",
   "tagline": "Evidence and analysis for the repositories of the Eunoia ecosystem",
-  "lede": "Epikrisis reads the git histories of the **Eunoia ecosystem** \u2014 a group of repositories built around one proof calculus \u2014 and asks what actually happened: what was built, what stalled, and where a project's own account of itself differs from its tree. Every figure below is derived from commits recorded in advance, so anybody with the checkouts can reproduce it.",
+  "lede": "Epikrisis reads the git histories of the **Eunoia ecosystem** \u2014 a group of repositories built around one proof calculus \u2014 and asks what actually happened: what was built, what stalled, and where a project's own account of itself differs from its tree. The commit census includes **cvc5 and ethos on main**, with counts and pins recorded so anybody with the checkouts can reproduce them.",
   "highlight": {
     "subject": "eunoia-ecosystem-s2",
     "stamp": "2026-09-18",
     "doc": "stretches.md",
     "eyebrow": "The current picture",
     "title": "Two presidencies, in commits",
-    "figure": "stretches",
-    "blurb": "One repository at a time holds an office called the presidency, sets the direction of the shared work for a stretch, and hands it on. **Two stretches have run.** Stretch 2 looks more than twice as busy as Stretch 1 \u2014 and it is not: take out the eleven days Stretch 1 carried no commit at all, and the two terms run at the same pace. The only census anybody published of Stretch 1 covers five of its eighteen days, and forty-nine commits fall outside it.",
+    "figure": "overview",
+    "blurb": "One repository at a time holds the presidency and sets the direction of shared work for a stretch. **Two stretches have run.** The charts and table below count the ten member repositories together with **cvc5 and ethos on main**. Stretch 1 covers August 29 to the September 15 handoff; Stretch 2 runs from that handoff to the September 18 snapshot. Whole-history counts include all commits reachable from each repository's pin; the stretch columns count commits within those windows.",
     "stats": [
       {
-        "n": "439",
-        "cap": "commits in Stretch 1 \u2014 anoieu's term, eighteen days",
+        "measure": "stretch1",
+        "cap": "commits in Stretch 1 \u2014 all twelve repositories, eighteen days",
         "cls": "s1"
       },
       {
-        "n": "221",
-        "cap": "commits in Stretch 2 so far \u2014 kanon's term, four days",
+        "measure": "stretch2",
+        "cap": "commits in Stretch 2 so far \u2014 all twelve repositories, four days",
         "cls": "s2"
       },
       {
-        "n": "11",
-        "cap": "of Stretch 1's eighteen days carried no commit anywhere",
-        "cls": "s1"
+        "measure": "all_time",
+        "cap": "commits across the whole histories of all repositories shown",
+        "cls": "d"
       },
       {
-        "n": "0",
-        "cap": "commits to logos in Stretch 2 \u2014 52.5% of all history, and stopped",
-        "cls": "s2"
+        "measure": "repositories",
+        "cap": "repositories tracked, including cvc5 and ethos on main",
+        "cls": "d"
       }
     ],
     "cta": "Read the full comparison"

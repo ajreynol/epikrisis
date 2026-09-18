@@ -143,7 +143,9 @@ to existing checkouts work). `pin` records their full commit IDs and whole-histo
 counts in `corpus.json` under `commit_tracking`, independently of the checked-out
 branch. Missing checkouts, missing refs and shallow histories stop the run.
 The public runs listing and every ecosystem report display these counts beside
-the assessed corpus totals. The six existing ecosystem runs have dated amendments
+the assessed corpus totals. The homepage includes both repositories in its table,
+stretch charts and summary totals, all rendered from the same pinned evidence.
+The six existing ecosystem runs have dated amendments
 reconstructing these histories at their latest original source-commit timestamps.
 
 An existing report can be checked directly:

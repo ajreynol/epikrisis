@@ -14,6 +14,7 @@ import os
 import re
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -123,6 +124,27 @@ class Site(unittest.TestCase):
                         self.assertIn(f'{s["commits"]:,}', page)
                         self.assertIn(s["commit"], page)
 
+    def test_homepage_table_tiles_and_both_chart_themes_include_tracked_repositories(self):
+        idx = open(os.path.join(self.out, "index.html")).read()
+        table = re.search(r'<table id="commit-overview">(.*?)</table>', idx, re.S).group(1)
+        for name, counts in [("cvc5", ["14,093", "22", "7"]),
+                             ("ethos", ["1,060", "5", "0"])]:
+            row = re.search(rf'{name} \(main\)</a></td>(.*?)</tr>', table, re.S).group(1)
+            self.assertEqual(re.findall(r'<td>(.*?)</td>', row), counts)
+        for total in ("466", "228", "16,508"):
+            self.assertIn(f"<b>{total}</b>", idx)
+            self.assertIn(f"<strong>{total}</strong>", table)
+        for mode in ("light", "dark"):
+            p = os.path.join(self.out, "eunoia-ecosystem-s2/2026-09-18", f"overview-{mode}.svg")
+            svg = ET.parse(p).getroot()
+            labels = [el.text for el in svg.iter("{http://www.w3.org/2000/svg}text")]
+            self.assertEqual(labels.count("cvc5"), 2)
+            self.assertEqual(labels.count("ethos"), 2)
+            self.assertIn("cvc5 22", svg.attrib["aria-label"])
+            self.assertIn("cvc5 7", svg.attrib["aria-label"])
+            self.assertIn("ethos 5", svg.attrib["aria-label"])
+            self.assertIn("ethos 0", svg.attrib["aria-label"])
+
     def test_nothing_is_dropped_from_a_source_document(self):
         for r in site.runs():
             for f in r["prose"]:
@@ -161,6 +183,38 @@ class Site(unittest.TestCase):
         site.main.__globals__["sys"].argv = ["site", os.path.join(site.RUNS, "x")]
         with self.assertRaises(SystemExit):
             site.main()
+
+
+class OverviewData(unittest.TestCase):
+    def setUp(self):
+        rd = os.path.join(ROOT, "runs/eunoia-ecosystem-s2/2026-09-18")
+        self.corpus = json.load(open(os.path.join(rd, "corpus.json")))
+        self.spec = json.load(open(os.path.join(rd, "figures.json")))
+        self.fig = next(f for f in self.spec["figures"] if f["name"] == "overview")
+
+    def test_new_window_counts_update_table_totals_and_chart_together(self):
+        context = next(s for s in self.spec["context"]["repositories"] if s["id"] == "cvc5")
+        context["stretch2"] = 9
+        _, totals = site.overview(self.corpus, self.spec, self.fig)
+        panels, _, _, _ = site.figures.build_figure(self.corpus, self.spec, self.fig)
+        self.assertEqual(totals["stretch2"], 230)
+        self.assertIn(("cvc5", 9), panels[1]["rows"])
+        self.assertIn("230 commits", panels[1]["sub"])
+
+    def test_stale_window_pin_fails_instead_of_reusing_old_counts(self):
+        self.corpus["commit_tracking"]["sources"][0]["commit"] = "0" * 40
+        with self.assertRaisesRegex(SystemExit, "do not match its pin"):
+            site.overview(self.corpus, self.spec, self.fig)
+
+    def test_missing_tracked_history_fails_instead_of_dropping_rows(self):
+        del self.corpus["commit_tracking"]
+        with self.assertRaisesRegex(SystemExit, "pins are missing"):
+            site.overview(self.corpus, self.spec, self.fig)
+
+    def test_missing_window_count_fails_instead_of_becoming_zero(self):
+        del self.spec["context"]["repositories"][0]["stretch2"]
+        with self.assertRaisesRegex(SystemExit, "has no count"):
+            site.overview(self.corpus, self.spec, self.fig)
 
 
 if __name__ == "__main__":

@@ -78,6 +78,15 @@
         "stretch1",
         "stretch2"
       ]
+    },
+    {
+      "name": "overview",
+      "heading": "Commits across all twelve repositories",
+      "panels": [
+        "stretch1",
+        "stretch2"
+      ],
+      "include_tracked": true
     }
   ],
   "context": {
