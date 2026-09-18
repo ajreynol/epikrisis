@@ -1,5 +1,8 @@
 # Note — not a report
 
+> [!NOTE]
+> **Commit-tracking amendment, 2026-09-18.** cvc5 `main`: **14,072** commits; ethos `main`: **1,058**. These whole-history counts are reconstructed at `2026-09-02T09:25:07-05:00`, the latest original source-commit time; the original wall-clock pin time was not recorded. Full pins and the reconstruction command are in [`corpus.json`](corpus.json), under `commit_tracking`. The assessments and their totals below retain their original source scope.
+
 **Stages 1–2 only.** No claims were extracted, no delta was computed, no
 assessment was written, and `check` has not been run over anything here. This
 file exists because the evidence bears on a figure somebody else has already

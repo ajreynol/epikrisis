@@ -29,6 +29,7 @@ import sys
 # Every other footing -- candidate, associate, outsider, foundation, child --
 # is outside the member set, and `child` is never a checkout of its own.
 UNDER_POLICY = {"member", "president"}
+TRACKED = ("cvc5", "ethos")
 
 
 def main():
@@ -54,14 +55,14 @@ def main():
                      "ecosystem."),
         },
         "sources": [{"id": n, "origin": reg[n].get("url", "")} for n in members],
+        "tracked_sources": [{"id": n, "origin": reg[n]["url"], "ref": "main"}
+                            for n in TRACKED],
         "exclude": ["deps/", "checkers/", ".lake/"],
         "not_in_corpus": [
-            ("ethos, which holds the proof checker and the compiler, is not read "
-             "here: its footing is candidate rather than member, so it is outside "
-             "the member set as well as outside this corpus. The effect is that "
-             "the ecosystem's history as this run sees it is missing one of the "
-             "two trees holding its executable artifacts, and ethos is the tree "
-             "that has disclosed agent co-authorship since 2026-05-11."),
+            ("cvc5 and ethos have commit counts and main-branch pins in "
+             "commit_tracking. They are outside the assessed member corpus; "
+             "events, claims and assessments do not cover them. Ethos compiler "
+             "work on ethosEoc3 is outside the tracked main history."),
             ("child projects are not separate sources. Each is read inside its "
              "parent's tree at the parent's pin, so a child that moved between "
              "parents appears here as a directory arriving and a directory "

@@ -374,6 +374,37 @@ def runs():
     return found
 
 
+def tracked_commits(c, detail=False):
+    """Render the counts kept alongside (not added to) the assessed corpus."""
+    tracking = c.get("commit_tracking")
+    if not tracking:
+        return ""
+    rows = []
+    for s in tracking["sources"]:
+        label = html.escape(f"{s['id']} ({s['ref']})")
+        url = html.escape(s["origin"].rstrip("/") + "/commit/" + s["commit"])
+        pin = f'<a href="{url}"><code>{s["commit"][:12]}</code></a>'
+        if detail:
+            rows.append(f"<tr><td>{label}</td><td>{s['commits']:,}</td>"
+                        f"<td>{pin}</td></tr>")
+        else:
+            rows.append(f"{label}: <strong>{s['commits']:,}</strong> ({pin})")
+    if not detail:
+        return "<br>".join(rows)
+    method = html.escape(tracking["method"])
+    cutoff = (f" Cutoff: <code>{html.escape(tracking['cutoff'])}</code>. "
+              "This reconstructs the history at the latest source-commit time; "
+              "the original wall-clock pin time was not recorded."
+              if tracking.get("cutoff") else "")
+    return ('<aside><h2 id="tracked-commits">cvc5 and Ethos commit tracking</h2>'
+            '<p>Whole-history counts on the named branches, with their commit '
+            'pins. These supplement the assessed corpus; its source and commit '
+            'totals above retain their original scope.</p>'
+            f'<p>{method}.{cutoff}</p><div class="tw"><table><thead><tr>'
+            '<th>repository (branch)</th><th>commits</th><th>pin</th>'
+            '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div></aside>')
+
+
 def main():
     if len(sys.argv) != 2:
         raise SystemExit("usage: site <out-dir>")
@@ -396,7 +427,8 @@ def main():
             src = os.path.join(r["dir"], f)
             crumb = (f'<div class="crumb"><a href="../../index.html">All runs</a> '
                      f'&nbsp;/&nbsp; <code>{html.escape(rel)}</code></div>')
-            body = convert(open(src).read(), os.path.join(rel, f), rel)
+            body = ('<article>' + convert(open(src).read(), os.path.join(rel, f), rel)
+                    + '</article>' + tracked_commits(c, detail=True))
             name = f[:-3] + ".html"
             open(os.path.join(dst, name), "w").write(
                 page(f"{TITLES[f]} — {r['subject']} {r['stamp']}", body, crumb,
@@ -412,6 +444,7 @@ def main():
             f"<tr><td><code>{html.escape(r['subject'])}</code></td>"
             f"<td><code>{html.escape(r['stamp'])}</code></td>"
             f"<td>{len(c['sources'])}</td><td>{n:,}</td>"
+            f"<td>{tracked_commits(c) or '&mdash;'}</td>"
             f"<td>{' &middot; '.join(links) if links else '&mdash;'} "
             f"&middot; {ev}</td></tr>")
 
@@ -498,9 +531,15 @@ def main():
     listing = ('<h1>Every run</h1><p class="lede">One row per pinned corpus. '
                'Sources and commits are read from each run’s own '
                '<code>corpus.json</code>; a run with no prose reached the '
-               'evidence stages and was never written up. Newest first.</p>'
+               'evidence stages and was never written up. cvc5 and Ethos '
+               'main-branch counts supplement ecosystem runs and are shown '
+               'separately from the assessed corpus totals. Historical counts '
+               'are reconstructed at the latest source-commit timestamp in '
+               'each run; the cutoff and full pins are in its manifest. '
+               'Newest first.</p>'
                '<div class="tw"><table><thead><tr><th>subject</th><th>pinned</th>'
-               '<th>sources</th><th>commits</th><th>what there is to read</th>'
+               '<th>assessed sources</th><th>assessed commits</th>'
+               '<th>tracked commits</th><th>what there is to read</th>'
                '</tr></thead><tbody>%s</tbody></table></div>' % "".join(rows))
     open(os.path.join(out, "runs.html"), "w").write(
         page("Every run — epikrisis", listing,

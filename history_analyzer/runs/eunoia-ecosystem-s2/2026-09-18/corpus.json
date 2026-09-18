@@ -1,4 +1,38 @@
 {
+  "commit_tracking": {
+    "count": "git rev-list --count <commit>",
+    "cutoff": "2026-09-18T06:13:47-05:00",
+    "cutoff_basis": {
+      "commit": "adc647a34f6b31e6af130b4258dbb043a985dbdc",
+      "field": "committer timestamp of latest original source pin",
+      "source": "kanon"
+    },
+    "method": "Reconstructed from main history on 2026-09-18",
+    "recorded": "2026-09-18",
+    "selection": "git rev-list --first-parent --max-count=1 --before=<cutoff> <reconstructed_from>",
+    "sources": [
+      {
+        "commit": "a07d51307598ec718af427c4fb97645d2013ebb8",
+        "commits": 14093,
+        "first_commit": "2009-09-26",
+        "id": "cvc5",
+        "last_commit": "2026-09-17",
+        "origin": "https://github.com/cvc5/cvc5",
+        "reconstructed_from": "a07d51307598ec718af427c4fb97645d2013ebb8",
+        "ref": "main"
+      },
+      {
+        "commit": "8dc85c4db8d6cc612f02dc3bb627331732605eff",
+        "commits": 1060,
+        "first_commit": "2023-07-18",
+        "id": "ethos",
+        "last_commit": "2026-09-11",
+        "origin": "https://github.com/cvc5/ethos",
+        "reconstructed_from": "8dc85c4db8d6cc612f02dc3bb627331732605eff",
+        "ref": "main"
+      }
+    ]
+  },
   "date_field": "committer date, --date=short, as git reports it",
   "detectors_implemented": [
     "ai-attribution",

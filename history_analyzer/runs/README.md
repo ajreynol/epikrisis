@@ -18,6 +18,14 @@ twelve folders to find the four with something to read is the cost it removes.
 
 ## Every run
 
+**Commit-tracking amendment, 2026-09-18.** All six ecosystem runs now record
+cvc5 and ethos on `main` in `corpus.json` under `commit_tracking`. Each count is
+reconstructed at the latest original source-commit timestamp, with its cutoff,
+selection command and full pin recorded. The original pin time is unknown.
+The public listing and report pages show these supplemental counts separately;
+the assessed-source totals in the table below retain their original scope.
+Future ecosystem pins collect both automatically.
+
 Each row is derived from the run's own `corpus.json` and file list, not from
 memory. `stages` is how far the pipeline was taken: **1–2** is a pin and its
 candidates, **1–4** adds the declared record and the delta, **1–6** means a

@@ -81,33 +81,29 @@
     }
   ],
   "context": {
-    "_why": "Two repositories this ecosystem is built around and does not govern. They are counted here because a sentence about what happened is wrong without them, and they are kept out of the corpus because a run over somebody else's tree would be a verdict nobody asked for. Nothing in any report assesses them.",
+    "_why": "Main-branch commit counts for cvc5 and ethos supplement the assessed corpus. Whole-history counts and full pins are also in corpus.json under commit_tracking, which pin now collects for every ecosystem run. Window counts below remain hand-read at those same pins.",
     "repositories": [
       {
         "id": "ethos",
         "what": "the proof checker, and the home of the Eunoia manual",
         "footing": "candidate \u2014 the policy is addressed to it and it has not joined",
-        "pin": "17356669",
-        "ref": "ethosEoc3",
+        "pin": "8dc85c4db8d6cc612f02dc3bb627331732605eff",
+        "ref": "main",
         "command": "git rev-list --count --since=<window> <pin>",
-        "note": "counted on the ethosEoc3 branch, which is where the compiler child project's work is. Its main branch gives very different figures and both are legitimate readings; see the note in stretches.md.",
-        "all_time": 2411,
-        "stretch1": 36,
-        "stretch1_published": 34,
-        "stretch2": 6,
-        "main_ref": "8dc85c4d",
-        "main_stretch1": 5,
-        "main_stretch1_published": 3,
-        "main_stretch2": 0
+        "note": "Tracks main only. Compiler work on ethosEoc3 is outside this history.",
+        "all_time": 1060,
+        "stretch1": 5,
+        "stretch1_published": 3,
+        "stretch2": 0
       },
       {
         "id": "cvc5",
         "what": "the SMT solver, and the owner of the calculus",
         "footing": "foundation \u2014 the arrangement is downstream of it, and asks it for nothing",
-        "pin": "a07d513075",
+        "pin": "a07d51307598ec718af427c4fb97645d2013ebb8",
         "ref": "main",
         "command": "git rev-list --count --since=<window> <pin>",
-        "note": "not resolved by kanon's scripts/repos.local, which records no checkout for it; read from a local clone at the pin above.",
+        "note": "Tracks main; provide a cvc5 checkout under --from, alongside the member repositories.",
         "all_time": 14093,
         "stretch1": 22,
         "stretch1_published": 10,

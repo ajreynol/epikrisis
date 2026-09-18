@@ -1,5 +1,8 @@
 # Two presidencies, in commits
 
+> [!NOTE]
+> **Commit-tracking amendment, 2026-09-18.** cvc5 `main`: **14,093** commits; ethos `main`: **1,060**. These whole-history counts are reconstructed at `2026-09-18T06:13:47-05:00`, the latest original source-commit time; the original wall-clock pin time was not recorded. Full pins and the reconstruction command are in [`corpus.json`](corpus.json), under `commit_tracking`. The assessments and their totals below retain their original source scope.
+
 The **Eunoia ecosystem** is a group of repositories built around one proof
 calculus. One of them holds an office called the *presidency* for a stretch of
 time, sets the direction of the shared work, and hands it on. **Two stretches
@@ -124,37 +127,32 @@ them. `cvc5` is the SMT solver everything here exists to serve; `ethos` holds th
 proof checker and the Eunoia manual that every other reading of the language is
 measured against. The ecosystem asks nothing of either.
 
-| repository | footing | whole history | **Stretch 1** | **Stretch 2** |
+| repository (branch) | footing | whole history | **Stretch 1** | **Stretch 2** |
 | --- | --- | ---: | ---: | ---: |
-| cvc5 | *foundation* — the arrangement is downstream of it | 14,093 | 22 | 7 |
-| ethos | *candidate* — the policy is addressed to it, and it has not joined | 2,411 | 36 | 6 |
+| cvc5 (`main`) | *foundation* — the arrangement is downstream of it | 14,093 | 22 | 7 |
+| ethos (`main`) | *candidate* — the policy is addressed to it, and it has not joined | 1,060 | 5 | 0 |
 
 **They are counted and never assessed.** Nothing on this page or in any report
 here judges them; a run whose subject is somebody else's tree would be a verdict
 nobody asked for, and this project's own rules forbid publishing one. These rows
 are context for the ecosystem's own figures.
 
-**Two things about these numbers a reader should know before quoting them.**
+**Both repositories are tracked on `main`.** This amendment replaces the
+previous ethosEoc3 count with the requested main-branch history. Compiler work
+on ethosEoc3 is outside these figures. The pins and whole-history counts are
+recorded in [`corpus.json`](corpus.json), under `commit_tracking`; the window
+counts remain in [`figures.json`](figures.json).
 
-**`ethos` gives a different answer depending on which branch you read, and nobody
-has said which is the right one.** Counted on `ethosEoc3` — where the Eunoia
-compiler work lives, and the branch the ecosystem's own register names for that
-child project — it has **36** commits in Stretch 1 and 6 in Stretch 2. Counted on
-`main` it has **5** and **0**. The table above uses `ethosEoc3`. Anoieu's census
-used `main`, which is why it reported 3 where this page would have reported 34
-for the same window. **Both are legitimate readings of the same repository**, an
-order of magnitude apart, and the difference is a branch nobody thought to state.
-
-**`cvc5` is not in the ecosystem's own checkout list.** `kanon`'s
-`scripts/repos.local` records where every tracked repository lives on a machine
-and has no entry for it, so no tool here resolves it automatically; the figures
-above come from a local clone pinned at `a07d513075`. A repository the whole
-arrangement is downstream of is the one the tooling cannot find.
+**Future ecosystem runs collect both automatically at `pin`.** Their subject
+files declare cvc5 and ethos as tracked sources on `main`. Supply full checkouts
+named `cvc5` and `ethos` under `--from`; a missing checkout, missing branch or
+shallow history stops the pin instead of omitting a count.
 
 ## Where these numbers come from
 
-**Every count is a `git rev-list` over a named window, taken at commits recorded
-in advance**, so anybody with the checkouts can reproduce them exactly. The pins,
+**Every count is a `git rev-list` over a named window, taken at a named commit**,
+so anybody with the checkouts can reproduce it exactly. The cvc5 and ethos main
+pins were reconstructed in the amendment described above. The pins,
 the windows and the commands are in
 [`figures.json`](figures.json) and [`corpus.json`](corpus.json), and the chart
 above is drawn from those files rather than typed.

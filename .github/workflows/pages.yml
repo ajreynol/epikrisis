@@ -11,6 +11,9 @@ on:
     paths:
       - 'history_analyzer/bin/site'
       - 'history_analyzer/bin/figures'
+      - 'history_analyzer/bin/epikrisis'
+      - 'history_analyzer/subjects/**'
+      - 'history_analyzer/site.json'
       - 'history_analyzer/runs/**'
       - 'history_analyzer/tests/**'
       - '.github/workflows/pages.yml'
@@ -18,6 +21,9 @@ on:
     paths:
       - 'history_analyzer/bin/site'
       - 'history_analyzer/bin/figures'
+      - 'history_analyzer/bin/epikrisis'
+      - 'history_analyzer/subjects/**'
+      - 'history_analyzer/site.json'
       - 'history_analyzer/runs/**'
       - 'history_analyzer/tests/**'
       - '.github/workflows/pages.yml'

@@ -51,13 +51,25 @@
       "origin": "https://github.com/ajreynol/tachyon"
     }
   ],
+  "tracked_sources": [
+    {
+      "id": "cvc5",
+      "origin": "https://github.com/cvc5/cvc5",
+      "ref": "main"
+    },
+    {
+      "id": "ethos",
+      "origin": "https://github.com/cvc5/ethos",
+      "ref": "main"
+    }
+  ],
   "exclude": [
     "deps/",
     "checkers/",
     ".lake/"
   ],
   "not_in_corpus": [
-    "ethos, which holds the proof checker and the compiler, is not read here: its footing is candidate rather than member, so it is outside the member set as well as outside this corpus. The effect is that the ecosystem's history as this run sees it is missing one of the two trees holding its executable artifacts, and ethos is the tree that has disclosed agent co-authorship since 2026-05-11.",
+    "cvc5 and ethos have commit counts and main-branch pins in commit_tracking. They are outside the assessed member corpus; events, claims and assessments do not cover them. Ethos compiler work on ethosEoc3 is outside the tracked main history.",
     "child projects are not separate sources. Each is read inside its parent's tree at the parent's pin, so a child that moved between parents appears here as a directory arriving and a directory leaving, and never as one event.",
     "issue trackers, pull requests and discussion threads, for every source, by design",
     "anything unpublished, absolutely",

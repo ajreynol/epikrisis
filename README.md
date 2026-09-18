@@ -137,6 +137,15 @@ analyzer does not generate the narrative. Write the report and assessment files
 using the [report requirements](history_analyzer/docs/judgement.md), then validate them with
 `python3 history_analyzer/bin/epikrisis check anoieu --run <stamp>`.
 
+Ecosystem subjects also track **cvc5 and ethos on `main`**. Provide full checkouts
+named `cvc5` and `ethos` alongside the other repositories under `--from` (symlinks
+to existing checkouts work). `pin` records their full commit IDs and whole-history
+counts in `corpus.json` under `commit_tracking`, independently of the checked-out
+branch. Missing checkouts, missing refs and shallow histories stop the run.
+The public runs listing and every ecosystem report display these counts beside
+the assessed corpus totals. The six existing ecosystem runs have dated amendments
+reconstructing these histories at their latest original source-commit timestamps.
+
 An existing report can be checked directly:
 
 ```sh

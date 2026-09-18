@@ -1,5 +1,8 @@
 # eunoia-ecosystem — history report
 
+> [!NOTE]
+> **Commit-tracking amendment, 2026-09-18.** cvc5 `main`: **14,066** commits; ethos `main`: **1,056**. These whole-history counts are reconstructed at `2026-09-01T09:26:31-05:00`, the latest original source-commit time; the original wall-clock pin time was not recorded. Full pins and the reconstruction command are in [`corpus.json`](corpus.json), under `commit_tracking`. The assessments and their totals below retain their original source scope.
+
 **Run date** 2026-09-01. **Tool version** 0.1.0-demo. Stage 5 output: this file is prose and is not re-derivable. `corpus.json`, `events.jsonl`, `claims.jsonl` and `delta.json` are, and are the only source of fact used here.
 
 **This is a self-assessment.** `corpus.json` carries `"self": true` — the subject is a tree family that contains this tool. Under `docs/judgement.md` its conclusions are never cited outward: not as evidence that these practices work, not in a vision document, not in a README.

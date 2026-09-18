@@ -73,6 +73,34 @@ itself:
   report says so in its header for as long as the flag is set. It is never
   cleared by editing; it is cleared by starting a run over.
 
+Subjects may also declare `tracked_sources`, each with `id`, `origin` and `ref`
+(and optionally `mirror`, as for assessed sources). All supplied ecosystem
+subjects track cvc5 and ethos with `ref: main`, meaning `refs/heads/main` rather
+than a tag of the same name. Explicit `refs/...` names are also accepted.
+`pin` resolves that ref once and
+records its full SHA, reachable commit count and committer-date bounds in
+`corpus.json` under `commit_tracking.sources`. The current checkout branch does
+not determine the tracked history. A missing ref, missing checkout or shallow
+history fails before the manifest is written. Tracking supplements the assessed
+`sources`; events, claims, ratios and assessments retain their original scope.
+
+The 2026-09-18 amendment adds tracking to all six historical ecosystem manifests.
+Each records a `cutoff` equal to the latest committer timestamp among its original
+source pins, and a `cutoff_basis` identifying that source. The original wall-clock
+pin time was not recorded, so this is a reconstruction rather than an assertion
+about the checkout at the original run time. For each tracked repository,
+`reconstructed_from` records the main tip used to select the latest first-parent
+commit at or before the cutoff:
+
+```sh
+git rev-list --first-parent --max-count=1 --before=<cutoff> <reconstructed_from>
+git rev-list --count <commit>
+```
+
+The first command selects a historical main-branch tip. The second counts every
+commit reachable from it, including merged history. The site renders this data
+on the runs listing and alongside each report, with links to the full pins.
+
 ### 2. `events.jsonl` — candidates, one per line
 
 ```json

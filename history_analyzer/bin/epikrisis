@@ -268,24 +268,29 @@ def write(rd, base, obj):
 
 # ---------------------------------------------------------------- stage 1
 
+def pin_source(src, frm):
+    repo = os.path.join(frm, src.get("mirror", src["id"]))
+    ok, top = git_ok(repo, "rev-parse", "--show-toplevel")
+    if not ok or os.path.realpath(top.strip()) != os.path.realpath(repo):
+        raise SystemExit(f"epikrisis: {repo} is not a git checkout")
+    if git(repo, "rev-parse", "--is-shallow-repository").strip() == "true":
+        raise SystemExit(f"epikrisis: {src['id']} is a shallow clone; "
+                         "commit counts would silently under-report")
+    ref = src.get("ref", "HEAD")
+    revision = ref if ref == "HEAD" or ref.startswith("refs/") else "refs/heads/" + ref
+    sha = git(repo, "rev-parse", "--verify", revision + "^{commit}").strip()
+    dates = git(repo, "log", "--format=%cd", "--date=short", sha).split()
+    return {"id": src["id"], "origin": src["origin"], "ref": ref,
+            "commit": sha, "first_commit": min(dates),
+            "last_commit": max(dates), "commits": len(dates)}
+
+
 def cmd_pin(a):
     s = load_subject(a.subject)
     stamp = a.date or date.today().isoformat()
     rd = run_dir(a.subject, stamp)
-    sources = []
-    for src in s["sources"]:
-        repo = os.path.join(a.frm, src.get("mirror", src["id"]))
-        if not os.path.isdir(os.path.join(repo, ".git")):
-            raise SystemExit(f"epikrisis: {repo} is not a git checkout")
-        if git(repo, "rev-parse", "--is-shallow-repository").strip() == "true":
-            raise SystemExit(f"epikrisis: {src['id']} is a shallow clone; "
-                             "every detector would silently under-report")
-        log = git(repo, "log", "--reverse", "--format=%ad", "--date=short").split()
-        sources.append({
-            "id": src["id"], "origin": src["origin"],
-            "commit": git(repo, "rev-parse", "HEAD").strip(),
-            "first_commit": log[0], "last_commit": log[-1], "commits": len(log),
-        })
+    sources = [pin_source(src, a.frm) for src in s["sources"]]
+    tracked = [pin_source(src, a.frm) for src in s.get("tracked_sources", [])]
     qd = hashlib.sha256(open(os.path.join(HERE, "questions.md"), "rb").read()).hexdigest()
     corpus = {
         "subject": s["subject"], "kind": s["kind"], "self": s.get("self", False),
@@ -298,11 +303,19 @@ def cmd_pin(a):
         "detectors_not_implemented": NOT_IMPLEMENTED,
         "not_in_corpus": s.get("not_in_corpus", []),
     }
+    if tracked:
+        corpus["commit_tracking"] = {
+            "method": "collected with pin", "recorded": date.today().isoformat(),
+            "sources": tracked,
+        }
     write(rd, "corpus.json", corpus)
     print(f"  {len(sources)} source(s), "
           f"{sum(x['commits'] for x in sources)} commits, "
           f"{min(x['first_commit'] for x in sources)} .. "
           f"{max(x['last_commit'] for x in sources)}")
+    for src in tracked:
+        print(f"  tracked {src['id']} ({src['ref']}): {src['commits']} commits "
+              f"at {src['commit']}")
 
 
 # ---------------------------------------------------------------- stage 2

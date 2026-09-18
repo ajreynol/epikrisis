@@ -97,12 +97,40 @@ class Site(unittest.TestCase):
             self.assertIn(href, idx)
             self.assertTrue(os.path.exists(os.path.join(self.out, href)))
 
+    def test_every_ecosystem_run_displays_both_main_branch_counts_and_pins(self):
+        listing = open(os.path.join(self.out, "runs.html")).read()
+        for r in site.runs():
+            if r["corpus"]["kind"] != "ecosystem":
+                continue
+            sources = r["corpus"]["commit_tracking"]["sources"]
+            self.assertEqual([(s["id"], s["ref"]) for s in sources],
+                             [("cvc5", "main"), ("ethos", "main")])
+            start = (f'<tr><td><code>{r["subject"]}</code></td>'
+                     f'<td><code>{r["stamp"]}</code></td>')
+            row = listing.split(start, 1)[1].split("</tr>", 1)[0]
+            for s in sources:
+                self.assertIn(f'{s["id"]} (main)', row)
+                self.assertIn(f'{s["commits"]:,}', row)
+                self.assertIn(s["commit"], row)
+            for f in r["prose"]:
+                page = open(os.path.join(self.out, r["subject"], r["stamp"],
+                                         f[:-3] + ".html")).read()
+                with self.subTest(run=r["stamp"], doc=f):
+                    tracking = r["corpus"]["commit_tracking"]
+                    self.assertIn(tracking.get("cutoff", tracking["method"]), page)
+                    for s in sources:
+                        self.assertIn(f'{s["id"]} (main)', page)
+                        self.assertIn(f'{s["commits"]:,}', page)
+                        self.assertIn(s["commit"], page)
+
     def test_nothing_is_dropped_from_a_source_document(self):
         for r in site.runs():
             for f in r["prose"]:
                 md = open(os.path.join(r["dir"], f)).read()
                 out = open(os.path.join(self.out, r["subject"], r["stamp"],
                                         f[:-3] + ".html")).read()
+                # The surrounding census is rendered from corpus.json.
+                out = re.search(r"<article>(.*?)</article>", out, re.S).group(1)
                 fence, heads, cells = False, 0, 0
                 for ln in md.split("\n"):
                     if ln.lstrip("> ").startswith("```"):

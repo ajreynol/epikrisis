@@ -38,7 +38,7 @@
     ".lake/"
   ],
   "not_in_corpus": [
-    "ethos, which holds the proof checker and the compiler, is not read here: it is somebody else's tree, a run over one is internal by default, and this run's evidence is committed. Its footing in the ecosystem's own inventory is candidate rather than member, so it is outside the member set as well as outside this corpus -- but the effect is that the ecosystem's history as this run sees it is missing one of the two trees holding its executable artifacts.",
+    "cvc5 and ethos have commit counts and main-branch pins in commit_tracking. They are outside the assessed member corpus; events, claims and assessments do not cover them. Ethos compiler work on ethosEoc3 is outside the tracked main history.",
     "issue trackers, pull requests and discussion threads, for every source, by design",
     "anything unpublished, absolutely",
     "the source list here is hand-written and the inventory is the authority. This run reads seven of the ten repositories the register records as members, and does not read aisthesis, eschaton or tachyon. The set is therefore still not the ecosystem's own set, which is the `repo-added` failure mode occurring in the run that states it."
@@ -61,5 +61,17 @@
   "prose_is_product": [
     "anoieu"
   ],
-  "_prose_is_product_note": "anoieu ships the shared repository policy and the checker that enforces it; other repositories' CI depends on documents in that tree, so for it a prose line is a tool line and its ratio is not comparable with the others. This is a declared judgement, not a derived fact."
+  "_prose_is_product_note": "anoieu ships the shared repository policy and the checker that enforces it; other repositories' CI depends on documents in that tree, so for it a prose line is a tool line and its ratio is not comparable with the others. This is a declared judgement, not a derived fact.",
+  "tracked_sources": [
+    {
+      "id": "cvc5",
+      "origin": "https://github.com/cvc5/cvc5",
+      "ref": "main"
+    },
+    {
+      "id": "ethos",
+      "origin": "https://github.com/cvc5/ethos",
+      "ref": "main"
+    }
+  ]
 }

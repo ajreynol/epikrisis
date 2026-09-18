@@ -1,5 +1,8 @@
 # Stretch 2 — a stress test of the history analyzer
 
+> [!NOTE]
+> **Commit-tracking amendment, 2026-09-18.** cvc5 `main`: **14,093** commits; ethos `main`: **1,060**. These whole-history counts are reconstructed at `2026-09-18T06:13:47-05:00`, the latest original source-commit time; the original wall-clock pin time was not recorded. Full pins and the reconstruction command are in [`corpus.json`](corpus.json), under `commit_tracking`. The assessments and their totals below retain their original source scope.
+
 > [!IMPORTANT]
 > **This is a self-assessment.** The run it describes carries `"self": true` — the
 > subject is a family of trees that contains this tool. Under

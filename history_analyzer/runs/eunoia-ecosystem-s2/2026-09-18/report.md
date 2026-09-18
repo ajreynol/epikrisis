@@ -1,5 +1,8 @@
 # eunoia-ecosystem-s2 — history report
 
+> [!NOTE]
+> **Commit-tracking amendment, 2026-09-18.** cvc5 `main`: **14,093** commits; ethos `main`: **1,060**. These whole-history counts are reconstructed at `2026-09-18T06:13:47-05:00`, the latest original source-commit time; the original wall-clock pin time was not recorded. Full pins and the reconstruction command are in [`corpus.json`](corpus.json), under `commit_tracking`. The assessments and their totals below retain their original source scope.
+
 **Run date** 2026-09-18. **Tool version** 0.1.0-demo. Stage 5 output: this file is prose and is not re-derivable. `corpus.json`, `events.jsonl`, `claims.jsonl`, `delta.json`, `ratio.json` and `panel.json` are, and are the only source of derived fact used here. Where a figure is **hand-read** it is marked in place, every time, with the command that produces it.
 
 > [!IMPORTANT]
