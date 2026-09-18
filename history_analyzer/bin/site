@@ -349,9 +349,9 @@ def page(title, body, crumb="", desc=""):
 <footer>
 epikrisis &middot; evidence and analysis for repositories in the Eunoia ecosystem &middot;
 <a href="https://github.com/ajreynol/epikrisis">source</a><br>
-Every run here is a <strong>self-assessment</strong>: the subject is a family of trees
-that contains the tool. Its conclusions are not cited outward &mdash; not as evidence
-that these practices work, not in a vision document, not in a README.
+History reports marked <strong>self-assessment</strong> concern a family of trees
+that contains the tool. Their conclusions are not cited outward as evidence that
+these practices work. LOC reports publish repository-size measurements at named commits.
 </footer>
 </div>
 </body>
@@ -589,6 +589,7 @@ def main():
     pages += 1
 
     print(f"  {pages} prose page(s) and an index for {len(rows)} run(s) -> {out}")
+    return cfg, parts
 
 
 if __name__ == "__main__":

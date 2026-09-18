@@ -9,23 +9,27 @@ in the tree.**
 [ajreynol.github.io/epikrisis](https://ajreynol.github.io/epikrisis/)** — the
 index, every report, and the evidence each rests on. It is built by CI from what
 is committed under
-[`history_analyzer/runs/`](history_analyzer/runs/README.md); nothing appears
-there that is not in this tree. **Every run is a self-assessment and its
+[`history_analyzer/runs/`](history_analyzer/runs/README.md) and
+[`loc_analyzer/runs/`](loc_analyzer/runs/README.md); nothing appears
+there that is not in this tree. **Every history report is a self-assessment and its
 conclusions do not travel** — see [what that means for a reader from
 outside](#what-it-has-produced).
 
-Its first tool is a **GitHub history analyzer**. The longer-term ambition is to
+Its tools are a **GitHub history analyzer** and a **LOC analyzer**. The former
+examines changes over time; the latter measures repository size, split into
+implementation and Markdown documentation. Both publish pinned evidence, and
+both appear on the homepage. The longer-term ambition is to
 provide deeper analyses across Eunoia and develop into the ecosystem's
 **“judicial” branch**: examining its work, testing claims against evidence, and
 making assessments that others can inspect and contest.
 
 ## The GitHub history analyzer
 
-**[`history_analyzer/`](history_analyzer/) is the whole of it** — the tool, what
-it reads, and what it has produced. It is a directory rather than a scattering
-of top-level ones because this repository intends to carry more than one
-analysis, and a second tool arriving into a flat tree is the point at which
-every path and every link has to move at once.
+**[`history_analyzer/`](history_analyzer/) holds the history tool, its inputs and
+its reports.** The LOC analyzer has its own directory and run artifacts.
+
+Start with the [analyzer README](history_analyzer/README.md) for setup, the run
+workflow, commit tracking and building the reports site.
 
 | under `history_analyzer/` | what it holds |
 | --- | --- |
@@ -57,6 +61,27 @@ copies of it. **Nothing compares them**, so a command added to one and not the
 others is drift that has not been reported yet; that is stated here rather than
 left for a reader to discover.
 
+## The LOC analyzer
+
+**[`loc_analyzer/`](loc_analyzer/README.md)** is the central census of repository
+size. It counts physical lines in committed Git trees: `.md` files are
+documentation, and other UTF-8 text is implementation, including tests,
+configuration and data. Each run records full commit pins, per-file counts,
+skipped entries and a generated report.
+
+It uses the history census's repository set, including cvc5 and ethos on `main`.
+Read the [LOC reports](https://ajreynol.github.io/epikrisis/loc/) or the
+[committed snapshot index](loc_analyzer/runs/README.md).
+
+```sh
+python3 loc_analyzer/bin/loc run eunoia-ecosystem --from /path/to/checkouts
+python3 bin/site site
+```
+
+The shared site builder presents history and LOC as parallel analyses, with
+separate report pages and both tables on the homepage. See the
+[LOC README](loc_analyzer/README.md) for the counting rules and verification.
+
 ## What it has produced
 
 **The reports are published at
@@ -83,7 +108,7 @@ For an example of the historical account this tooling is intended to support,
 see **[anoieu's `history.md`](https://github.com/ajreynol/anoieu/blob/main/docs/history.md)**,
 which records repository development and ecosystem events.
 
-**Every run in this repository is a self-assessment, and its conclusions do not
+**Every history report in this repository is a self-assessment, and its conclusions do not
 travel.** The subject of each is a family of trees that contains this tool, so
 each run is marked `self` and [`judgement.md`](history_analyzer/docs/judgement.md)
 forbids citing what it concluded outward — not as evidence that these practices
@@ -206,7 +231,9 @@ the repository. The analyzer's own documents sit with the analyzer, under
 - [Detector catalogue](history_analyzer/docs/events.md): event definitions, thresholds, and failure modes.
 - [Report requirements](history_analyzer/docs/judgement.md): assessments, falsifiers, and self-assessment rules.
 - [Open defects](history_analyzer/docs/notes.md): current limitations and how to reproduce them.
-- [Runs](history_analyzer/runs/README.md): the index of every run — which carry a report, a case study or a note, and which are evidence only.
+- [History runs](history_analyzer/runs/README.md): reports, case studies, notes and evidence-only histories.
+- [LOC analyzer](loc_analyzer/README.md): counting rules, usage and reproducibility.
+- [LOC snapshots](loc_analyzer/runs/README.md): generated size reports and per-file evidence.
 
 ## The name
 

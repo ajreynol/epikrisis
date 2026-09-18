@@ -1,0 +1,90 @@
+{
+  "exclude": [],
+  "files_digest": "cc12387f065be6c207d067992e1d30d1d3f83e6a647344fcaa08d386e7b9893b",
+  "recorded_at": "2026-09-18T16:46:22+00:00",
+  "rules": {
+    "binary": "files containing NUL bytes or not decodable as UTF-8 are skipped",
+    "documentation": "regular UTF-8 text files ending in .md, case-insensitive",
+    "implementation": "all other regular UTF-8 text files, including tests, configuration and data",
+    "links": "symlinks and submodules are recorded but not followed or counted",
+    "scope": "tracked files at the recorded commit; working-tree changes are not read",
+    "unit": "physical lines, including blank lines and comments; final unterminated line counts"
+  },
+  "run": "2026-09-18",
+  "schema_version": 1,
+  "sources": [
+    {
+      "commit": "58f6c66dfbbc37dfefb72c9a43f4e2baf2e06e5b",
+      "id": "aisthesis",
+      "origin": "https://github.com/ajreynol/aisthesis",
+      "ref": "main"
+    },
+    {
+      "commit": "b5a7d4ee32bd4575c5e6466aa33679443db7b640",
+      "id": "anoieu",
+      "origin": "https://github.com/ajreynol/anoieu",
+      "ref": "main"
+    },
+    {
+      "commit": "a07d51307598ec718af427c4fb97645d2013ebb8",
+      "id": "cvc5",
+      "origin": "https://github.com/cvc5/cvc5",
+      "ref": "main"
+    },
+    {
+      "commit": "fe47f6c76980e23efffa69c64582e3d56b74df1a",
+      "id": "dokimasia",
+      "origin": "https://github.com/ajreynol/dokimasia",
+      "ref": "main"
+    },
+    {
+      "commit": "5dd65b196447726f365f6622c43f2259224444ff",
+      "id": "epikrisis",
+      "origin": "https://github.com/ajreynol/epikrisis",
+      "ref": "main"
+    },
+    {
+      "commit": "5e1aacc908480ff82aba689e406dfe3026532726",
+      "id": "eschaton",
+      "origin": "https://github.com/ajreynol/eschaton",
+      "ref": "main"
+    },
+    {
+      "commit": "8dc85c4db8d6cc612f02dc3bb627331732605eff",
+      "id": "ethos",
+      "origin": "https://github.com/cvc5/ethos",
+      "ref": "main"
+    },
+    {
+      "commit": "79dd6010db64a0194af95ffb046cce77867357de",
+      "id": "eudaimonia",
+      "origin": "https://github.com/ajreynol/eudaimonia",
+      "ref": "main"
+    },
+    {
+      "commit": "da664142c09d4c11d0e2b00e1e8b0bbad60299a7",
+      "id": "kanon",
+      "origin": "https://github.com/ajreynol/kanon",
+      "ref": "main"
+    },
+    {
+      "commit": "1c9523a6b617ad6c842a3a27c974ebfdf9532fd4",
+      "id": "koine",
+      "origin": "https://github.com/ajreynol/koine",
+      "ref": "main"
+    },
+    {
+      "commit": "be4791204be5616df2bf6f42ea304b45b08d33e1",
+      "id": "logos",
+      "origin": "https://github.com/cvc5/logos",
+      "ref": "main"
+    },
+    {
+      "commit": "3ab79d4251d285158adf2829a7e5fbd1c05bdbdf",
+      "id": "tachyon",
+      "origin": "https://github.com/ajreynol/tachyon",
+      "ref": "main"
+    }
+  ],
+  "subject": "eunoia-ecosystem"
+}

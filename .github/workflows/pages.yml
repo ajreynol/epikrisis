@@ -1,7 +1,7 @@
 name: Pages
 
 # The site is a rendering of what is already committed under runs/: the index is
-# derived from each run's corpus.json and each page is that run's own markdown.
+# derived from pinned history and LOC evidence.
 # It is built here rather than committed, so the tree carries evidence and prose
 # and never a generated copy of them.
 
@@ -9,6 +9,9 @@ on:
   push:
     branches: [main]
     paths:
+      - 'bin/site'
+      - 'loc_analyzer/**'
+      - 'tests/**'
       - 'history_analyzer/bin/site'
       - 'history_analyzer/bin/figures'
       - 'history_analyzer/bin/epikrisis'
@@ -19,6 +22,9 @@ on:
       - '.github/workflows/pages.yml'
   pull_request:
     paths:
+      - 'bin/site'
+      - 'loc_analyzer/**'
+      - 'tests/**'
       - 'history_analyzer/bin/site'
       - 'history_analyzer/bin/figures'
       - 'history_analyzer/bin/epikrisis'
@@ -38,8 +44,11 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v5
-      - name: Check the converter refuses what it cannot render, and loses nothing
-        run: python3 -m unittest discover -s history_analyzer/tests
+      - name: Check history, LOC counting and the shared site
+        run: |
+          python3 -m unittest discover -s history_analyzer/tests
+          python3 -m unittest discover -s loc_analyzer/tests
+          python3 -m unittest discover -s tests
       - name: Check every report still matches its evidence
         run: |
           for run in history_analyzer/runs/*/*/report.md; do
@@ -48,7 +57,7 @@ jobs:
               "$(basename "$(dirname "$d")")" --run "$(basename "$d")"
           done
       - name: Build the site
-        run: python3 history_analyzer/bin/site site
+        run: python3 bin/site site
       - name: Upload
         uses: actions/upload-pages-artifact@v4
         with:

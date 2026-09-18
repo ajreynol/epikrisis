@@ -1,0 +1,259 @@
+#!/usr/bin/env python3
+"""Count physical lines in pinned Git trees. Standard library only; no network."""
+import argparse
+from datetime import date, datetime, timezone
+import hashlib
+import json
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+HERE = Path(__file__).resolve().parents[1]
+VERSION = 1
+RULES = {
+    "unit": "physical lines, including blank lines and comments; final unterminated line counts",
+    "documentation": "regular UTF-8 text files ending in .md, case-insensitive",
+    "implementation": "all other regular UTF-8 text files, including tests, configuration and data",
+    "binary": "files containing NUL bytes or not decodable as UTF-8 are skipped",
+    "scope": "tracked files at the recorded commit; working-tree changes are not read",
+    "links": "symlinks and submodules are recorded but not followed or counted",
+}
+CATEGORIES = ("implementation", "documentation")
+SKIPPED = ("binary", "symlink", "submodule", "excluded")
+
+
+def git(repo, *args):
+    p = subprocess.run(["git", "-C", str(repo), *args], capture_output=True)
+    if p.returncode:
+        raise ValueError(p.stderr.decode(errors="replace").strip())
+    return p.stdout
+
+
+def identifier(value):
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", value):
+        raise ValueError(f"invalid subject or run name: {value!r}")
+    return value
+
+
+def subject(name):
+    path = HERE / "subjects" / (identifier(name) + ".json")
+    config = json.loads(path.read_text())
+    if "sources_from" in config:
+        parent = json.loads((path.parent / config["sources_from"]).read_text())
+        sources = parent["sources"] + parent.get("tracked_sources", [])
+    else:
+        sources = config["sources"]
+    resolved = []
+    for src in sources:
+        resolved.append({"id": identifier(src["id"]), "origin": src["origin"],
+                         "ref": src.get("ref", config.get("ref", "main"))})
+    if not resolved or len({s["id"] for s in resolved}) != len(resolved):
+        raise ValueError("the subject must contain distinct repositories")
+    return config, sorted(resolved, key=lambda s: s["id"])
+
+
+def pin(src, checkouts):
+    repo = checkouts / src["id"]
+    top = git(repo, "rev-parse", "--show-toplevel").decode().strip()
+    if Path(top).resolve() != repo.resolve():
+        raise ValueError(f"{repo} is not the root of a checkout")
+    ref = src["ref"]
+    revision = ref if ref == "HEAD" or ref.startswith("refs/") else "refs/heads/" + ref
+    sha = git(repo, "rev-parse", "--verify", revision + "^{commit}").decode().strip()
+    return dict(src, commit=sha)
+
+
+def text_lines(data):
+    if b"\0" in data:
+        return None
+    try:
+        data.decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+    return data.count(b"\n") + int(bool(data) and not data.endswith(b"\n"))
+
+
+def count_tree(src, checkouts, exclude):
+    repo = checkouts / src["id"]
+    tree = git(repo, "ls-tree", "-r", "-z", "--full-tree", src["commit"])
+    records, cache = [], {}
+    # Batch object reads avoid starting a Git process for each file.
+    with subprocess.Popen(["git", "-C", str(repo), "cat-file", "--batch"],
+                          stdin=subprocess.PIPE, stdout=subprocess.PIPE) as proc:
+        try:
+            for entry in tree.split(b"\0"):
+                if not entry:
+                    continue
+                meta, raw_path = entry.split(b"\t", 1)
+                mode, kind, oid = meta.decode("ascii").split()
+                path = raw_path.decode("utf-8", errors="surrogateescape")
+                row = dict(source=src["id"], path=path, object=oid, mode=mode)
+                if any(path == p.rstrip("/") or path.startswith(p.rstrip("/") + "/")
+                       for p in exclude):
+                    row["category"] = "excluded"
+                elif mode == "120000":
+                    row["category"] = "symlink"
+                elif kind == "commit":
+                    row["category"] = "submodule"
+                else:
+                    if oid not in cache:
+                        proc.stdin.write(oid.encode("ascii") + b"\n")
+                        proc.stdin.flush()
+                        header = proc.stdout.readline().split()
+                        if len(header) != 3 or header[1] != b"blob":
+                            raise ValueError(f"cannot read blob {oid} in {src['id']}")
+                        size = int(header[2])
+                        data = proc.stdout.read(size)
+                        if len(data) != size or proc.stdout.read(1) != b"\n":
+                            raise ValueError(f"incomplete blob {oid}")
+                        cache[oid] = (size, text_lines(data))
+                    size, lines = cache[oid]
+                    row["bytes"] = size
+                    if lines is None:
+                        row["category"] = "binary"
+                    else:
+                        row.update(category="documentation" if path.lower().endswith(".md")
+                                   else "implementation", lines=lines)
+                records.append(row)
+        finally:
+            proc.stdin.close()
+            proc.stdout.close()
+        if proc.wait():
+            raise ValueError(f"Git object reader failed for {src['id']}")
+    return sorted(records, key=lambda r: r["path"])
+
+
+def summarize(corpus, records):
+    by = {s["id"]: dict(s, implementation={"files": 0, "lines": 0},
+                         documentation={"files": 0, "lines": 0},
+                         skipped={k: 0 for k in SKIPPED}) for s in corpus["sources"]}
+    seen = set()
+    for row in records:
+        key = row["source"], row["path"]
+        if key in seen:
+            raise ValueError(f"duplicate file: {key}")
+        seen.add(key)
+        out = by[row["source"]]
+        category = row["category"]
+        if category in CATEGORIES:
+            if type(row["lines"]) is not int or row["lines"] < 0:
+                raise ValueError(f"invalid line count: {key}")
+            expected = "documentation" if row["path"].lower().endswith(".md") else "implementation"
+            if category != expected:
+                raise ValueError(f"wrong category: {key}")
+            out[category]["files"] += 1
+            out[category]["lines"] += row["lines"]
+        else:
+            out["skipped"][category] += 1
+    sources = list(by.values())
+    for src in sources:
+        src["total_lines"] = sum(src[k]["lines"] for k in CATEGORIES)
+        src["tracked_entries"] = sum(src[k]["files"] for k in CATEGORIES) + sum(src["skipped"].values())
+    return {"schema_version": VERSION, "subject": corpus["subject"], "run": corpus["run"],
+            "sources": sources, "totals": {
+                **{k: sum(s[k]["lines"] for s in sources) for k in CATEGORIES},
+                "total_lines": sum(s["total_lines"] for s in sources),
+                "skipped_files": sum(sum(s["skipped"].values()) for s in sources)}}
+
+
+def report(corpus, counts):
+    lines = [f"# LOC analysis — {corpus['subject']}", "",
+             f"Generated by `loc_analyzer` from pinned Git trees. Run: `{corpus['run']}`. "
+             f"Recorded: `{corpus['recorded_at']}`.", "",
+             "Counts are physical lines, including blanks and comments. Documentation is "
+             "UTF-8 text in `.md` files (case-insensitive); implementation is all other "
+             "UTF-8 text, including tests, configuration and data. Binary files, symlinks "
+             "and submodules are skipped. These counts describe repository size, not quality or effort.", "",
+             "| Repository | Branch | Implementation | Documentation (.md) | Total | Pin |",
+             "| --- | --- | ---: | ---: | ---: | --- |"]
+    for s in counts["sources"]:
+        link = s["origin"].rstrip("/") + "/commit/" + s["commit"]
+        lines.append(f"| {s['id']} | {s['ref']} | {s['implementation']['lines']:,} | "
+                     f"{s['documentation']['lines']:,} | {s['total_lines']:,} | "
+                     f"[{s['commit'][:12]}]({link}) |")
+    t = counts["totals"]
+    lines += [f"| **Total** | | **{t['implementation']:,}** | **{t['documentation']:,}** | "
+              f"**{t['total_lines']:,}** | |", "", "## Skipped entries", "",
+              "| Repository | Binary / non-UTF-8 | Symlinks | Submodules | Excluded paths |",
+              "| --- | ---: | ---: | ---: | ---: |"]
+    for s in counts["sources"]:
+        lines.append("| " + s["id"] + " | " + " | ".join(str(s["skipped"][k]) for k in SKIPPED) + " |")
+    lines += ["", "## Evidence", "",
+              "[Manifest and counting rules](corpus.json) · [Repository totals](loc.json) · "
+              "[Per-file evidence](files.jsonl).", "",
+              "Only committed files at the named pins are counted. Duplicate blobs at different "
+              "paths count once per path. Generated and vendored text is included unless a path "
+              "is explicitly excluded in the manifest.", "",
+              "Excluded paths: " + (", ".join(f"`{p}`" for p in corpus["exclude"]) or "none") + ".", ""]
+    return "\n".join(lines)
+
+
+def check_run(rd, checkouts=None):
+    corpus = json.loads((rd / "corpus.json").read_text())
+    if corpus["schema_version"] != VERSION or corpus["rules"] != RULES:
+        raise ValueError("unsupported counting rules or schema version")
+    raw = (rd / "files.jsonl").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != corpus["files_digest"]:
+        raise ValueError("per-file evidence digest does not match the manifest")
+    records = [json.loads(line) for line in raw.splitlines()]
+    counts = summarize(corpus, records)
+    if counts != json.loads((rd / "loc.json").read_text()):
+        raise ValueError("repository totals do not match per-file evidence")
+    if (rd / "report.md").read_text() != report(corpus, counts):
+        raise ValueError("report does not match the pinned counts")
+    if checkouts is not None:
+        actual = [r for src in corpus["sources"] for r in count_tree(src, checkouts, corpus["exclude"])]
+        if actual != records:
+            raise ValueError("per-file evidence differs from the pinned Git trees")
+    return corpus, counts
+
+
+def run_analysis(name, checkouts, stamp):
+    config, sources = subject(name)
+    rd = HERE / "runs" / identifier(name) / identifier(stamp)
+    if rd.exists():
+        raise ValueError(f"run already exists: {rd}; choose a new --run stamp")
+    corpus = {"schema_version": VERSION, "subject": name, "run": stamp,
+              "recorded_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+              "rules": RULES, "exclude": config.get("exclude", []),
+              "sources": [pin(s, checkouts) for s in sources]}
+    records = [r for src in corpus["sources"] for r in count_tree(src, checkouts, corpus["exclude"])]
+    raw = "".join(json.dumps(row, sort_keys=True) + "\n" for row in records).encode()
+    corpus["files_digest"] = hashlib.sha256(raw).hexdigest()
+    counts = summarize(corpus, records)
+    rd.mkdir(parents=True)
+    (rd / "files.jsonl").write_bytes(raw)
+    for name, value in [("corpus.json", corpus), ("loc.json", counts)]:
+        (rd / name).write_text(json.dumps(value, indent=2, sort_keys=True) + "\n")
+    (rd / "report.md").write_text(report(corpus, counts))
+    print(f"wrote {rd}: {len(sources)} repositories, {counts['totals']['total_lines']:,} lines")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("subjects")
+    for command in ("run", "check"):
+        cmd = commands.add_parser(command)
+        cmd.add_argument("subject")
+        cmd.add_argument("--from", dest="checkouts", type=Path, required=command == "run")
+        cmd.add_argument("--run", required=command == "check", default=date.today().isoformat())
+    args = parser.parse_args()
+    try:
+        if args.command == "subjects":
+            for path in sorted((HERE / "subjects").glob("*.json")):
+                _, sources = subject(path.stem)
+                print(path.stem + ": " + ", ".join(s["id"] for s in sources))
+        elif args.command == "run":
+            run_analysis(args.subject, args.checkouts, args.run)
+        else:
+            rd = HERE / "runs" / identifier(args.subject) / identifier(args.run)
+            check_run(rd, args.checkouts)
+            print("check: ok" + ("; reproduced from pinned trees" if args.checkouts else ""))
+    except (ValueError, OSError, KeyError) as exc:
+        parser.exit(1, f"loc: {exc}\n")
+
+
+if __name__ == "__main__":
+    main()

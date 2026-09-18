@@ -1,0 +1,7 @@
+{
+  "subject": "eunoia-ecosystem",
+  "sources_from": "../../history_analyzer/subjects/eunoia-ecosystem-s2.json",
+  "ref": "main",
+  "exclude": [],
+  "note": "Use the same repository set as the history census, including its tracked cvc5 and ethos sources. Pin main for each repository independently at each LOC run."
+}

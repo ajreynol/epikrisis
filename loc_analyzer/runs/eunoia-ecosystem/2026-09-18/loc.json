@@ -1,0 +1,277 @@
+{
+  "run": "2026-09-18",
+  "schema_version": 1,
+  "sources": [
+    {
+      "commit": "58f6c66dfbbc37dfefb72c9a43f4e2baf2e06e5b",
+      "documentation": {
+        "files": 7,
+        "lines": 2278
+      },
+      "id": "aisthesis",
+      "implementation": {
+        "files": 1,
+        "lines": 33
+      },
+      "origin": "https://github.com/ajreynol/aisthesis",
+      "ref": "main",
+      "skipped": {
+        "binary": 0,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 2311,
+      "tracked_entries": 8
+    },
+    {
+      "commit": "b5a7d4ee32bd4575c5e6466aa33679443db7b640",
+      "documentation": {
+        "files": 21,
+        "lines": 9596
+      },
+      "id": "anoieu",
+      "implementation": {
+        "files": 164,
+        "lines": 19784
+      },
+      "origin": "https://github.com/ajreynol/anoieu",
+      "ref": "main",
+      "skipped": {
+        "binary": 0,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 29380,
+      "tracked_entries": 185
+    },
+    {
+      "commit": "a07d51307598ec718af427c4fb97645d2013ebb8",
+      "documentation": {
+        "files": 10,
+        "lines": 1902
+      },
+      "id": "cvc5",
+      "implementation": {
+        "files": 7205,
+        "lines": 1066715
+      },
+      "origin": "https://github.com/cvc5/cvc5",
+      "ref": "main",
+      "skipped": {
+        "binary": 1,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 1068617,
+      "tracked_entries": 7216
+    },
+    {
+      "commit": "fe47f6c76980e23efffa69c64582e3d56b74df1a",
+      "documentation": {
+        "files": 30,
+        "lines": 5659
+      },
+      "id": "dokimasia",
+      "implementation": {
+        "files": 99,
+        "lines": 22679
+      },
+      "origin": "https://github.com/ajreynol/dokimasia",
+      "ref": "main",
+      "skipped": {
+        "binary": 0,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 28338,
+      "tracked_entries": 129
+    },
+    {
+      "commit": "5dd65b196447726f365f6622c43f2259224444ff",
+      "documentation": {
+        "files": 24,
+        "lines": 4518
+      },
+      "id": "epikrisis",
+      "implementation": {
+        "files": 66,
+        "lines": 12142
+      },
+      "origin": "https://github.com/ajreynol/epikrisis",
+      "ref": "main",
+      "skipped": {
+        "binary": 0,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 16660,
+      "tracked_entries": 90
+    },
+    {
+      "commit": "5e1aacc908480ff82aba689e406dfe3026532726",
+      "documentation": {
+        "files": 14,
+        "lines": 2418
+      },
+      "id": "eschaton",
+      "implementation": {
+        "files": 2,
+        "lines": 27
+      },
+      "origin": "https://github.com/ajreynol/eschaton",
+      "ref": "main",
+      "skipped": {
+        "binary": 0,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 2445,
+      "tracked_entries": 16
+    },
+    {
+      "commit": "8dc85c4db8d6cc612f02dc3bb627331732605eff",
+      "documentation": {
+        "files": 10,
+        "lines": 6407
+      },
+      "id": "ethos",
+      "implementation": {
+        "files": 357,
+        "lines": 51479
+      },
+      "origin": "https://github.com/cvc5/ethos",
+      "ref": "main",
+      "skipped": {
+        "binary": 0,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 57886,
+      "tracked_entries": 367
+    },
+    {
+      "commit": "79dd6010db64a0194af95ffb046cce77867357de",
+      "documentation": {
+        "files": 64,
+        "lines": 14892
+      },
+      "id": "eudaimonia",
+      "implementation": {
+        "files": 229,
+        "lines": 37996
+      },
+      "origin": "https://github.com/ajreynol/eudaimonia",
+      "ref": "main",
+      "skipped": {
+        "binary": 0,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 52888,
+      "tracked_entries": 293
+    },
+    {
+      "commit": "da664142c09d4c11d0e2b00e1e8b0bbad60299a7",
+      "documentation": {
+        "files": 34,
+        "lines": 15993
+      },
+      "id": "kanon",
+      "implementation": {
+        "files": 15,
+        "lines": 2447
+      },
+      "origin": "https://github.com/ajreynol/kanon",
+      "ref": "main",
+      "skipped": {
+        "binary": 0,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 18440,
+      "tracked_entries": 49
+    },
+    {
+      "commit": "1c9523a6b617ad6c842a3a27c974ebfdf9532fd4",
+      "documentation": {
+        "files": 6,
+        "lines": 2086
+      },
+      "id": "koine",
+      "implementation": {
+        "files": 19,
+        "lines": 5921
+      },
+      "origin": "https://github.com/ajreynol/koine",
+      "ref": "main",
+      "skipped": {
+        "binary": 0,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 8007,
+      "tracked_entries": 25
+    },
+    {
+      "commit": "be4791204be5616df2bf6f42ea304b45b08d33e1",
+      "documentation": {
+        "files": 7,
+        "lines": 1445
+      },
+      "id": "logos",
+      "implementation": {
+        "files": 935,
+        "lines": 821107
+      },
+      "origin": "https://github.com/cvc5/logos",
+      "ref": "main",
+      "skipped": {
+        "binary": 1,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 822552,
+      "tracked_entries": 943
+    },
+    {
+      "commit": "3ab79d4251d285158adf2829a7e5fbd1c05bdbdf",
+      "documentation": {
+        "files": 38,
+        "lines": 5795
+      },
+      "id": "tachyon",
+      "implementation": {
+        "files": 86,
+        "lines": 11250
+      },
+      "origin": "https://github.com/ajreynol/tachyon",
+      "ref": "main",
+      "skipped": {
+        "binary": 1,
+        "excluded": 0,
+        "submodule": 0,
+        "symlink": 0
+      },
+      "total_lines": 17045,
+      "tracked_entries": 125
+    }
+  ],
+  "subject": "eunoia-ecosystem",
+  "totals": {
+    "documentation": 72989,
+    "implementation": 2051580,
+    "skipped_files": 3,
+    "total_lines": 2124569
+  }
+}

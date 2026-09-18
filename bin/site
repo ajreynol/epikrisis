@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+"""Build the shared GitHub Pages site for history and LOC analysis."""
+import importlib.machinery
+import importlib.util
+from pathlib import Path
+import shutil
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def module(name, path):
+    loader = importlib.machinery.SourceFileLoader(name, str(path))
+    spec = importlib.util.spec_from_loader(loader.name, loader)
+    loaded = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(loaded)
+    return loaded
+
+
+def build(out):
+    out = Path(out).resolve()
+    # The history builder replaces the output directory. Keep every input safe.
+    if out == ROOT or out in ROOT.parents or (ROOT in out.parents and out != ROOT / "site"):
+        raise ValueError("site: inside this repository, use the ignored site/ output directory")
+    history = module("history_site", ROOT / "history_analyzer/bin/site")
+    loc = module("loc_site", ROOT / "loc_analyzer/bin/site")
+    argv = sys.argv
+    try:
+        sys.argv = ["site", str(out)]
+        _, parts = history.main()
+    finally:
+        sys.argv = argv
+    shutil.copyfile(out / "index.html", out / "history.html")
+    loc_summary, counts = loc.build(out, history.page)
+    navigation = ('<section aria-label="Analyses"><div class="cards">'
+                  '<a class="card" href="history.html"><h3>History analysis</h3>'
+                  '<p>Commits, changes and reports across pinned repository histories.</p></a>'
+                  '<a class="card" href="loc/index.html"><h3>LOC analysis</h3>'
+                  '<p>Implementation and Markdown documentation at each repository pin.</p>'
+                  f'<span class="where">{counts["totals"]["total_lines"]:,} lines · '
+                  f'{len(counts["sources"])} repositories</span></a></div></section>')
+    mast = ('<div class="mast"><div class="eyebrow">Evidence for the Eunoia ecosystem</div>'
+            '<h1>epikrisis — repository analyses</h1><div class="lede"><p>'
+            'Two analyses of the same repository family: how its history develops, '
+            'and how much implementation and documentation each tree contains. '
+            'Both include cvc5 and ethos on main and publish their commit pins.</p></div></div>')
+    # Keep the existing history table and charts directly on the homepage.
+    body = "\n".join([mast, navigation, parts[1], loc_summary, *parts[2:]])
+    (out / "index.html").write_text(history.page(
+        "epikrisis — history and LOC analysis", body, "",
+        "Parallel history and lines-of-code analyses for the Eunoia ecosystem."))
+    print(f"  shared site: history and LOC analysis -> {out}")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        raise SystemExit("usage: site <out-dir>")
+    build(sys.argv[1])

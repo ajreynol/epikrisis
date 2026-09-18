@@ -7,7 +7,7 @@
     "subject": "eunoia-ecosystem-s2",
     "stamp": "2026-09-18",
     "doc": "stretches.md",
-    "eyebrow": "The current picture",
+    "eyebrow": "History analysis",
     "title": "Two presidencies, in commits",
     "figure": "overview",
     "blurb": "One repository at a time holds the presidency and sets the direction of shared work for a stretch. **Two stretches have run.** The charts and table below count the ten member repositories together with **cvc5 and ethos on main**. Stretch 1 covers August 29 to the September 15 handoff; Stretch 2 runs from that handoff to the September 18 snapshot. Whole-history counts include all commits reachable from each repository's pin; the stretch columns count commits within those windows.",

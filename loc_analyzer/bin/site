@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+"""Render the LOC analysis from committed counts; used by the shared site build."""
+import html
+import importlib.machinery
+import importlib.util
+from pathlib import Path
+import shutil
+
+HERE = Path(__file__).resolve().parents[1]
+_loader = importlib.machinery.SourceFileLoader("loc_counts", str(HERE / "bin/loc"))
+_spec = importlib.util.spec_from_loader(_loader.name, _loader)
+counter = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(counter)
+
+METHOD = ("Physical lines at pinned commits, including blanks and comments. "
+          "Documentation counts .md files; implementation counts other UTF-8 text, "
+          "including tests, configuration and data. Binary files, symlinks and "
+          "submodules are skipped. Counts describe size, not quality or effort.")
+
+
+def table(counts):
+    rows = []
+    for s in sorted(counts["sources"], key=lambda s: (-s["total_lines"], s["id"])):
+        url = s["origin"].rstrip("/") + "/commit/" + s["commit"]
+        rows.append(f'<tr><td><a href="{html.escape(url)}">{html.escape(s["id"])}</a>'
+                    f'<br><small>{html.escape(s["ref"])}</small></td>'
+                    f'<td>{s["implementation"]["lines"]:,}</td>'
+                    f'<td>{s["documentation"]["lines"]:,}</td><td>{s["total_lines"]:,}</td>'
+                    f'<td><a href="{html.escape(url)}"><code>{s["commit"][:12]}</code></a></td></tr>')
+    totals = counts["totals"]
+    return ('<div class="tw"><table class="loc-counts"><thead><tr>'
+            '<th>repository / branch</th><th>implementation</th>'
+            '<th>documentation (.md)</th><th>total lines</th><th>pin</th>'
+            '</tr></thead><tbody>' + "".join(rows) + '</tbody><tfoot><tr><th>Total</th>'
+            + "".join(f'<td><strong>{totals[k]:,}</strong></td>'
+                      for k in ("implementation", "documentation", "total_lines"))
+            + '<td></td></tr></tfoot></table></div>')
+
+
+def stats(counts):
+    totals = counts["totals"]
+    values = [(totals["implementation"], "implementation lines (other text)"),
+              (totals["documentation"], "documentation lines (.md)"),
+              (len(counts["sources"]), "repositories at recorded commits")]
+    return '<div class="stats">' + "".join(
+        f'<div class="stat d"><b>{n:,}</b><span>{label}</span></div>'
+        for n, label in values) + '</div>'
+
+
+def build(out, page):
+    out = Path(out)
+    runs = []
+    for manifest in (HERE / "runs").glob("*/*/corpus.json"):
+        corpus, counts = counter.check_run(manifest.parent)
+        runs.append((corpus, counts, manifest.parent))
+    if not runs:
+        raise ValueError("loc site: no committed LOC runs")
+    runs.sort(key=lambda r: (r[0]["recorded_at"], r[0]["subject"], r[0]["run"]), reverse=True)
+    listing = []
+    for corpus, counts, rd in runs:
+        rel = f"loc/{corpus['subject']}/{corpus['run']}"
+        dst = out / rel
+        dst.mkdir(parents=True, exist_ok=True)
+        for name in ("corpus.json", "loc.json", "files.jsonl", "report.md"):
+            shutil.copyfile(rd / name, dst / name)
+        skipped = "".join(
+            f'<tr><td>{html.escape(s["id"])}</td>'
+            + "".join(f'<td>{s["skipped"][k]:,}</td>' for k in counter.SKIPPED) + '</tr>'
+            for s in counts["sources"])
+        body = (f'<h1>LOC analysis — {html.escape(corpus["subject"])}</h1>'
+                f'<p>Snapshot {html.escape(corpus["run"])}. Recorded '
+                f'<code>{html.escape(corpus["recorded_at"])}</code>.</p>'
+                f'<p>{METHOD}</p>' + stats(counts) + table(counts)
+                + '<h2>Skipped entries</h2><div class="tw"><table><thead><tr>'
+                '<th>repository</th><th>binary / non-UTF-8</th><th>symlinks</th>'
+                '<th>submodules</th><th>excluded paths</th></tr></thead><tbody>'
+                + skipped + '</tbody></table></div>'
+                + '<p>Generated and vendored text is included unless explicitly excluded. '
+                'Excluded paths: ' + html.escape(", ".join(corpus["exclude"]) or "none") + '.</p>'
+                + '<h2>Evidence</h2><p><a href="corpus.json">Manifest and counting rules</a> · '
+                '<a href="loc.json">Repository totals</a> · '
+                '<a href="files.jsonl">Per-file evidence</a> · '
+                '<a href="report.md">Markdown report</a></p>')
+        (dst / "index.html").write_text(page(
+            "LOC analysis — " + corpus["subject"], body,
+            '<div class="crumb"><a href="../../index.html">LOC analysis</a> · '
+            '<a href="../../../index.html">All analyses</a></div>', METHOD))
+        listing.append(f'<li><a href="{html.escape(corpus["subject"])}/'
+                       f'{html.escape(corpus["run"])}/index.html">'
+                       f'{html.escape(corpus["subject"])} — {html.escape(corpus["run"])}</a>'
+                       f' · {counts["totals"]["total_lines"]:,} lines</li>')
+    corpus, counts, _ = runs[0]
+    latest = f"loc/{corpus['subject']}/{corpus['run']}/index.html"
+    intro = (f'<p>{METHOD}</p><p>Latest snapshot: {html.escape(corpus["run"])}.</p>'
+             + stats(counts) + table(counts))
+    (out / "loc/index.html").write_text(page(
+        "LOC analysis — epikrisis", '<h1>Lines of code</h1>' + intro
+        + '<h2>Snapshots</h2><ul>' + "".join(listing) + '</ul>'
+        + '<p><a href="https://github.com/ajreynol/epikrisis/blob/main/loc_analyzer/README.md">'
+          'Counting method and usage</a></p>',
+        '<div class="crumb"><a href="../index.html">All analyses</a> · '
+        '<a href="../history.html">History analysis</a></div>', METHOD))
+    summary = ('<section id="loc-analysis"><div class="eyebrow">LOC analysis</div>'
+               '<h2><a href="loc/index.html">Repository size, in lines</a></h2>'
+               + intro + f'<p class="cta"><a href="{latest}">'
+               'Read the LOC report and per-file evidence &rarr;</a></p></section>')
+    return summary, counts

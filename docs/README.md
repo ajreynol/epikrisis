@@ -13,10 +13,9 @@ Every document in this repository, and what each one is for. The charter,
 **Documents sit with the thing they describe.** This directory holds what is
 true of the repository; a tool's own documents live under that tool, so a
 reader who has found the tool has found its documentation and a tool that is
-retired takes its pages with it. The repository has one analyzer today, so the
-split looks like overhead — it is here because the alternative, one flat
-directory serving an unknown number of tools, is the arrangement that cannot be
-introduced later without moving every page and every link at once.
+retired takes its pages with it. History and LOC analysis have their own
+directories, run artifacts and documentation; [`../bin/site`](../bin/site)
+builds their shared public site.
 
 | document | what it is for |
 | --- | --- |
@@ -32,6 +31,7 @@ evidence and reports in `runs/`.
 
 | document | what it is for |
 | --- | --- |
+| [`../history_analyzer/README.md`](../history_analyzer/README.md) | The analyzer's guide: directory layout, requirements, running an analysis, cvc5 and ethos commit tracking, building the site and checking the outputs. |
 | [`../history_analyzer/docs/design.md`](../history_analyzer/docs/design.md) | The pipeline: six stages, the boundary between the four that are programs and the one that is judgement, what each stage produces, what is committed, the command surface, and the hazards that produce plausible wrong answers rather than errors. Goal 1. |
 | [`../history_analyzer/docs/events.md`](../history_analyzer/docs/events.md) | The detector catalogue: what counts as a candidate event, how each is found, how each is known to be wrong, what was deliberately refused as a detector, and the rule for adding one. Goal 2. |
 | [`../history_analyzer/docs/judgement.md`](../history_analyzer/docs/judgement.md) | Everything standing in for the fact that the second half cannot be checked by a program: pre-registration, the shape of an assessment, required negative findings, the dropped-candidate record, the stricter rules when the subject is ours, and what calibration can and cannot establish. Goal 3. |
@@ -39,14 +39,15 @@ evidence and reports in `runs/`.
 
 The standard each had to meet: a document displaces a question or an hour of
 somebody's reading, because writing another page is the comfortable alternative
-to doing the work. The three above the line are held to it as the analyzer's
-account of itself; `notes.md` is held to it separately, and is what is left of a
+to doing the work. The design, detector catalogue and report requirements are
+held to it as the analyzer's account of itself; `notes.md` is held to it
+separately, and is what is left of a
 page that failed it — written before any request had arrived, and cut to the
 open defects it was carrying, each of which does displace something by being a
 finding somebody would otherwise have to make twice.
 
 **This index names documents the checker cannot see.** It reads `docs/` and
-requires every markdown file there to appear here; the four rows above are
+requires every markdown file there to appear here; the analyzer rows above are
 outside its reach, so a document added under `history_analyzer/docs/` and not
 listed here is drift that nothing will report. Said here rather than left for a
 reader to discover.
@@ -59,3 +60,14 @@ the tool works, and a report is the tool's output.
 carry a report, a case study or a note, and which are evidence only. It is not
 listed in the table above because it describes runs rather than the tool, which
 is the same line this section draws.
+
+## The LOC analyzer
+
+[`../loc_analyzer/`](../loc_analyzer/) holds the repository-size census. It
+shares the history census's repository set and measures implementation and
+Markdown documentation at its own recorded commits.
+
+| document | what it is for |
+| --- | --- |
+| [`../loc_analyzer/README.md`](../loc_analyzer/README.md) | Counting rules, subject configuration, running and checking a census, and publishing alongside history analysis. |
+| [`../loc_analyzer/runs/README.md`](../loc_analyzer/runs/README.md) | The snapshot index, with generated reports, manifests and per-file evidence. |
