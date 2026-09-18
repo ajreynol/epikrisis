@@ -9,7 +9,7 @@ twelve folders to find the four with something to read is the cost it removes.
 
 | what to read | what it is |
 | --- | --- |
-| **[Stretch 2 — case study](eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size, with the per-repository commit census for kanon's term, the nine defects the run exposed, five things worth measuring next, and advice. **Not a report**, which is what lets it carry the last two. |
+| **[Stretch 2 — case study](eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size, with the per-repository commit census for kanon's term, the nine defects the run exposed, five things worth measuring next, and advice. **Not a report**, which is what lets it carry the last two. Also as [one self-contained HTML file](eunoia-ecosystem-s2/2026-09-18/case-study.html) — no network, no dependencies, opens from disk. **GitHub renders markdown and not HTML**, so from a browser that link shows source: use *Download raw file*, or read the markdown. |
 | [Stretch 2 — report](eunoia-ecosystem-s2/2026-09-18/report.md) | The report proper for the same run: ten sources, 1,355 commits, Q1–Q8, eleven assessments. Held to [`judgement.md`](../docs/judgement.md) and validated by `check`. |
 | [anoieu — report](anoieu/2026-09-01/report.md) | The first report this tool produced. One repository, 132 commits. The worked example the charter points at. |
 | [ecosystem — report](eunoia-ecosystem/2026-09-01/report.md) | The first ecosystem report. Five sources, 889 commits, of which 707 are one of them. |

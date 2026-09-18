@@ -55,7 +55,7 @@ evidence — a pin and its candidates, with nothing anybody wrote.
 
 | | |
 | --- | --- |
-| **[Stretch 2 — case study](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size: the **per-repository commit census** for kanon's term, nine defects the run exposed, five things worth measuring next, and advice. **Not a report** — [`judgement.md`](history_analyzer/docs/judgement.md) forbids a report from saying what a subject should do next, which is why the advice lives beside one instead of inside it. |
+| **[Stretch 2 — case study](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size: the **per-repository commit census** for kanon's term, nine defects the run exposed, five things worth measuring next, and advice. **Not a report** — [`judgement.md`](history_analyzer/docs/judgement.md) forbids a report from saying what a subject should do next, which is why the advice lives beside one instead of inside it. **Also as [one self-contained HTML file](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/case-study.html)** — no network and no dependencies, so it opens from a checkout with nothing installed. |
 | [Stretch 2 — report](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/report.md) | The report for the same run. Ten sources, 1,355 commits, eleven assessments, `check` accepted. |
 | [anoieu — report](history_analyzer/runs/anoieu/2026-09-01/report.md) | The first report this tool produced, with its [evidence](history_analyzer/runs/anoieu/2026-09-01/). The worked example. |
 | [ecosystem — report](history_analyzer/runs/eunoia-ecosystem/2026-09-01/report.md) | The first ecosystem report. Five sources, 889 commits. |
@@ -64,6 +64,24 @@ evidence — a pin and its candidates, with nothing anybody wrote.
 For an example of the historical account this tooling is intended to support,
 see **[anoieu's `history.md`](https://github.com/ajreynol/anoieu/blob/main/docs/history.md)**,
 which records repository development and ecosystem events.
+
+**Every run in this repository is a self-assessment, and its conclusions do not
+travel.** The subject of each is a family of trees that contains this tool, so
+each run is marked `self` and [`judgement.md`](history_analyzer/docs/judgement.md)
+forbids citing what it concluded outward — not as evidence that these practices
+work, not in a vision document, not in a README, including this one. A family
+grading itself with its own instrument produces something useful to the family
+and worthless to anybody else.
+
+**So if you have arrived from outside the Eunoia ecosystem, the method is the
+part addressed to you** — [the pipeline design](history_analyzer/docs/design.md),
+[the detector catalogue](history_analyzer/docs/events.md) with its failure modes,
+[the report requirements](history_analyzer/docs/judgement.md), and
+[the open defects](history_analyzer/docs/notes.md). The runs above are worth
+reading as worked examples of that method and **not as findings you should
+believe**: what they assess is us, by us. A finding about a repository outside
+this family is that repository's, is carried by a person rather than published
+here, and is asked for first.
 
 The analyzer is experimental. Its completed assessments cover anoieu and the
 Eunoia ecosystem and are marked as self-assessments. Known limitations include

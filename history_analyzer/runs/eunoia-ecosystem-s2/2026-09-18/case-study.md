@@ -1,5 +1,19 @@
 # Case study — not a report, and not evidence
 
+**This is a self-assessment.** The run it describes carries `"self": true` — the
+subject is a family of trees that contains this tool. Under
+[`judgement.md`](../../../docs/judgement.md) its conclusions **are never cited
+outward**: not as evidence that these practices work, not in a vision document,
+not in a README. What may travel outward is the method, and never the findings.
+
+> **There is a rendered version of this page beside it:**
+> [`case-study.html`](case-study.html) — one self-contained file, no network, no
+> dependencies. **GitHub will not render it** — it shows HTML as source, so from
+> a browser use *Download raw file* and open it locally, or read this markdown
+> instead, which GitHub does render. **This markdown is the authoritative text**;
+> the HTML is a rendering of it, both are hand-written, and *nothing compares
+> them*.
+
 **What this file is.** A stress test of the analyzer, written up beside the run
 that produced it. [`report.md`](report.md) is the report and is held to
 [`../../../docs/judgement.md`](../../../docs/judgement.md); this is not, and the
