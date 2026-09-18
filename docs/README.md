@@ -48,3 +48,7 @@ Nothing in either place describes a run. Evidence and reports live beside the
 subject that produced them, under
 [`../history_analyzer/runs/`](../history_analyzer/runs/): documentation says how
 the tool works, and a report is the tool's output.
+[`runs/README.md`](../history_analyzer/runs/README.md) indexes them — which runs
+carry a report, a case study or a note, and which are evidence only. It is not
+listed in the table above because it describes runs rather than the tool, which
+is the same line this section draws.

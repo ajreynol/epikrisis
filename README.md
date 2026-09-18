@@ -46,15 +46,30 @@ copies of it. **Nothing compares them**, so a command added to one and not the
 others is drift that has not been reported yet; that is stated here rather than
 left for a reader to discover.
 
+## What it has produced
+
+**[`history_analyzer/runs/`](history_analyzer/runs/) holds twelve runs and four of
+them carry prose; [its index](history_analyzer/runs/README.md) says which, and is
+the page to open when you know a thing was written and not where.** The rest are
+evidence — a pin and its candidates, with nothing anybody wrote.
+
+| | |
+| --- | --- |
+| **[Stretch 2 — case study](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size: the **per-repository commit census** for kanon's term, nine defects the run exposed, five things worth measuring next, and advice. **Not a report** — [`judgement.md`](history_analyzer/docs/judgement.md) forbids a report from saying what a subject should do next, which is why the advice lives beside one instead of inside it. |
+| [Stretch 2 — report](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/report.md) | The report for the same run. Ten sources, 1,355 commits, eleven assessments, `check` accepted. |
+| [anoieu — report](history_analyzer/runs/anoieu/2026-09-01/report.md) | The first report this tool produced, with its [evidence](history_analyzer/runs/anoieu/2026-09-01/). The worked example. |
+| [ecosystem — report](history_analyzer/runs/eunoia-ecosystem/2026-09-01/report.md) | The first ecosystem report. Five sources, 889 commits. |
+| [census — note](history_analyzer/runs/eunoia-ecosystem/2026-09-02-census/note.md) | Stages 1–2 only, published because the evidence bore on a figure already in somebody's record. |
+
 For an example of the historical account this tooling is intended to support,
 see **[anoieu's `history.md`](https://github.com/ajreynol/anoieu/blob/main/docs/history.md)**,
-which records repository development and ecosystem events. For a worked analyzer
-output, see the [anoieu report](history_analyzer/runs/anoieu/2026-09-01/report.md) and its
-[accompanying evidence](history_analyzer/runs/anoieu/2026-09-01/).
+which records repository development and ecosystem events.
 
 The analyzer is experimental. Its completed assessments cover anoieu and the
 Eunoia ecosystem and are marked as self-assessments. Known limitations include
-missed governance events and unreliable event-to-claim matching; see
+**no windowing** -- every run reports over whole histories up to the pin, so a
+figure scoped to a stretch or any other period is not a product of this pipeline
+-- missed governance events, and unreliable event-to-claim matching; see
 [open defects](history_analyzer/docs/notes.md) before relying on the results.
 
 ## Using it
@@ -144,7 +159,7 @@ the repository. The analyzer's own documents sit with the analyzer, under
 - [Detector catalogue](history_analyzer/docs/events.md): event definitions, thresholds, and failure modes.
 - [Report requirements](history_analyzer/docs/judgement.md): assessments, falsifiers, and self-assessment rules.
 - [Open defects](history_analyzer/docs/notes.md): current limitations and how to reproduce them.
-- [Runs](history_analyzer/runs/): committed evidence and reports.
+- [Runs](history_analyzer/runs/README.md): the index of every run — which carry a report, a case study or a note, and which are evidence only.
 
 ## The name
 

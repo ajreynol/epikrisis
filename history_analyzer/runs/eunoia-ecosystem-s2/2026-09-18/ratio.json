@@ -1,0 +1,279 @@
+{
+  "_note": "Lines of tool against lines about tools, per repository, per month.",
+  "classifier": {
+    "everything else": "other, reported and not counted into either side",
+    "prose": [
+      ".md",
+      ".org",
+      ".rst",
+      ".txt"
+    ],
+    "tool": [
+      ".bzl",
+      ".c",
+      ".cc",
+      ".cmake",
+      ".cpp",
+      ".eo",
+      ".eos",
+      ".expected",
+      ".h",
+      ".hpp",
+      ".lean",
+      ".mk",
+      ".proof",
+      ".py",
+      ".rs",
+      ".sh",
+      ".smt2",
+      ".toml",
+      ".yaml",
+      ".yml"
+    ],
+    "tool_names": [
+      "CMakeLists.txt",
+      "Dockerfile",
+      "Makefile",
+      "lakefile.lean",
+      "lakefile.toml",
+      "lean-toolchain"
+    ]
+  },
+  "prose_is_product": [
+    "aisthesis",
+    "anoieu",
+    "kanon"
+  ],
+  "sources": {
+    "aisthesis": {
+      "months": {
+        "2026-09": {
+          "other": 0,
+          "prose": 3671,
+          "prose_per_tool": 64.4,
+          "tool": 57
+        }
+      },
+      "prose_is_product": true,
+      "total": {
+        "other": 0,
+        "prose": 3671,
+        "prose_per_tool": 64.4,
+        "tool": 57
+      }
+    },
+    "anoieu": {
+      "months": {
+        "2026-08": {
+          "other": 2659,
+          "prose": 20682,
+          "prose_per_tool": 1.16,
+          "tool": 17823
+        },
+        "2026-09": {
+          "other": 1821,
+          "prose": 23916,
+          "prose_per_tool": 3.91,
+          "tool": 6112
+        }
+      },
+      "prose_is_product": true,
+      "total": {
+        "other": 4480,
+        "prose": 44598,
+        "prose_per_tool": 1.86,
+        "tool": 23935
+      }
+    },
+    "dokimasia": {
+      "months": {
+        "2026-08": {
+          "other": 451,
+          "prose": 7144,
+          "prose_per_tool": 0.97,
+          "tool": 7388
+        },
+        "2026-09": {
+          "other": 12729,
+          "prose": 4424,
+          "prose_per_tool": 1.4,
+          "tool": 3155
+        }
+      },
+      "prose_is_product": false,
+      "total": {
+        "other": 13180,
+        "prose": 11568,
+        "prose_per_tool": 1.1,
+        "tool": 10543
+      }
+    },
+    "epikrisis": {
+      "months": {
+        "2026-09": {
+          "other": 4773,
+          "prose": 4997,
+          "prose_per_tool": 2.57,
+          "tool": 1947
+        }
+      },
+      "prose_is_product": false,
+      "total": {
+        "other": 4773,
+        "prose": 4997,
+        "prose_per_tool": 2.57,
+        "tool": 1947
+      }
+    },
+    "eschaton": {
+      "months": {
+        "2026-09": {
+          "other": 3,
+          "prose": 3070,
+          "prose_per_tool": 118.08,
+          "tool": 26
+        }
+      },
+      "prose_is_product": false,
+      "total": {
+        "other": 3,
+        "prose": 3070,
+        "prose_per_tool": 118.08,
+        "tool": 26
+      }
+    },
+    "eudaimonia": {
+      "months": {
+        "2026-08": {
+          "other": 10135,
+          "prose": 6513,
+          "prose_per_tool": 0.29,
+          "tool": 22234
+        },
+        "2026-09": {
+          "other": 7366,
+          "prose": 15538,
+          "prose_per_tool": 3.54,
+          "tool": 4386
+        }
+      },
+      "prose_is_product": false,
+      "total": {
+        "other": 17501,
+        "prose": 22051,
+        "prose_per_tool": 0.83,
+        "tool": 26620
+      }
+    },
+    "kanon": {
+      "months": {
+        "2026-09": {
+          "other": 2492,
+          "prose": 32887,
+          "prose_per_tool": 7.42,
+          "tool": 4435
+        }
+      },
+      "prose_is_product": true,
+      "total": {
+        "other": 2492,
+        "prose": 32887,
+        "prose_per_tool": 7.42,
+        "tool": 4435
+      }
+    },
+    "koine": {
+      "months": {
+        "2026-08": {
+          "other": 0,
+          "prose": 351,
+          "prose_per_tool": 20.65,
+          "tool": 17
+        },
+        "2026-09": {
+          "other": 3254,
+          "prose": 5692,
+          "prose_per_tool": 0.73,
+          "tool": 7791
+        }
+      },
+      "prose_is_product": false,
+      "total": {
+        "other": 3254,
+        "prose": 6043,
+        "prose_per_tool": 0.77,
+        "tool": 7808
+      }
+    },
+    "logos": {
+      "months": {
+        "2026-03": {
+          "other": 2252,
+          "prose": 95,
+          "prose_per_tool": 0.0,
+          "tool": 123958
+        },
+        "2026-04": {
+          "other": 4,
+          "prose": 5,
+          "prose_per_tool": 0.0,
+          "tool": 134320
+        },
+        "2026-05": {
+          "other": 977,
+          "prose": 164,
+          "prose_per_tool": 0.0,
+          "tool": 253428
+        },
+        "2026-06": {
+          "other": 2004,
+          "prose": 0,
+          "prose_per_tool": 0.0,
+          "tool": 279079
+        },
+        "2026-07": {
+          "other": 1136,
+          "prose": 32,
+          "prose_per_tool": 0.0,
+          "tool": 500708
+        },
+        "2026-08": {
+          "other": 3855,
+          "prose": 1610,
+          "prose_per_tool": 0.03,
+          "tool": 53859
+        },
+        "2026-09": {
+          "other": 35,
+          "prose": 274,
+          "prose_per_tool": 1.75,
+          "tool": 157
+        }
+      },
+      "prose_is_product": false,
+      "total": {
+        "other": 10263,
+        "prose": 2180,
+        "prose_per_tool": 0.0,
+        "tool": 1345509
+      }
+    },
+    "tachyon": {
+      "months": {
+        "2026-09": {
+          "other": 9660,
+          "prose": 1805306,
+          "prose_per_tool": 1098.12,
+          "tool": 1644
+        }
+      },
+      "prose_is_product": false,
+      "total": {
+        "other": 9660,
+        "prose": 1805306,
+        "prose_per_tool": 1098.12,
+        "tool": 1644
+      }
+    }
+  }
+}
