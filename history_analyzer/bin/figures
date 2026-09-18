@@ -31,13 +31,17 @@ import sys
 
 THEMES = {
     "light": dict(bg="#ffffff", ink="#15181d", ink2="#3e454f", ink3="#6b737f",
-                  rule="#d8d8d4", derived="#2470B8", declared="#A8721C"),
+                  rule="#d8d8d4", derived="#2470B8", declared="#B5651D",
+                  stretch1="#B5651D", stretch2="#8A4BA0"),
     "dark":  dict(bg="#0d1117", ink="#e7e9ec", ink2="#b3b9c2", ink3="#848b96",
-                  rule="#2c313a", derived="#4694D8", declared="#B5842B"),
+                  rule="#2c313a", derived="#4694D8", declared="#C07C2E",
+                  stretch1="#C07C2E", stretch2="#A470BC"),
 }
-# Both pairs pass the lightness band, chroma floor, CVD separation and contrast
-# checks against their own surface. They carry provenance and never rank:
-# `derived` is what the pipeline produced, `declared` is what somebody counted.
+# Each theme's set passes the lightness band, chroma floor, adjacent-pair CVD
+# separation, the normal-vision floor and contrast against its own surface --
+# checked with the validator rather than reasoned about. A hue identifies one
+# window and never its rank, so the same stretch keeps its colour everywhere it
+# is drawn, and `derived` stays distinct from anything counted by hand.
 
 # A three-panel figure at full panel width renders wider than any page that
 # carries it, and the browser scales the text down with it. Panels get narrower
@@ -153,7 +157,7 @@ def main():
         return dict(
             rows=rows, title=ser["label"],
             sub=f"{st:,} commits \u00b7 {ser.get('provenance', 'declared')}",
-            colour="declared",
+            colour=ser.get("colour", "declared"),
             emphasise={top[0]} | {i for i, v in rows if v == 0},
             foot=f"max {top[1]:,} \u2014 hatched = zero in the window"), \
             (f" {ser['label']}: " + ", ".join(f"{i} {v}" for i, v in rows)

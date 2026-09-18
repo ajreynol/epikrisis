@@ -18,7 +18,8 @@
         "epikrisis": 23,
         "eschaton": 0,
         "aisthesis": 1
-      }
+      },
+      "colour": "stretch1"
     },
     {
       "id": "stretch1-published",
@@ -37,7 +38,8 @@
         "epikrisis": 20,
         "eschaton": 0,
         "aisthesis": 0
-      }
+      },
+      "colour": "stretch1"
     },
     {
       "id": "stretch2",
@@ -56,7 +58,8 @@
         "epikrisis": 9,
         "eschaton": 11,
         "aisthesis": 8
-      }
+      },
+      "colour": "stretch2"
     }
   ],
   "figures": [
@@ -70,12 +73,46 @@
     },
     {
       "name": "stretches",
-      "heading": "Two stretches, and the window one of them published",
+      "heading": "The two presidential terms, side by side",
       "panels": [
         "stretch1",
-        "stretch1-published",
         "stretch2"
       ]
     }
-  ]
+  ],
+  "context": {
+    "_why": "Two repositories this ecosystem is built around and does not govern. They are counted here because a sentence about what happened is wrong without them, and they are kept out of the corpus because a run over somebody else's tree would be a verdict nobody asked for. Nothing in any report assesses them.",
+    "repositories": [
+      {
+        "id": "ethos",
+        "what": "the proof checker, and the home of the Eunoia manual",
+        "footing": "candidate \u2014 the policy is addressed to it and it has not joined",
+        "pin": "17356669",
+        "ref": "ethosEoc3",
+        "command": "git rev-list --count --since=<window> <pin>",
+        "note": "counted on the ethosEoc3 branch, which is where the compiler child project's work is. Its main branch gives very different figures and both are legitimate readings; see the note in stretches.md.",
+        "all_time": 2411,
+        "stretch1": 36,
+        "stretch1_published": 34,
+        "stretch2": 6,
+        "main_ref": "8dc85c4d",
+        "main_stretch1": 5,
+        "main_stretch1_published": 3,
+        "main_stretch2": 0
+      },
+      {
+        "id": "cvc5",
+        "what": "the SMT solver, and the owner of the calculus",
+        "footing": "foundation \u2014 the arrangement is downstream of it, and asks it for nothing",
+        "pin": "a07d513075",
+        "ref": "main",
+        "command": "git rev-list --count --since=<window> <pin>",
+        "note": "not resolved by kanon's scripts/repos.local, which records no checkout for it; read from a local clone at the pin above.",
+        "all_time": 14093,
+        "stretch1": 22,
+        "stretch1_published": 10,
+        "stretch2": 7
+      }
+    ]
+  }
 }

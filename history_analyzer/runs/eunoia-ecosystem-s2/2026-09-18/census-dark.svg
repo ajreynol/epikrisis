@@ -45,31 +45,31 @@
 <rect x="566" y="123.5" width="30" height="10" rx="2" fill="url(#hatch)"/>
 <text x="880" y="132.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#e7e9ec" font-weight="600">0</text>
 <text x="556" y="157.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">anoieu</text>
-<path d="M566 146.0 h58.11764705882353 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-58.11764705882353 z" fill="#B5842B"/>
+<path d="M566 146.0 h58.11764705882353 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-58.11764705882353 z" fill="#A470BC"/>
 <text x="880" y="157.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">20</text>
 <text x="556" y="182.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#e7e9ec" font-weight="600">kanon</text>
-<path d="M566 171.0 h260.0 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-260.0 z" fill="#B5842B"/>
+<path d="M566 171.0 h260.0 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-260.0 z" fill="#A470BC"/>
 <text x="880" y="182.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#e7e9ec" font-weight="600">85</text>
 <text x="556" y="207.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">eudaimonia</text>
-<path d="M566 196.0 h76.75294117647059 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-76.75294117647059 z" fill="#B5842B"/>
+<path d="M566 196.0 h76.75294117647059 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-76.75294117647059 z" fill="#A470BC"/>
 <text x="880" y="207.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">26</text>
 <text x="556" y="232.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">dokimasia</text>
-<path d="M566 221.0 h23.95294117647059 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-23.95294117647059 z" fill="#B5842B"/>
+<path d="M566 221.0 h23.95294117647059 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-23.95294117647059 z" fill="#A470BC"/>
 <text x="880" y="232.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">9</text>
 <text x="556" y="257.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">koine</text>
-<path d="M566 246.0 h82.96470588235294 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-82.96470588235294 z" fill="#B5842B"/>
+<path d="M566 246.0 h82.96470588235294 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-82.96470588235294 z" fill="#A470BC"/>
 <text x="880" y="257.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">28</text>
 <text x="556" y="282.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">tachyon</text>
-<path d="M566 271.0 h73.6470588235294 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-73.6470588235294 z" fill="#B5842B"/>
+<path d="M566 271.0 h73.6470588235294 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-73.6470588235294 z" fill="#A470BC"/>
 <text x="880" y="282.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">25</text>
 <text x="556" y="307.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">epikrisis</text>
-<path d="M566 296.0 h23.95294117647059 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-23.95294117647059 z" fill="#B5842B"/>
+<path d="M566 296.0 h23.95294117647059 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-23.95294117647059 z" fill="#A470BC"/>
 <text x="880" y="307.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">9</text>
 <text x="556" y="332.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">eschaton</text>
-<path d="M566 321.0 h30.16470588235294 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-30.16470588235294 z" fill="#B5842B"/>
+<path d="M566 321.0 h30.16470588235294 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-30.16470588235294 z" fill="#A470BC"/>
 <text x="880" y="332.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">11</text>
 <text x="556" y="357.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">aisthesis</text>
-<path d="M566 346.0 h20.847058823529412 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-20.847058823529412 z" fill="#B5842B"/>
+<path d="M566 346.0 h20.847058823529412 a4 4 0 0 1 4 4 v7 a4 4 0 0 1 -4 4 h-20.847058823529412 z" fill="#A470BC"/>
 <text x="880" y="357.5" text-anchor="end" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="11" fill="#b3b9c2">8</text>
 <line x1="480" y1="370" x2="880" y2="370" stroke="#2c313a" stroke-width="1"/>
 <text x="480" y="386" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="10" fill="#848b96">max 85 — hatched = zero in the window</text>

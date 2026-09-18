@@ -210,7 +210,8 @@ def convert(text, where, rel):
 CSS = """
 :root{--paper:#fcfcfb;--surface:#f4f4f2;--surface2:#ebebe8;--ink:#15181d;
 --ink2:#3e454f;--ink3:#6b737f;--rule:#d8d8d4;--rule2:#b9bab6;
---derived:#2470B8;--derived-soft:#e2edf8;--hand:#A8721C;--hand-soft:#f6eddc;
+--derived:#2470B8;--derived-soft:#e2edf8;--hand:#B5651D;--hand-soft:#f6ece1;
+--s1:#B5651D;--s2:#8A4BA0;
 --warn:#8a5a12;--warnbg:#f6eddc;--note:#1d5a8a;--notebg:#e2edf8;
 --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
 --sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
@@ -218,7 +219,8 @@ CSS = """
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
 --paper:#12151a;--surface:#191d23;--surface2:#222730;--ink:#e7e9ec;--ink2:#b3b9c2;
 --ink3:#848b96;--rule:#2c313a;--rule2:#3d434e;
---derived:#4694D8;--derived-soft:#16283a;--hand:#B5842B;--hand-soft:#2c2415;
+--derived:#4694D8;--derived-soft:#16283a;--hand:#C07C2E;--hand-soft:#2b2318;
+--s1:#C07C2E;--s2:#A470BC;
 --warn:#d8a24a;--warnbg:#2c2415;--note:#7ab3e0;--notebg:#16283a}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
@@ -272,6 +274,8 @@ grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
 border-radius:6px;padding:15px 17px;background:var(--surface)}
 .stat.d{border-left-color:var(--derived)}
 .stat.h{border-left-color:var(--hand)}
+.stat.s1{border-left-color:var(--s1)}
+.stat.s2{border-left-color:var(--s2)}
 .stat b{display:block;font-family:var(--serif);font-size:2.1rem;line-height:1.04;
 letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-bottom:5px;
 font-weight:600}
@@ -437,8 +441,9 @@ def main():
         href = doc_href(hl)
         base = "%s/%s" % (hl["subject"], hl["stamp"])
         tiles = "".join(
-            '<div class="stat h"><b>%s</b><span>%s</span></div>'
-            % (esc(t["n"]), inline(t["cap"], base)) for t in hl.get("stats", []))
+            '<div class="stat %s"><b>%s</b><span>%s</span></div>'
+            % (esc(t.get("cls", "h")), esc(t["n"]), inline(t["cap"], base))
+            for t in hl.get("stats", []))
         fig = ""
         if hl.get("figure"):
             fig = ('<picture><source media="(prefers-color-scheme: dark)" '

@@ -1,8 +1,8 @@
 {
   "_why": "The editorial copy for the published index, kept beside the runs rather than inside bin/site, so what the front page says is a file somebody edits and not a string in a program. Every figure it shows is still read from a run's own evidence.",
-  "title": "epikrisis — how the Eunoia ecosystem is developing",
+  "title": "epikrisis \u2014 how the Eunoia ecosystem is developing",
   "tagline": "Evidence and analysis for the repositories of the Eunoia ecosystem",
-  "lede": "Epikrisis reads the git histories of the **Eunoia ecosystem** — a group of repositories built around one proof calculus — and asks what actually happened: what was built, what stalled, and where a project's own account of itself differs from its tree. Every figure below is derived from commits recorded in advance, so anybody with the checkouts can reproduce it.",
+  "lede": "Epikrisis reads the git histories of the **Eunoia ecosystem** \u2014 a group of repositories built around one proof calculus \u2014 and asks what actually happened: what was built, what stalled, and where a project's own account of itself differs from its tree. Every figure below is derived from commits recorded in advance, so anybody with the checkouts can reproduce it.",
   "highlight": {
     "subject": "eunoia-ecosystem-s2",
     "stamp": "2026-09-18",
@@ -10,12 +10,28 @@
     "eyebrow": "The current picture",
     "title": "Two presidencies, in commits",
     "figure": "stretches",
-    "blurb": "One repository at a time holds an office called the presidency, sets the direction of the shared work for a stretch, and hands it on. **Two stretches have run.** Stretch 2 looks more than twice as busy as Stretch 1 — and it is not: take out the eleven days Stretch 1 carried no commit at all, and the two terms run at the same pace. Forty-nine commits of Stretch 1 fall outside the only census anybody published of it.",
+    "blurb": "One repository at a time holds an office called the presidency, sets the direction of the shared work for a stretch, and hands it on. **Two stretches have run.** Stretch 2 looks more than twice as busy as Stretch 1 \u2014 and it is not: take out the eleven days Stretch 1 carried no commit at all, and the two terms run at the same pace. The only census anybody published of Stretch 1 covers five of its eighteen days, and forty-nine commits fall outside it.",
     "stats": [
-      {"n": "439", "cap": "commits in Stretch 1, anoieu's term, across eighteen days"},
-      {"n": "221", "cap": "commits in Stretch 2 so far, kanon's term, across four"},
-      {"n": "11", "cap": "of Stretch 1's eighteen days carried no commit anywhere"},
-      {"n": "0", "cap": "commits to logos in Stretch 2 — 52.5% of all history, and stopped"}
+      {
+        "n": "439",
+        "cap": "commits in Stretch 1 \u2014 anoieu's term, eighteen days",
+        "cls": "s1"
+      },
+      {
+        "n": "221",
+        "cap": "commits in Stretch 2 so far \u2014 kanon's term, four days",
+        "cls": "s2"
+      },
+      {
+        "n": "11",
+        "cap": "of Stretch 1's eighteen days carried no commit anywhere",
+        "cls": "s1"
+      },
+      {
+        "n": "0",
+        "cap": "commits to logos in Stretch 2 \u2014 52.5% of all history, and stopped",
+        "cls": "s2"
+      }
     ],
     "cta": "Read the full comparison"
   },
@@ -24,38 +40,70 @@
       "title": "Reports",
       "blurb": "Each is written against committed evidence and checked by a program before it is published: every figure cited must exist, every assessment must name what would prove it wrong, and every candidate event must be either used or dropped with a reason.",
       "items": [
-        {"subject": "eunoia-ecosystem-s2", "stamp": "2026-09-18", "doc": "report.md",
-         "title": "The ecosystem at ten repositories",
-         "blurb": "The full report for the current pin: eight pre-registered questions answered against 1,355 commits across every repository the register holds under the policy."},
-        {"subject": "anoieu", "stamp": "2026-09-01", "doc": "report.md",
-         "title": "anoieu, the first report",
-         "blurb": "One repository, 132 commits, and the first thing this tool produced. The worked example everything since is measured against."},
-        {"subject": "eunoia-ecosystem", "stamp": "2026-09-01", "doc": "report.md",
-         "title": "The ecosystem at five repositories",
-         "blurb": "The earlier ecosystem-wide report, 889 commits, of which 707 belong to a single tree."}
+        {
+          "subject": "eunoia-ecosystem-s2",
+          "stamp": "2026-09-18",
+          "doc": "report.md",
+          "title": "The ecosystem at ten repositories",
+          "blurb": "The full report for the current pin: eight pre-registered questions answered against 1,355 commits across every repository the register holds under the policy."
+        },
+        {
+          "subject": "anoieu",
+          "stamp": "2026-09-01",
+          "doc": "report.md",
+          "title": "anoieu, the first report",
+          "blurb": "One repository, 132 commits, and the first thing this tool produced. The worked example everything since is measured against."
+        },
+        {
+          "subject": "eunoia-ecosystem",
+          "stamp": "2026-09-01",
+          "doc": "report.md",
+          "title": "The ecosystem at five repositories",
+          "blurb": "The earlier ecosystem-wide report, 889 commits, of which 707 belong to a single tree."
+        }
       ]
     },
     {
       "title": "About the instrument",
       "blurb": "This tool is one of the repositories it reads, so what is wrong with it is published beside what it found.",
       "items": [
-        {"subject": "eunoia-ecosystem-s2", "stamp": "2026-09-18", "doc": "case-study.md",
-         "title": "What broke when this was run",
-         "blurb": "A stress test at the register's full size: nine defects, six of them new, including a census the pipeline cannot actually produce and a matcher whose wrongness grows with the corpus."},
-        {"subject": "eunoia-ecosystem", "stamp": "2026-09-02-census", "doc": "note.md",
-         "title": "A correction to somebody else's figure",
-         "blurb": "Not a report — evidence published because it bore on a number already in the ecosystem's record, and holding it would have been the failure this project named for itself."}
+        {
+          "subject": "eunoia-ecosystem-s2",
+          "stamp": "2026-09-18",
+          "doc": "case-study.md",
+          "title": "What broke when this was run",
+          "blurb": "A stress test at the register's full size: nine defects, six of them new, including a census the pipeline cannot actually produce and a matcher whose wrongness grows with the corpus."
+        },
+        {
+          "subject": "eunoia-ecosystem",
+          "stamp": "2026-09-02-census",
+          "doc": "note.md",
+          "title": "A correction to somebody else's figure",
+          "blurb": "Not a report \u2014 evidence published because it bore on a number already in the ecosystem's record, and holding it would have been the failure this project named for itself."
+        }
       ]
     }
   ],
   "method": [
-    {"title": "The pipeline", "href": "history_analyzer/docs/design.md",
-     "blurb": "Six stages, and the boundary between the four that are programs and the one that is judgement."},
-    {"title": "The detectors", "href": "history_analyzer/docs/events.md",
-     "blurb": "What counts as an event, how each is found, and how each is known to be wrong."},
-    {"title": "What a report must do", "href": "history_analyzer/docs/judgement.md",
-     "blurb": "Pre-registered questions, required falsifiers, required negative findings, and the stricter rules when the subject is ours."},
-    {"title": "Open defects", "href": "history_analyzer/docs/notes.md",
-     "blurb": "What is currently wrong with this tool, how to reproduce each one, and what would fix it."}
+    {
+      "title": "The pipeline",
+      "href": "history_analyzer/docs/design.md",
+      "blurb": "Six stages, and the boundary between the four that are programs and the one that is judgement."
+    },
+    {
+      "title": "The detectors",
+      "href": "history_analyzer/docs/events.md",
+      "blurb": "What counts as an event, how each is found, and how each is known to be wrong."
+    },
+    {
+      "title": "What a report must do",
+      "href": "history_analyzer/docs/judgement.md",
+      "blurb": "Pre-registered questions, required falsifiers, required negative findings, and the stricter rules when the subject is ours."
+    },
+    {
+      "title": "Open defects",
+      "href": "history_analyzer/docs/notes.md",
+      "blurb": "What is currently wrong with this tool, how to reproduce each one, and what would fix it."
+    }
   ]
 }
