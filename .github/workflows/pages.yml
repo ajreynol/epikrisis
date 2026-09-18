@@ -1,0 +1,68 @@
+name: Pages
+
+# The site is a rendering of what is already committed under runs/: the index is
+# derived from each run's corpus.json and each page is that run's own markdown.
+# It is built here rather than committed, so the tree carries evidence and prose
+# and never a generated copy of them.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'history_analyzer/bin/site'
+      - 'history_analyzer/bin/figures'
+      - 'history_analyzer/runs/**'
+      - 'history_analyzer/tests/**'
+      - '.github/workflows/pages.yml'
+  pull_request:
+    paths:
+      - 'history_analyzer/bin/site'
+      - 'history_analyzer/bin/figures'
+      - 'history_analyzer/runs/**'
+      - 'history_analyzer/tests/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the converter refuses what it cannot render, and loses nothing
+        run: python3 -m unittest discover -s history_analyzer/tests
+      - name: Check every report still matches its evidence
+        run: |
+          for run in history_analyzer/runs/*/*/report.md; do
+            d=$(dirname "$run")
+            python3 history_analyzer/bin/epikrisis check \
+              "$(basename "$(dirname "$d")")" --run "$(basename "$d")"
+          done
+      - name: Build the site
+        run: python3 history_analyzer/bin/site site
+      - name: Upload
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v5
+      - id: deployment
+        uses: actions/deploy-pages@v4

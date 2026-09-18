@@ -1,0 +1,17 @@
+{
+  "_why": "Panels this pipeline cannot derive. The analyzer has no window and reports over whole histories up to the pin, so a stretch-scoped count is read by hand; it is declared here with the command that produces it so a chart drawn from it is re-derivable, and is coloured and labelled as declared rather than derived wherever it is drawn.",
+  "series": [
+    {
+      "id": "stretch2",
+      "label": "Stretch 2, the current term",
+      "provenance": "hand-read",
+      "command": "git rev-list --count --since=2026-09-15T16:15:45-05:00 HEAD",
+      "note": "Stretch 2 opened at kanon 7eb9973, the commit in which the register first read `status: president` against kanon. Counted in each checkout at the commit corpus.json pins for it.",
+      "values": {
+        "logos": 0, "anoieu": 20, "kanon": 85, "eudaimonia": 26,
+        "dokimasia": 9, "koine": 28, "tachyon": 25, "epikrisis": 9,
+        "eschaton": 11, "aisthesis": 8
+      }
+    }
+  ]
+}

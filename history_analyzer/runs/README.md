@@ -9,7 +9,7 @@ twelve folders to find the four with something to read is the cost it removes.
 
 | what to read | what it is |
 | --- | --- |
-| **[Stretch 2 — case study](eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size, with the per-repository commit census for kanon's term, the nine defects the run exposed, five things worth measuring next, and advice. **Not a report**, which is what lets it carry the last two. Also as [one self-contained HTML file](eunoia-ecosystem-s2/2026-09-18/case-study.html) — no network, no dependencies, opens from disk. **GitHub renders markdown and not HTML**, so from a browser that link shows source: use *Download raw file*, or read the markdown. |
+| **[Stretch 2 — case study](eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size, with the per-repository commit census for kanon's term, the nine defects the run exposed, five things worth measuring next, and advice. **Not a report**, which is what lets it carry the last two. |
 | [Stretch 2 — report](eunoia-ecosystem-s2/2026-09-18/report.md) | The report proper for the same run: ten sources, 1,355 commits, Q1–Q8, eleven assessments. Held to [`judgement.md`](../docs/judgement.md) and validated by `check`. |
 | [anoieu — report](anoieu/2026-09-01/report.md) | The first report this tool produced. One repository, 132 commits. The worked example the charter points at. |
 | [ecosystem — report](eunoia-ecosystem/2026-09-01/report.md) | The first ecosystem report. Five sources, 889 commits, of which 707 are one of them. |
@@ -60,13 +60,52 @@ done
 
 Twelve rows, four with prose, or this page is stale.
 
+## How a run is presented
+
+**Published at [ajreynol.github.io/epikrisis](https://ajreynol.github.io/epikrisis/).**
+`bin/site` builds it from this directory and CI deploys it; the built site is a
+`.gitignore`d artifact, because a generated copy of the evidence living in the
+tree is one more thing to go stale. **The converter refuses any markdown it has
+not been taught** rather than guessing — a renderer that quietly drops a table row
+produces a page that reads correctly and is wrong, which is the failure this
+repository is arranged against. `history_analyzer/tests/test_site.py` holds that
+to it, and checks that no heading or table row is lost and that no link goes
+nowhere.
+
+**Markdown is the source, and nothing else.** GitHub renders it, it diffs in review, its
+headings are linkable, and it needs no build and no website. A hand-written HTML copy
+was tried on 2026-09-18 and removed the same day: GitHub serves HTML as source,
+so it was unreadable in the place people actually browse, and a second
+hand-written copy of the same prose was a drift hazard for no reader's benefit.
+The site above is not that: it is generated from this markdown on every build and
+is never edited.
+
+**Charts are derived, never drawn.** `bin/figures` renders a run's `corpus.json`
+into themed SVG committed beside it, and any panel the pipeline cannot derive
+must be declared in that run's `figures.json` **with the command that produces
+it** — the renderer refuses a series without one, and refuses a series drawn over
+a different set than the pin. The markdown wraps the pair in `<picture>` so it
+follows the reader's theme. Blue is derived, ochre is hand-read.
+
+```sh
+python3 history_analyzer/bin/figures history_analyzer/runs/<subject>/<stamp>
+```
+
+**Data URIs are not an option**, and it is worth writing down so it is not
+rediscovered: GitHub's markdown sanitizer strips `data:` images, so a single
+self-contained `.md` with its figures inlined does not render there. A committed
+file referenced relatively is the form that works, and it is self-contained in
+the only sense a repository needs — nothing is fetched from anywhere.
+
 ## What a run directory holds
 
 `corpus.json` the pin · `events.jsonl` the candidates · `claims.jsonl` what the
 subject says about itself · `delta.json` the join between them · `ratio.json`,
 `panel.json` the measures · `selection.jsonl` every candidate not cited, with the
-reason it was dropped · `report.md`, `assessments.jsonl` the judgement, and the
-only files in here that a program did not write.
+reason it was dropped · `figures.json` any panel
+the pipeline cannot derive, with its command · `census-*.svg` the rendered
+figures · `report.md`, `assessments.jsonl` the judgement, and the only files in
+here that a program did not write.
 
 **Reports are marked `self` where the subject contains this tool**, and under
 [`judgement.md`](../docs/judgement.md) a self-assessment's conclusions are never

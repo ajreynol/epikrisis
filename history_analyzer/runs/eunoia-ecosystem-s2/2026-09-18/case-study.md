@@ -1,18 +1,20 @@
-# Case study — not a report, and not evidence
+# Stretch 2 — a stress test of the history analyzer
 
-**This is a self-assessment.** The run it describes carries `"self": true` — the
-subject is a family of trees that contains this tool. Under
-[`judgement.md`](../../../docs/judgement.md) its conclusions **are never cited
-outward**: not as evidence that these practices work, not in a vision document,
-not in a README. What may travel outward is the method, and never the findings.
+> [!IMPORTANT]
+> **This is a self-assessment.** The run it describes carries `"self": true` — the
+> subject is a family of trees that contains this tool. Under
+> [`judgement.md`](../../../docs/judgement.md) its conclusions **are never cited
+> outward**: not as evidence that these practices work, not in a vision document,
+> not in a README. What may travel outward is the method, never the findings.
 
-> **There is a rendered version of this page beside it:**
-> [`case-study.html`](case-study.html) — one self-contained file, no network, no
-> dependencies. **GitHub will not render it** — it shows HTML as source, so from
-> a browser use *Download raw file* and open it locally, or read this markdown
-> instead, which GitHub does render. **This markdown is the authoritative text**;
-> the HTML is a rendering of it, both are hand-written, and *nothing compares
-> them*.
+| | |
+| --- | --- |
+| **Run** | `eunoia-ecosystem-s2` / `2026-09-18` |
+| **Corpus** | 10 sources, 1,355 commits, 2026-03-03 → 2026-09-18 |
+| **Target** | Stretch 2, kanon's term, opened 2026-09-15 16:15:45 −05:00 |
+| **Stage 6** | `check` ok — 11 assessments, 43 ids cited, 554 candidates accounted for |
+
+**Contents** — [The census](#the-census) · [What the stress test broke](#what-the-stress-test-broke) · [Five things worth measuring next](#five-things-worth-measuring-next) · [Advice](#advice-which-is-why-this-is-not-a-report)
 
 **What this file is.** A stress test of the analyzer, written up beside the run
 that produced it. [`report.md`](report.md) is the report and is held to
@@ -55,6 +57,23 @@ The figure `D4` accepted. **The whole-history column is derived and is
 pipeline**, because no stage takes a window; it is `git rev-list --count --since`
 at the same commits `corpus.json` pins. Stretch 2 opened at kanon `7eb9973`,
 2026-09-15 16:15:45 −05:00.
+
+> [!NOTE]
+> **The charts below are derived, not drawn.** `figures` renders them from this
+> run's own `corpus.json` and from [`figures.json`](figures.json), which declares
+> the hand-read panel together with the command that produces it. Re-running it
+> after a re-pin redraws them or fails; it cannot quietly disagree with the
+> evidence. Blue is derived, ochre is hand-read, hatched is a zero rather than a
+> short bar.
+>
+> ```sh
+> python3 history_analyzer/bin/figures history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18
+> ```
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="census-dark.svg">
+  <img alt="Commits per repository across ten Eunoia members, two panels sharing a row order. Whole history: logos 711, anoieu 261, kanon 104, eudaimonia 97, dokimasia 52, koine 41, tachyon 37, epikrisis 32, eschaton 11, aisthesis 9 — 1,355 total. Stretch 2: kanon 85, koine 28, eudaimonia 26, tachyon 25, anoieu 20, eschaton 11, dokimasia 9, epikrisis 9, aisthesis 8, and logos 0 — 221 total." src="census-light.svg">
+</picture>
 
 | repository | whole history | Stretch 2 *(hand-read)* | share of stretch |
 | --- | ---: | ---: | ---: |

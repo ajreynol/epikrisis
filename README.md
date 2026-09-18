@@ -21,6 +21,8 @@ every path and every link has to move at once.
 | under `history_analyzer/` | what it holds |
 | --- | --- |
 | `bin/epikrisis` | the program: one Python file, standard library only |
+| `bin/figures` | a renderer, and never part of the pipeline: it turns a run's evidence into SVG and decides nothing |
+| `bin/site` | the other renderer: it builds the published report site from what is under `runs/`, and refuses any markdown it has not been taught |
 | `subjects/` | what may be analysed — the repositories a run reads, and the settings it reads them under |
 | `questions.md` | the questions, pre-registered, with their digest pinned into every run |
 | `calibration/` | what a reader predicted before the detectors ran, and how that scored |
@@ -48,6 +50,12 @@ left for a reader to discover.
 
 ## What it has produced
 
+**The reports are published at
+[ajreynol.github.io/epikrisis](https://ajreynol.github.io/epikrisis/)**, built by
+CI from what is committed under `runs/` — the index derived from each run's
+`corpus.json`, each page that run's own markdown. Nothing is written there that
+is not in this tree.
+
 **[`history_analyzer/runs/`](history_analyzer/runs/) holds twelve runs and four of
 them carry prose; [its index](history_analyzer/runs/README.md) says which, and is
 the page to open when you know a thing was written and not where.** The rest are
@@ -55,7 +63,7 @@ evidence — a pin and its candidates, with nothing anybody wrote.
 
 | | |
 | --- | --- |
-| **[Stretch 2 — case study](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size: the **per-repository commit census** for kanon's term, nine defects the run exposed, five things worth measuring next, and advice. **Not a report** — [`judgement.md`](history_analyzer/docs/judgement.md) forbids a report from saying what a subject should do next, which is why the advice lives beside one instead of inside it. **Also as [one self-contained HTML file](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/case-study.html)** — no network and no dependencies, so it opens from a checkout with nothing installed. |
+| **[Stretch 2 — case study](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size: the **per-repository commit census** for kanon's term, nine defects the run exposed, five things worth measuring next, and advice. **Not a report** — [`judgement.md`](history_analyzer/docs/judgement.md) forbids a report from saying what a subject should do next, which is why the advice lives beside one instead of inside it. Renders on GitHub, charts included. |
 | [Stretch 2 — report](history_analyzer/runs/eunoia-ecosystem-s2/2026-09-18/report.md) | The report for the same run. Ten sources, 1,355 commits, eleven assessments, `check` accepted. |
 | [anoieu — report](history_analyzer/runs/anoieu/2026-09-01/report.md) | The first report this tool produced, with its [evidence](history_analyzer/runs/anoieu/2026-09-01/). The worked example. |
 | [ecosystem — report](history_analyzer/runs/eunoia-ecosystem/2026-09-01/report.md) | The first ecosystem report. Five sources, 889 commits. |

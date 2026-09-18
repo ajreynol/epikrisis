@@ -1,0 +1,387 @@
+#!/usr/bin/env python3
+"""site -- build the public report site from what is committed under runs/.
+
+The site is a **rendering and never a source**. Every page it produces comes
+from a run directory: the index is derived from each run's `corpus.json`, and
+each prose page is the markdown in that directory converted to HTML. Nothing is
+written here that is not already in the tree, so the site cannot say anything the
+repository does not.
+
+**The converter refuses what it does not understand.** A markdown feature it has
+not been taught is an error and never a guess, because a renderer that quietly
+drops a table row or mangles a figure produces a page that reads correctly and is
+wrong -- which is the failure this repository is arranged against. The supported
+set is exactly what the run documents use, and widening it is a deliberate edit.
+
+**It is not part of the analyzer.** It reads no history, runs no `git`, and
+decides nothing; the pipeline's output does not depend on it. Like `bin/figures`
+it is outside what `epikrisis budget` meters, which is recorded in
+../docs/notes.md rather than relied on.
+
+    site <out-dir>
+
+Stdlib only, no network. The output directory is a build artifact and is not
+committed; CI builds it and GitHub Pages serves it.
+"""
+import html
+import json
+import os
+import re
+import shutil
+import sys
+
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RUNS = os.path.join(HERE, "runs")
+REPO = "https://github.com/ajreynol/epikrisis/blob/main"
+
+# Prose that is a run's own output. Anything else in a run directory is evidence
+# and is linked as a file rather than rendered as a page.
+PROSE = ("case-study.md", "report.md", "note.md")
+
+TITLES = {"report.md": "Report", "case-study.md": "Case study", "note.md": "Note"}
+
+
+# ------------------------------------------------------------------ markdown
+
+class Unsupported(Exception):
+    """A construct the converter has not been taught. Never guessed at."""
+
+
+REFUSE = [
+    (re.compile(r"!\["), "an image; figures arrive through a <picture> block"),
+    (re.compile(r"\[\^"), "a footnote"),
+    (re.compile(r"~~"), "strikethrough"),
+    (re.compile(r"^#{4,} "), "a heading below level 3"),
+    (re.compile(r"^\s{4,}\S"), "an indented code block; use a fence"),
+]
+# What begins a block, and therefore ends a paragraph.
+BLOCK = re.compile(r"^(#{1,3} |\||>|```|<|-{3,}$|\d+\. |[-*] )")
+
+RAW_OK = ("<picture>", "</picture>", "<source", "<img", "<details", "</details>",
+          "<summary", "</summary>")
+
+
+def inline(s, rel):
+    """Code spans first, so nothing inside them is treated as markup."""
+    spans = []
+
+    def stash(m):
+        spans.append(m.group(1))
+        return f"\x00{len(spans)-1}\x00"
+
+    s = re.sub(r"`([^`]+)`", stash, s)
+    s = html.escape(s, quote=False)
+    s = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)",
+               lambda m: f'<a href="{html.escape(link(m.group(2), rel), quote=True)}">'
+                         f"{m.group(1)}</a>", s)
+    s = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", s)
+    s = re.sub(r"(?<!\*)\*([^*\n]+)\*(?!\*)", r"<em>\1</em>", s)
+    return re.sub(r"\x00(\d+)\x00",
+                  lambda m: f"<code>{html.escape(spans[int(m.group(1))])}</code>", s)
+
+
+def link(t, rel):
+    """A link the site carries stays relative; everything else goes to GitHub.
+
+    A page that silently links nowhere is the characteristic cost of rendering a
+    document away from the tree it was written in. The site carries prose and
+    figures and nothing else, so a link to evidence -- `figures.json`, an events
+    file -- resolves into the repository instead of to a file that is not here.
+    """
+    if t.startswith(("http", "mailto:", "#")):
+        return t
+    if t.endswith(PROSE):
+        return t[:-3] + ".html"
+    if t.endswith(".svg"):
+        return t                       # copied beside the page
+    here = f"history_analyzer/runs/{rel}"
+    return f"{REPO}/{os.path.normpath(os.path.join(here, t))}"
+
+
+def slug(h):
+    return re.sub(r"\s+", "-", re.sub(r"[^\w\s-]", "", re.sub(r"<[^>]+>", "", h)
+                                      .strip().lower()))
+
+
+def convert(text, where, rel):
+    out, lines, i = [], text.split("\n"), 0
+    while i < len(lines):
+        ln, start = lines[i], i
+        for pat, what in REFUSE:
+            if pat.search(ln):
+                raise Unsupported(f"{where}:{i+1}: {what} -- teach the converter "
+                                  f"or change the document: {ln.strip()[:60]}")
+        if ln.startswith("```"):
+            j = i + 1
+            while j < len(lines) and not lines[j].startswith("```"):
+                j += 1
+            body = html.escape("\n".join(lines[i+1:j]))
+            out.append(f"<pre><code>{body}</code></pre>")
+            i = j + 1
+        elif ln.startswith("<picture>"):
+            j = i
+            while j < len(lines) and "</picture>" not in lines[j]:
+                j += 1
+            out.append("\n".join(lines[i:j+1]))
+            i = j + 1
+        elif ln.startswith("<"):
+            if not ln.lstrip().startswith(RAW_OK):
+                raise Unsupported(f"{where}:{i+1}: raw HTML <{ln.strip()[1:20]}")
+            out.append(ln)
+            i += 1
+        elif re.match(r"^#{1,3} ", ln):
+            n = len(ln) - len(ln.lstrip("#"))
+            t = ln[n+1:].strip()
+            out.append(f'<h{n} id="{slug(t)}">{inline(t, rel)}</h{n}>')
+            i += 1
+        elif re.match(r"^-{3,}$", ln):
+            out.append("<hr>")
+            i += 1
+        elif ln.startswith("|"):
+            rows, j = [], i
+            while j < len(lines) and lines[j].startswith("|"):
+                rows.append([c.strip() for c in lines[j].strip("|").split("|")])
+                j += 1
+            head, body = rows[0], rows[2:] if len(rows) > 1 and set(
+                "".join(rows[1]).replace("|", "")) <= set("-: ") else rows[1:]
+            th = "".join(f"<th>{inline(c, rel)}</th>" for c in head)
+            tb = "".join("<tr>" + "".join(f"<td>{inline(c, rel)}</td>" for c in r)
+                         + "</tr>" for r in body)
+            out.append(f'<div class="tw"><table><thead><tr>{th}</tr></thead>'
+                       f"<tbody>{tb}</tbody></table></div>")
+            i = j
+        elif ln.startswith(">"):
+            j, buf = i, []
+            while j < len(lines) and lines[j].startswith(">"):
+                buf.append(lines[j].lstrip(">").lstrip(" "))
+                j += 1
+            kind = ""
+            m = re.match(r"\[!(\w+)\]", buf[0] if buf else "")
+            if m:
+                kind = " alert " + m.group(1).lower()
+                buf = buf[1:]
+            out.append(f'<blockquote class="q{kind}">'
+                       + convert("\n".join(buf), where, rel) + "</blockquote>")
+            i = j
+        elif re.match(r"^[-*] ", ln) or re.match(r"^\d+\. ", ln):
+            tag = "ul" if re.match(r"^[-*] ", ln) else "ol"
+            items, j = [], i
+            pat = r"^[-*] " if tag == "ul" else r"^\d+\. "
+            while j < len(lines) and (re.match(pat, lines[j])
+                                      or (items and lines[j].startswith("  ")
+                                          and lines[j].strip())):
+                if re.match(pat, lines[j]):
+                    items.append(re.sub(pat, "", lines[j]))
+                else:
+                    items[-1] += " " + lines[j].strip()
+                j += 1
+            li = "".join(f"<li>{inline(x, rel)}</li>" for x in items)
+            out.append(f"<{tag}>{li}</{tag}>")
+            i = j
+        elif ln.strip() == "":
+            i += 1
+        else:
+            # Always consume the opening line. A paragraph that starts with a
+            # character another block also starts with -- a backtick, most often
+            # -- otherwise matches the continuation test, buffers nothing, and
+            # leaves the cursor where it was.
+            buf, j = [lines[i]], i + 1
+            while j < len(lines) and lines[j].strip() and not BLOCK.match(lines[j]):
+                buf.append(lines[j])
+                j += 1
+            out.append(f"<p>{inline(' '.join(buf), rel)}</p>")
+            i = j
+        if i <= start:
+            raise Unsupported(f"{where}:{start+1}: the converter consumed no "
+                              f"input here and would not terminate: "
+                              f"{lines[start].strip()[:60]!r}")
+    return "\n".join(out)
+
+
+# ---------------------------------------------------------------------- page
+
+CSS = """
+:root{--paper:#fcfcfb;--surface:#f4f4f2;--surface2:#ebebe8;--ink:#15181d;
+--ink2:#3e454f;--ink3:#6b737f;--rule:#d8d8d4;--derived:#2470B8;--hand:#A8721C;
+--warn:#8a5a12;--warnbg:#f6eddc;--note:#1d5a8a;--notebg:#e2edf8;
+--serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+--sans:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+--paper:#12151a;--surface:#191d23;--surface2:#222730;--ink:#e7e9ec;--ink2:#b3b9c2;
+--ink3:#848b96;--rule:#2c313a;--derived:#4694D8;--hand:#B5842B;
+--warn:#d8a24a;--warnbg:#2c2415;--note:#7ab3e0;--notebg:#16283a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 24px 88px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;text-wrap:balance;
+line-height:1.16;letter-spacing:-.012em;margin:2.1em 0 .6em}
+h1{font-size:clamp(1.95rem,1.3rem+2vw,2.9rem);margin:1.2em 0 .5em}
+h2{font-size:1.5rem;padding-bottom:.28em;border-bottom:2px solid var(--ink)}
+h3{font-size:1.06rem;font-family:var(--sans)}
+p,ul,ol{margin:0 0 1.05em}
+a{color:var(--derived)}
+code{font-family:var(--mono);font-size:.87em;background:var(--surface2);
+padding:.1em .34em;border-radius:3px}
+pre{background:var(--surface);border:1px solid var(--rule);border-radius:6px;
+padding:14px 16px;overflow-x:auto}
+pre code{background:none;padding:0;font-size:.84rem}
+.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:7px;
+background:var(--surface);margin:0 0 1.3em}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:520px}
+th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--rule);
+vertical-align:top}
+thead th{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;
+text-transform:uppercase;color:var(--ink3);font-weight:500;
+background:var(--surface2);white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+td:not(:first-child){font-variant-numeric:tabular-nums}
+blockquote.q{margin:0 0 1.3em;padding:2px 20px;border-left:3px solid var(--rule);
+color:var(--ink2)}
+blockquote.alert{padding:15px 20px;border-radius:0 6px 6px 0}
+blockquote.important,blockquote.warning,blockquote.caution{
+border-left-color:var(--warn);background:var(--warnbg)}
+blockquote.note,blockquote.tip{border-left-color:var(--note);background:var(--notebg)}
+blockquote.q>*:last-child{margin-bottom:0}
+picture,img{display:block;max-width:100%;height:auto;margin:0 0 1.3em}
+hr{border:0;border-top:1px solid var(--rule);margin:2.4em 0}
+.mast{padding:56px 0 0}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
+text-transform:uppercase;color:var(--ink3)}
+.crumb{margin-bottom:26px;font-size:.85rem;color:var(--ink3)}
+footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--rule);
+font-family:var(--mono);font-size:.73rem;color:var(--ink3);line-height:1.7}
+:focus-visible{outline:2px solid var(--derived);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+"""
+
+
+def page(title, body, crumb="", desc=""):
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="{html.escape(desc, quote=True)}">
+<title>{html.escape(title)}</title>
+<style>{CSS}</style>
+</head>
+<body>
+<div class="wrap">
+{crumb}
+{body}
+<footer>
+epikrisis &middot; evidence and analysis for repositories in the Eunoia ecosystem &middot;
+<a href="https://github.com/ajreynol/epikrisis">source</a><br>
+Every run here is a <strong>self-assessment</strong>: the subject is a family of trees
+that contains the tool. Its conclusions are not cited outward &mdash; not as evidence
+that these practices work, not in a vision document, not in a README.
+</footer>
+</div>
+</body>
+</html>
+"""
+
+
+# --------------------------------------------------------------------- build
+
+def runs():
+    found = []
+    for subject in sorted(os.listdir(RUNS)):
+        d = os.path.join(RUNS, subject)
+        if not os.path.isdir(d):
+            continue
+        for stamp in sorted(os.listdir(d)):
+            rd = os.path.join(d, stamp)
+            cp = os.path.join(rd, "corpus.json")
+            if not os.path.isfile(cp):
+                continue
+            prose = [f for f in PROSE if os.path.isfile(os.path.join(rd, f))]
+            found.append(dict(subject=subject, stamp=stamp, dir=rd, prose=prose,
+                              corpus=json.load(open(cp))))
+    if not found:
+        raise SystemExit("site: no runs with a corpus.json; nothing to build")
+    return found
+
+
+def main():
+    if len(sys.argv) != 2:
+        raise SystemExit("usage: site <out-dir>")
+    out = os.path.abspath(sys.argv[1])
+    if os.path.commonpath([out, RUNS]) == RUNS:
+        raise SystemExit("site: refusing to write the site into runs/; the "
+                         "output is a build artifact and the input is evidence")
+    shutil.rmtree(out, ignore_errors=True)
+    os.makedirs(out)
+
+    rows, pages = [], 0
+    for r in sorted(runs(), key=lambda r: (r["stamp"], r["subject"]), reverse=True):
+        c, rel = r["corpus"], f"{r['subject']}/{r['stamp']}"
+        dst = os.path.join(out, rel)
+        os.makedirs(dst, exist_ok=True)
+        n = sum(s["commits"] for s in c["sources"])
+        links = []
+        for f in r["prose"]:
+            src = os.path.join(r["dir"], f)
+            crumb = (f'<div class="crumb"><a href="../../index.html">All runs</a> '
+                     f'&nbsp;/&nbsp; <code>{html.escape(rel)}</code></div>')
+            body = convert(open(src).read(), os.path.join(rel, f), rel)
+            name = f[:-3] + ".html"
+            open(os.path.join(dst, name), "w").write(
+                page(f"{TITLES[f]} — {r['subject']} {r['stamp']}", body, crumb,
+                     f"{TITLES[f]} for the {r['subject']} run pinned "
+                     f"{r['stamp']}: {len(c['sources'])} sources, {n:,} commits."))
+            links.append(f'<a href="{rel}/{name}">{TITLES[f]}</a>')
+            pages += 1
+        for f in sorted(os.listdir(r["dir"])):
+            if f.endswith(".svg"):
+                shutil.copy(os.path.join(r["dir"], f), dst)
+        ev = f'<a href="{REPO}/history_analyzer/runs/{rel}">evidence</a>'
+        rows.append(
+            f"<tr><td><code>{html.escape(r['subject'])}</code></td>"
+            f"<td><code>{html.escape(r['stamp'])}</code></td>"
+            f"<td>{len(c['sources'])}</td><td>{n:,}</td>"
+            f"<td>{' &middot; '.join(links) if links else '&mdash;'} "
+            f"&middot; {ev}</td></tr>")
+
+    idx = f"""<div class="mast">
+<div class="eyebrow">epikrisis &middot; history analyzer</div>
+<h1>What these repositories did, on evidence a reader can re-derive</h1>
+<p>Epikrisis reads the git histories of the <strong>Eunoia ecosystem</strong> at pinned
+commits and asks what happened, what worked, what went wrong, and where the recorded
+account differs from the tree. Every run below is committed: the evidence, the report
+written from it, and the reason every candidate event was cited or dropped.</p>
+</div>
+
+<blockquote class="q alert important"><p><strong>These are self-assessments, and their
+conclusions do not travel.</strong> The subject of each run is a family of trees that
+contains this tool, so each is marked <code>self</code> and its findings are never cited
+outward &mdash; not as evidence that these practices work, not in a vision document, not
+in a README. A family grading itself with its own instrument produces something useful to
+the family and worthless to anybody else. <strong>What is addressed to a reader from
+outside is the method</strong>: the
+<a href="{REPO}/history_analyzer/docs/design.md">pipeline design</a>, the
+<a href="{REPO}/history_analyzer/docs/events.md">detector catalogue</a> with its failure
+modes, the <a href="{REPO}/history_analyzer/docs/judgement.md">report requirements</a>,
+and the <a href="{REPO}/history_analyzer/docs/notes.md">open defects</a>. Read the runs as
+worked examples of that method, not as findings you should believe.</p></blockquote>
+
+<h2 id="runs">Runs</h2>
+<p>Newest first. Sources and commits are read from each run&rsquo;s own
+<code>corpus.json</code>; a run with no prose reached the evidence stages and was
+never written up.</p>
+<div class="tw"><table><thead><tr><th>subject</th><th>pinned</th><th>sources</th>
+<th>commits</th><th>what there is to read</th></tr></thead>
+<tbody>{''.join(rows)}</tbody></table></div>
+"""
+    open(os.path.join(out, "index.html"), "w").write(
+        page("epikrisis — history reports", idx, "",
+             "Reports on how the Eunoia ecosystem's repositories evolved, each "
+             "built from committed evidence at pinned commits."))
+    print(f"  {pages} prose page(s) and an index for {len(rows)} run(s) -> {out}")
+
+
+if __name__ == "__main__":
+    main()

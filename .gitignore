@@ -20,3 +20,7 @@ scratch/
 # assumed.
 __pycache__/
 *.pyc
+
+# The report site is built by CI from what is under runs/, and never committed:
+# a generated copy of the evidence in the tree is one more thing to go stale.
+/site/

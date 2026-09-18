@@ -2,7 +2,12 @@
 
 **Run date** 2026-09-18. **Tool version** 0.1.0-demo. Stage 5 output: this file is prose and is not re-derivable. `corpus.json`, `events.jsonl`, `claims.jsonl`, `delta.json`, `ratio.json` and `panel.json` are, and are the only source of derived fact used here. Where a figure is **hand-read** it is marked in place, every time, with the command that produces it.
 
-**This is a self-assessment.** `corpus.json` carries `"self": true`. Under `docs/judgement.md` its conclusions are never cited outward: not as evidence that these practices work, not in a vision document, not in a README. The subject contains the tool that produced it, and the tool is assessed here with everything else.
+> [!IMPORTANT]
+> **This is a self-assessment.** `corpus.json` carries `"self": true`. Under the
+> [report requirements](../../../docs/judgement.md) its conclusions are never cited
+> outward: not as evidence that these practices work, not in a vision document,
+> not in a README. The subject contains the tool that produced it, and the tool is
+> assessed here with everything else.
 
 **Why this subject exists.** `eunoia-ecosystem-s2` is the first subject whose source list is **derived from the register rather than hand-written** — every entry in `kanon scripts/ecosystem/ecosystem.json` whose `status` is `member` or `president`. The two existing ecosystem subjects hand-write five and seven sources against a register holding ten, which both declare in `not_in_corpus` and neither fixes. Q6 reports what that difference is worth, and it is not what the declaration implies.
 
@@ -41,6 +46,13 @@
 ### The census: commits per repository
 
 **The figure this run was asked for.** The whole-history column is derived — it is `corpus.json`. **The Stretch 2 column is hand-read and is not a product of this pipeline**, because the pipeline has no window; it is `git rev-list --count --since=2026-09-15T16:15:45-05:00 HEAD` in each checkout, at the same commits `corpus.json` pins.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="census-dark.svg">
+  <img alt="Commits per repository across ten Eunoia members, two panels sharing a row order. Whole history: logos 711, anoieu 261, kanon 104, eudaimonia 97, dokimasia 52, koine 41, tachyon 37, epikrisis 32, eschaton 11, aisthesis 9 — 1,355 total. Stretch 2: kanon 85, koine 28, eudaimonia 26, tachyon 25, anoieu 20, eschaton 11, dokimasia 9, epikrisis 9, aisthesis 8, and logos 0 — 221 total." src="census-light.svg">
+</picture>
+
+*Rendered by `figures` from `corpus.json` and [`figures.json`](figures.json), which declares the hand-read panel with the command that produces it. Blue is derived, ochre is hand-read, hatched is a zero.*
 
 | repository | whole history | Stretch 2 *(hand-read)* | share of stretch |
 | --- | ---: | ---: | ---: |

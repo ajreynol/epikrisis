@@ -105,9 +105,12 @@ report the breach by turning the build red rather than by stating it.
 
 **And the counter reads one file.** `budget_facts` opens `bin/epikrisis` and
 nothing else, so any program added anywhere in this tree is unmetered by the
-limit it is supposed to be held to. `subjects/derive_sources.py` is the first
-such program and is disclosed here rather than left for the limit to stop
-meaning anything quietly. The prose half is wider than the code half — it counts
+limit it is supposed to be held to. `subjects/derive_sources.py`,
+`bin/figures` and `bin/site` are the three such programs and are disclosed here rather than left
+for the limit to stop meaning anything quietly. Neither reads a history, runs
+`git` or decides anything the pipeline's output depends on — which is the reason
+they are allowed to exist and not a reason the counter should keep ignoring
+them. The prose half is wider than the code half — it counts
 `docs/*.md` and the top-level `questions.md`, and no markdown under `runs/`,
 which is correct: evidence is not prose about the tool.
 
