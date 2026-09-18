@@ -69,5 +69,5 @@ Markdown documentation at its own recorded commits.
 
 | document | what it is for |
 | --- | --- |
-| [`../loc_analyzer/README.md`](../loc_analyzer/README.md) | Counting rules, subject configuration, running and checking a census, and publishing alongside history analysis. |
+| [`../loc_analyzer/README.md`](../loc_analyzer/README.md) | Counting rules, language percentages, subject configuration, running and checking a census, and publishing alongside history analysis. |
 | [`../loc_analyzer/runs/README.md`](../loc_analyzer/runs/README.md) | The snapshot index, with generated reports, manifests and per-file evidence. |

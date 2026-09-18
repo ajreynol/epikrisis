@@ -4,7 +4,7 @@ import argparse
 from datetime import date, datetime, timezone
 import hashlib
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import sys
@@ -21,6 +21,87 @@ RULES = {
 }
 CATEGORIES = ("implementation", "documentation")
 SKIPPED = ("binary", "symlink", "submodule", "excluded")
+LANGUAGE_SUFFIXES = {
+    "Python": [".py", ".pyi", ".pyw"],
+    "C++": [".cpp", ".cc", ".cxx", ".c++", ".hpp", ".hh", ".hxx", ".ipp", ".tpp", ".C", ".H"],
+    "C": [".c"], "C/C++ headers": [".h"], "Lean": [".lean"],
+    "Cython": [".pyx", ".pxd", ".pxi"], "Java": [".java"],
+    "JavaScript": [".js", ".mjs", ".cjs", ".jsx"], "TypeScript": [".ts", ".tsx"],
+    "Rust": [".rs"], "Go": [".go"], "Ruby": [".rb"], "Perl": [".pl", ".pm"],
+    "Shell": [".sh", ".bash", ".zsh", ".fish"], "Emacs Lisp": [".el"],
+    "Eunoia": [".eo", ".eos"], "SMT-LIB": [".smt2", ".smt"],
+    "Markdown": [".md"], "reStructuredText": [".rst"],
+    "TeX / BibTeX": [".tex", ".bib", ".sty", ".cls"],
+    "JSON / JSONL": [".json", ".jsonl"], "YAML": [".yml", ".yaml"], "TOML": [".toml"],
+    "CSV / TSV": [".csv", ".tsv"], "HTML": [".html", ".htm"], "CSS": [".css"],
+    "XML / SVG": [".xml", ".svg"], "CMake": [".cmake"], "Make": [".mk"],
+    "Plain text": [".txt"], "Templates": [".in", ".template"],
+    "Patches": [".patch", ".diff"],
+}
+LANGUAGE_FILENAMES = {"CMakeLists.txt": "CMake", "Makefile": "Make", "GNUmakefile": "Make",
+                      "makefile": "Make", "Dockerfile": "Dockerfile"}
+LANGUAGE_RULES = {
+    "version": 1,
+    "classification": "filename first, then extension; .C and .H mean C++; other suffixes ignore case",
+    "headers": ".h files are C/C++ headers, reported separately from C and C++",
+    "unknown": "unrecognized and extensionless files are Other text; contents and shebangs are not inspected",
+    "scope": "physical lines, including comments, blanks, tests, generated files and vendored files",
+    "percent_total": "share of all counted text lines in the selected repository or combined corpus",
+    "percent_implementation": "share of non-Markdown lines in the same scope; Markdown has no value",
+    "aggregation": "combined percentages use summed lines, not an average of repository percentages",
+    "suffixes": LANGUAGE_SUFFIXES,
+    "filenames": LANGUAGE_FILENAMES,
+}
+
+
+def language(path):
+    if path.lower().endswith(".md"):
+        return "Markdown"
+    name = PurePosixPath(path).name
+    if name in LANGUAGE_FILENAMES:
+        return LANGUAGE_FILENAMES[name]
+    suffix = PurePosixPath(path).suffix
+    if suffix not in (".C", ".H"):
+        suffix = suffix.lower()
+    for label, suffixes in LANGUAGE_SUFFIXES.items():
+        if suffix in suffixes:
+            return label
+    return "Other text"
+
+
+def language_summary(corpus, records):
+    """Derive a language/file-type view without changing the pinned LOC evidence."""
+    def distribution(rows):
+        total = sum(r["lines"] for r in rows)
+        implementation = sum(r["lines"] for r in rows if r["category"] == "implementation")
+        groups = {}
+        for row in rows:
+            groups.setdefault(language(row["path"]), []).append(row)
+        result = []
+        for label, files in groups.items():
+            lines = sum(r["lines"] for r in files)
+            largest = sorted(files, key=lambda r: (-r["lines"], r["source"], r["path"]))[:5]
+            result.append({"language": label, "files": len(files), "lines": lines,
+                           "percent_total": round(100 * lines / total, 6) if total else None,
+                           "percent_implementation": round(100 * lines / implementation, 6)
+                           if implementation and label != "Markdown" else None,
+                           "largest_files": [{k: r[k] for k in ("source", "path", "lines", "object")}
+                                             for r in largest]})
+        return {"total_lines": total, "implementation_lines": implementation,
+                "languages": sorted(result, key=lambda r: (-r["lines"], r["language"]))}
+
+    counted = [r for r in records if r["category"] in CATEGORIES]
+    return {"schema_version": 1, "subject": corpus["subject"], "run": corpus["run"],
+            "files_digest": corpus["files_digest"], "rules": LANGUAGE_RULES,
+            "totals": distribution(counted),
+            "sources": [dict(src, **distribution([r for r in counted if r["source"] == src["id"]]))
+                        for src in corpus["sources"]]}
+
+
+def languages_for_run(rd):
+    corpus, _ = check_run(rd)
+    records = [json.loads(line) for line in (rd / "files.jsonl").read_text().splitlines()]
+    return language_summary(corpus, records)
 
 
 def git(repo, *args):
@@ -234,11 +315,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("subjects")
-    for command in ("run", "check"):
+    for command in ("run", "check", "languages"):
         cmd = commands.add_parser(command)
         cmd.add_argument("subject")
-        cmd.add_argument("--from", dest="checkouts", type=Path, required=command == "run")
-        cmd.add_argument("--run", required=command == "check", default=date.today().isoformat())
+        if command != "languages":
+            cmd.add_argument("--from", dest="checkouts", type=Path, required=command == "run")
+        cmd.add_argument("--run", required=command != "run", default=date.today().isoformat())
     args = parser.parse_args()
     try:
         if args.command == "subjects":
@@ -247,6 +329,9 @@ def main():
                 print(path.stem + ": " + ", ".join(s["id"] for s in sources))
         elif args.command == "run":
             run_analysis(args.subject, args.checkouts, args.run)
+        elif args.command == "languages":
+            rd = HERE / "runs" / identifier(args.subject) / identifier(args.run)
+            print(json.dumps(languages_for_run(rd), indent=2, sort_keys=True))
         else:
             rd = HERE / "runs" / identifier(args.subject) / identifier(args.run)
             check_run(rd, args.checkouts)

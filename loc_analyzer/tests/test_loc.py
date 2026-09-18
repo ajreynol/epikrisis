@@ -28,6 +28,50 @@ class Lines(unittest.TestCase):
         self.assertIsNone(loc.text_lines(b"\xff\n"))
 
 
+class Languages(unittest.TestCase):
+    def test_file_types_headers_case_and_extensionless_files(self):
+        cases = {"src/code.py": "Python", "code.PY": "Python", "code.pyi": "Python",
+                 "code.cpp": "C++", "code.C": "C++", "code.c": "C", "code.H": "C++",
+                 "code.h": "C/C++ headers", "code.hpp": "C++", "Proof.lean": "Lean",
+                 "README.MD": "Markdown", ".md": "Markdown", "CMakeLists.txt": "CMake",
+                 "build/Makefile": "Make", "code.cpp.in": "Templates", "input.smt2": "SMT-LIB",
+                 "data.jsonl": "JSON / JSONL", "bin/loc": "Other text", "code.unknown": "Other text"}
+        for path, expected in cases.items():
+            with self.subTest(path=path):
+                self.assertEqual(loc.language(path), expected)
+
+    def test_denominators_weighting_skipped_files_and_empty_repositories(self):
+        sources = [{"id": name, "commit": name * 40, "ref": "main", "origin": "https://example.org/" + name}
+                   for name in ("a", "b", "empty")]
+        corpus = {"subject": "sample", "run": "test", "files_digest": "digest", "sources": sources}
+        rows = [{"source": source, "path": path, "category": category, "lines": lines, "object": "blob"}
+                for source, path, category, lines in [
+                    ("a", "code.py", "implementation", 30), ("a", "README.md", "documentation", 10),
+                    ("b", "code.cpp", "implementation", 60), ("b", "empty.py", "implementation", 0)]]
+        rows += [{"source": "a", "path": "binary.py", "category": "binary"},
+                 {"source": "b", "path": "symlink.lean", "category": "symlink"}]
+        data = loc.language_summary(corpus, rows)
+        groups = {g["language"]: g for g in data["totals"]["languages"]}
+        self.assertEqual(data["totals"]["total_lines"], 100)
+        self.assertEqual(data["totals"]["implementation_lines"], 90)
+        self.assertEqual(groups["Python"]["percent_total"], 30)
+        self.assertAlmostEqual(groups["Python"]["percent_implementation"], 100 / 3, places=5)
+        self.assertIsNone(groups["Markdown"]["percent_implementation"])
+        self.assertEqual(groups["Python"]["files"], 2)
+        self.assertEqual(data["sources"][0]["languages"][0]["percent_total"], 75)
+        self.assertEqual(data["sources"][2]["languages"], [])
+        self.assertEqual(data["sources"][2]["total_lines"], 0)
+        self.assertEqual(groups["Python"]["largest_files"][0]["source"], "a")
+
+    def test_zero_line_files_have_no_percentage_denominator(self):
+        corpus = {"subject": "sample", "run": "test", "files_digest": "digest", "sources": [{"id": "a"}]}
+        rows = [{"source": "a", "path": "empty.md", "category": "documentation", "lines": 0, "object": "blob"}]
+        group = loc.language_summary(corpus, rows)["totals"]["languages"][0]
+        self.assertEqual(group["files"], 1)
+        self.assertIsNone(group["percent_total"])
+        self.assertIsNone(group["percent_implementation"])
+
+
 class Analysis(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -88,6 +132,18 @@ class Analysis(unittest.TestCase):
         self.assertEqual(src["skipped"], dict(binary=2, symlink=1, submodule=1, excluded=0))
         self.assertEqual(src["tracked_entries"], 11)
         self.assertEqual(loc.check_run(self.rd, self.checkouts), (corpus, counts))
+
+    def test_language_view_uses_the_validated_evidence(self):
+        self.run_analysis()
+        data = loc.languages_for_run(self.rd)
+        groups = {g["language"]: g for g in data["totals"]["languages"]}
+        self.assertEqual(groups["Python"]["lines"], 3)
+        self.assertEqual(groups["Markdown"]["lines"], 3)
+        self.assertEqual(data["sources"][0]["commit"], self.sha)
+        path = self.rd / "files.jsonl"
+        path.write_bytes(path.read_bytes() + b"\n")
+        with self.assertRaisesRegex(ValueError, "digest"):
+            loc.languages_for_run(self.rd)
 
     def test_exclusions_are_path_boundaries_and_are_recorded(self):
         self.subject["exclude"] = ["vendor/"]

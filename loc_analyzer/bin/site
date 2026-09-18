@@ -3,8 +3,10 @@
 import html
 import importlib.machinery
 import importlib.util
+import json
 from pathlib import Path
 import shutil
+from urllib.parse import quote
 
 HERE = Path(__file__).resolve().parents[1]
 _loader = importlib.machinery.SourceFileLoader("loc_counts", str(HERE / "bin/loc"))
@@ -16,6 +18,82 @@ METHOD = ("Physical lines at pinned commits, including blanks and comments. "
           "Documentation counts .md files; implementation counts other UTF-8 text, "
           "including tests, configuration and data. Binary files, symlinks and "
           "submodules are skipped. Counts describe size, not quality or effort.")
+LANGUAGE_METHOD = (
+    "Languages and file types are identified by filename and extension. Percentages use physical "
+    "lines, including blanks and comments. Tests, generated files and vendored text are included. "
+    "Unrecognized and extensionless files, including scripts, remain Other text; file contents "
+    "and shebangs are not inspected. Shared .h headers are separate from C and C++. "
+    "Shares are based on lines, not bytes.")
+
+
+def percent(value):
+    if value is None:
+        return "—"
+    return "&lt;0.01%" if 0 < value < 0.01 else f"{value:.2f}%"
+
+
+def language_table(data, sources):
+    rows = []
+    for group in data["languages"]:
+        files = []
+        for row in group["largest_files"]:
+            src = sources[row["source"]]
+            url = src["origin"].rstrip("/") + "/blob/" + src["commit"] + "/" + quote(row["path"], safe="/")
+            files.append(f'<li><a href="{html.escape(url)}">'
+                         f'{html.escape(row["source"] + "/" + row["path"])}</a>'
+                         f' — {row["lines"]:,} lines</li>')
+        rows.append(f'<tr><td>{html.escape(group["language"])}'
+                    '<details><summary>Largest files</summary><ul>' + "".join(files) + '</ul></details></td>'
+                    f'<td>{group["files"]:,}</td><td>{group["lines"]:,}</td>'
+                    f'<td>{percent(group["percent_total"])}</td>'
+                    f'<td>{percent(group["percent_implementation"])}</td></tr>')
+    return ('<div class="tw"><table class="language-counts"><thead><tr><th>language / file type</th>'
+            '<th>files</th><th>lines</th><th>% of all text</th><th>% of non-Markdown</th>'
+            '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>')
+
+
+def language_page(data):
+    sources = {s["id"]: s for s in data["sources"]}
+    languages = ("Python", "C++", "Lean", "C/C++ headers")
+    rows = []
+    for src in data["sources"]:
+        groups = {r["language"]: r for r in src["languages"]}
+        cells = []
+        for label in languages:
+            value = groups.get(label, {}).get("percent_total", 0 if src["total_lines"] else None)
+            cells.append(f'<td>{percent(value)}</td>')
+        covered = sum(groups.get(label, {}).get("lines", 0) for label in languages)
+        other = 100 * (src["total_lines"] - covered) / src["total_lines"] if src["total_lines"] else None
+        rows.append(f'<tr><td><a href="#repo-{html.escape(src["id"])}">{html.escape(src["id"])}</a></td>'
+                    + "".join(cells) + f'<td>{percent(other)}</td><td>{src["total_lines"]:,}</td></tr>')
+    body = (f'<h1>Languages and file types</h1><p>{html.escape(data["subject"])} · '
+            f'snapshot {html.escape(data["run"])} · {data["totals"]["total_lines"]:,} counted lines.</p>'
+            f'<p>{LANGUAGE_METHOD}</p>'
+            '<p><strong>Reading the percentages:</strong> “All text” includes Markdown, source, '
+            'configuration and data. “Non-Markdown” uses the implementation total from the LOC summary; '
+            'it still includes tests and data. Each repository uses its own denominator. '
+            'Combined shares divide summed lines, rather than averaging repository percentages. '
+            'A dash means no denominator or, for Markdown, no applicable implementation share. '
+            'Displayed percentages are rounded.</p>'
+            '<p><a href="index.html">LOC summary and commit pins</a> · '
+            '<a href="languages.json">Download language counts and classification rules (JSON)</a> · '
+            '<a href="files.jsonl">Per-file evidence</a></p>'
+            '<h2>Repository comparison</h2><p>Share of all counted text in each repository. '
+            '“Other types” includes Markdown and every type outside the four named columns. '
+            'Select a repository for its full breakdown.</p>'
+            '<div class="tw"><table class="language-comparison"><thead><tr><th>repository</th>'
+            + "".join(f'<th>{html.escape(label)}</th>' for label in languages)
+            + '<th>other types</th><th>all text lines</th></tr></thead><tbody>'
+            + "".join(rows) + '</tbody></table></div>'
+            '<h2>All repositories combined</h2>' + language_table(data["totals"], sources))
+    for src in data["sources"]:
+        url = src["origin"].rstrip("/") + "/commit/" + src["commit"]
+        body += (f'<section id="repo-{html.escape(src["id"])}"><h2>{html.escape(src["id"])}</h2>'
+                 f'<p>{src["total_lines"]:,} text lines · {src["implementation_lines"]:,} non-Markdown lines · '
+                 f'{html.escape(src["ref"])} at <a href="{html.escape(url)}">'
+                 f'<code>{src["commit"][:12]}</code></a>.</p>'
+                 + language_table(src, sources) + '</section>')
+    return body
 
 
 def table(counts):
@@ -63,6 +141,13 @@ def build(out, page):
         dst.mkdir(parents=True, exist_ok=True)
         for name in ("corpus.json", "loc.json", "files.jsonl", "report.md"):
             shutil.copyfile(rd / name, dst / name)
+        languages = counter.languages_for_run(rd)
+        (dst / "languages.json").write_text(json.dumps(languages, indent=2, sort_keys=True) + "\n")
+        (dst / "languages.html").write_text(page(
+            "Language breakdown — " + corpus["subject"], language_page(languages),
+            '<div class="crumb"><a href="index.html">LOC snapshot</a> · '
+            '<a href="../../index.html">LOC analysis</a> · '
+            '<a href="../../../index.html">All analyses</a></div>', LANGUAGE_METHOD))
         skipped = "".join(
             f'<tr><td>{html.escape(s["id"])}</td>'
             + "".join(f'<td>{s["skipped"][k]:,}</td>' for k in counter.SKIPPED) + '</tr>'
@@ -70,7 +155,9 @@ def build(out, page):
         body = (f'<h1>LOC analysis — {html.escape(corpus["subject"])}</h1>'
                 f'<p>Snapshot {html.escape(corpus["run"])}. Recorded '
                 f'<code>{html.escape(corpus["recorded_at"])}</code>.</p>'
-                f'<p>{METHOD}</p>' + stats(counts) + table(counts)
+                f'<p>{METHOD}</p>' + stats(counts)
+                + '<p class="cta"><a href="languages.html">Explore language percentages: '
+                  'Python, C++, Lean and more &rarr;</a></p>' + table(counts)
                 + '<h2>Skipped entries</h2><div class="tw"><table><thead><tr>'
                 '<th>repository</th><th>binary / non-UTF-8</th><th>symlinks</th>'
                 '<th>submodules</th><th>excluded paths</th></tr></thead><tbody>'
@@ -91,10 +178,13 @@ def build(out, page):
                        f' · {counts["totals"]["total_lines"]:,} lines</li>')
     corpus, counts, _ = runs[0]
     latest = f"loc/{corpus['subject']}/{corpus['run']}/index.html"
+    language_url = f"loc/{corpus['subject']}/{corpus['run']}/languages.html"
+    language_label = "Explore language percentages: Python, C++, Lean and more &rarr;"
     intro = (f'<p>{METHOD}</p><p>Latest snapshot: {html.escape(corpus["run"])}.</p>'
              + stats(counts) + table(counts))
     (out / "loc/index.html").write_text(page(
         "LOC analysis — epikrisis", '<h1>Lines of code</h1>' + intro
+        + f'<p class="cta"><a href="{language_url.removeprefix("loc/")}">{language_label}</a></p>'
         + '<h2>Snapshots</h2><ul>' + "".join(listing) + '</ul>'
         + '<p><a href="https://github.com/ajreynol/epikrisis/blob/main/loc_analyzer/README.md">'
           'Counting method and usage</a></p>',
@@ -102,6 +192,7 @@ def build(out, page):
         '<a href="../history.html">History analysis</a></div>', METHOD))
     summary = ('<section id="loc-analysis"><div class="eyebrow">LOC analysis</div>'
                '<h2><a href="loc/index.html">Repository size, in lines</a></h2>'
-               + intro + f'<p class="cta"><a href="{latest}">'
+               + intro + f'<p class="cta"><a href="{language_url}">{language_label}</a></p>'
+               + f'<p class="cta"><a href="{latest}">'
                'Read the LOC report and per-file evidence &rarr;</a></p></section>')
     return summary, counts

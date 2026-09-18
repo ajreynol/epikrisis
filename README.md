@@ -72,6 +72,8 @@ skipped entries and a generated report.
 It uses the history census's repository set, including cvc5 and ethos on `main`.
 Read the [LOC reports](https://ajreynol.github.io/epikrisis/loc/) or the
 [committed snapshot index](loc_analyzer/runs/README.md).
+Each public LOC report links to language percentages, including Python, C++ and
+Lean, with per-repository breakdowns and links to the largest files at their pins.
 
 ```sh
 python3 loc_analyzer/bin/loc run eunoia-ecosystem --from /path/to/checkouts

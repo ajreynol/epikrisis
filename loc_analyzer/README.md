@@ -8,6 +8,8 @@ Git trees at recorded commits and publishes a per-repository split between
 Read the [published LOC analysis](https://ajreynol.github.io/epikrisis/loc/) or
 browse the [committed snapshots](runs/README.md). The shared
 [homepage](https://ajreynol.github.io/epikrisis/) presents both analyses.
+Each snapshot also links to a detailed language/file-type breakdown, with
+Python, C++, Lean and other percentages for the combined corpus and each repository.
 
 ## What is counted
 
@@ -29,6 +31,40 @@ content at different paths counts once for each path.
 Only committed files at the recorded pins are read. Dirty files, untracked build
 outputs and local configuration do not affect the count. Symlinks and submodules
 are recorded but never followed. These numbers measure size, not quality or effort.
+
+## Language percentages
+
+The detailed page groups the same pinned physical-line counts by filename and
+extension. It reports file counts, lines, percentages and the five largest files
+in each group, linked to the recorded commits. CMake and Make filenames take
+precedence over extensions; `.h` files form a separate **C/C++ headers** group.
+`.C` and `.H` mean C++; other extensions ignore case. Unrecognized and
+extensionless files, including scripts, remain **Other text**: this is a path-based
+classification, without parsing contents or detecting shebangs.
+
+Two percentage columns make the denominator explicit:
+
+- **All text:** all counted lines in the repository (or the combined corpus),
+  including Markdown, configuration, test inputs and data.
+- **Non-Markdown:** the implementation total from the size report. This still
+  includes configuration, tests and data; Markdown has no percentage here.
+
+Combined percentages use summed lines, rather than an average of repository
+percentages. A missing denominator is displayed as a dash. Small nonzero shares
+below 0.01% are shown as `<0.01%`; other percentages use two decimal places.
+The existing implementation/documentation counts and commit pins are unchanged.
+
+Produce the same JSON used by the public language page, without any checkouts:
+
+```sh
+python3 loc_analyzer/bin/loc languages eunoia-ecosystem --run 2026-09-18
+```
+
+This first validates the snapshot, then derives language counts from `files.jsonl`.
+The output includes the classification rules and their version, evidence digest,
+commit pins, per-repository and combined totals, and largest-file evidence.
+Language views are regenerated with the current classifier when the site builds;
+they are derived views, not changes to the original snapshot artifacts.
 
 ## Run a census
 
@@ -91,6 +127,9 @@ python3 -m unittest discover -s tests
 The shared builder renders both analyses. Preview `site/index.html` for the
 homepage or `site/loc/index.html` for LOC snapshots. It validates the stored LOC
 counts before rendering and copies the evidence beside each public report.
+It also generates `languages.html` and downloadable `languages.json` for every
+snapshot, with links from the homepage, LOC index and snapshot summary. New runs
+receive these pages automatically.
 Commit the run artifacts; the [Pages workflow](../.github/workflows/pages.yml)
 builds and deploys them when they are pushed to `main`.
 

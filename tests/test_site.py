@@ -56,6 +56,35 @@ class SharedSite(unittest.TestCase):
                     continue
                 self.assertTrue((path.parent / target.split("#")[0]).exists(), f"{path}: {target}")
 
+    def test_language_breakdowns_are_linked_and_reconcile_with_snapshot_counts(self):
+        home = (self.out / "index.html").read_text()
+        index = (self.out / "loc/index.html").read_text()
+        self.assertRegex(home, r'href="loc/[^\"]+/languages.html"')
+        self.assertRegex(index, r'href="[^\"]+/languages.html"')
+        for path in (self.out / "loc").glob("*/*/languages.json"):
+            data = json.loads(path.read_text())
+            counts = json.loads((path.parent / "loc.json").read_text())
+            page = (path.parent / "languages.html").read_text()
+            summary = (path.parent / "index.html").read_text()
+            self.assertIn('href="languages.html"', summary)
+            self.assertIn('href="languages.json"', page)
+            self.assertIn("C/C++ headers", page)
+            self.assertEqual(data["totals"]["total_lines"], counts["totals"]["total_lines"])
+            for src, expected in zip(data["sources"], counts["sources"]):
+                self.assertEqual(src["commit"], expected["commit"])
+                self.assertEqual(sum(g["lines"] for g in src["languages"]), expected["total_lines"])
+                self.assertEqual(sum(g["lines"] for g in src["languages"] if g["language"] != "Markdown"),
+                                 expected["implementation"]["lines"])
+                self.assertIn(f'id="repo-{src["id"]}"', page)
+                self.assertIn(f'href="#repo-{src["id"]}"', page)
+                for group in src["languages"]:
+                    self.assertIn(f'{group["lines"]:,}', page)
+            # The CLI and public download must describe the same analysis.
+            import subprocess
+            raw = subprocess.check_output(["python3", str(ROOT / "loc_analyzer/bin/loc"), "languages",
+                                           data["subject"], "--run", data["run"]], text=True)
+            self.assertEqual(json.loads(raw), data)
+
     def test_build_cannot_replace_analyzers_or_repository(self):
         for path in (ROOT, ROOT / "loc_analyzer", ROOT / "history_analyzer", ROOT.parent):
             with self.assertRaisesRegex(ValueError, "ignored site/"):
