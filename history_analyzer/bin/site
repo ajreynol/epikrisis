@@ -257,6 +257,16 @@ background:var(--surface2);white-space:nowrap}
 tbody tr:last-child td{border-bottom:none}
 tbody tr:hover{background:var(--surface2)}
 td:not(:first-child){font-variant-numeric:tabular-nums}
+/* The language comparison has more columns than the prose page. */
+.language-comparison-wrap{width:min(1380px,calc(100vw - 48px));position:relative;
+left:50%;transform:translateX(-50%)}
+.language-comparison th,.language-comparison td{padding:10px;white-space:nowrap}
+.language-comparison thead th{white-space:normal;min-width:76px}
+.language-comparison th:first-child,.language-comparison td:first-child{
+position:sticky;left:0;z-index:1;background:var(--surface2)}
+.language-comparison summary{cursor:pointer}
+.language-comparison details ul{white-space:normal;min-width:175px;
+padding-left:18px;margin:8px 0 0}
 /* The facts block under the title: a two-column table with an empty header. */
 .facts table{min-width:0;font-size:.85rem}
 .facts thead{display:none}

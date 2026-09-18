@@ -54,7 +54,8 @@ def language_table(data, sources):
 
 def language_page(data):
     sources = {s["id"]: s for s in data["sources"]}
-    languages = ("Python", "C++", "Lean", "C/C++ headers")
+    languages = ("Python", "C++", "Lean", "C/C++ headers", "SMT-LIB", "Eunoia",
+                 "Java", "Markdown", "JSON / JSONL", "Plain text")
     rows = []
     for src in data["sources"]:
         groups = {r["language"]: r for r in src["languages"]}
@@ -64,8 +65,14 @@ def language_page(data):
             cells.append(f'<td>{percent(value)}</td>')
         covered = sum(groups.get(label, {}).get("lines", 0) for label in languages)
         other = 100 * (src["total_lines"] - covered) / src["total_lines"] if src["total_lines"] else None
+        remainder = [g for g in src["languages"] if g["language"] not in languages and g["lines"]]
+        other_cell = percent(other)
+        if remainder:
+            other_cell = ('<details><summary>' + other_cell + '</summary><ul>'
+                          + "".join(f'<li>{html.escape(g["language"])}: {percent(g["percent_total"])}</li>'
+                                    for g in remainder) + '</ul></details>')
         rows.append(f'<tr><td><a href="#repo-{html.escape(src["id"])}">{html.escape(src["id"])}</a></td>'
-                    + "".join(cells) + f'<td>{percent(other)}</td><td>{src["total_lines"]:,}</td></tr>')
+                    + "".join(cells) + f'<td>{other_cell}</td><td>{src["total_lines"]:,}</td></tr>')
     body = (f'<h1>Languages and file types</h1><p>{html.escape(data["subject"])} · '
             f'snapshot {html.escape(data["run"])} · {data["totals"]["total_lines"]:,} counted lines.</p>'
             f'<p>{LANGUAGE_METHOD}</p>'
@@ -79,9 +86,12 @@ def language_page(data):
             '<a href="languages.json">Download language counts and classification rules (JSON)</a> · '
             '<a href="files.jsonl">Per-file evidence</a></p>'
             '<h2>Repository comparison</h2><p>Share of all counted text in each repository. '
-            '“Other types” includes Markdown and every type outside the four named columns. '
-            'Select a repository for its full breakdown.</p>'
-            '<div class="tw"><table class="language-comparison"><thead><tr><th>repository</th>'
+            '“Other types” includes types outside the named columns. Expand its percentage to see '
+            'the remaining types and their shares of the repository, including unclassified Other text. '
+            'Select a repository for its full breakdown. Scroll the table horizontally on smaller screens.</p>'
+            '<div class="tw language-comparison-wrap" tabindex="0" role="region" '
+            'aria-label="Repository language percentages"><table class="language-comparison">'
+            '<thead><tr><th>repository</th>'
             + "".join(f'<th>{html.escape(label)}</th>' for label in languages)
             + '<th>other types</th><th>all text lines</th></tr></thead><tbody>'
             + "".join(rows) + '</tbody></table></div>'

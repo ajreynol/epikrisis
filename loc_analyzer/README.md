@@ -42,6 +42,12 @@ precedence over extensions; `.h` files form a separate **C/C++ headers** group.
 extensionless files, including scripts, remain **Other text**: this is a path-based
 classification, without parsing contents or detecting shebangs.
 
+The repository comparison gives Python, C++, Lean, shared C/C++ headers,
+SMT-LIB, Eunoia, Java, Markdown, JSON/JSONL and plain text their own columns.
+Expand an **Other types** percentage to see the remaining types and their
+individual shares of the repository. The table scrolls horizontally on smaller
+screens, with repository names kept visible.
+
 Two percentage columns make the denominator explicit:
 
 - **All text:** all counted lines in the repository (or the combined corpus),
