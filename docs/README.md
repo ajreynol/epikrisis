@@ -1,5 +1,12 @@
 # Documentation
 
+**The reports are published at
+[ajreynol.github.io/epikrisis](https://ajreynol.github.io/epikrisis/)**, built by
+CI from the runs in this tree. This page is about the documents; the site is the
+output. Neither describes the other, and
+[`../history_analyzer/runs/README.md`](../history_analyzer/runs/README.md) says
+how a run gets from one to the other.
+
 Every document in this repository, and what each one is for. The charter,
 [`../README.md`](../README.md), is the entry point and assumes it has been read.
 

@@ -5,6 +5,15 @@ ecosystem**. Its purpose is to explain how projects evolve: **what happened, wha
 worked, what went wrong, and where the recorded account differs from the changes
 in the tree.**
 
+**The reports are published at
+[ajreynol.github.io/epikrisis](https://ajreynol.github.io/epikrisis/)** — the
+index, every report, and the evidence each rests on. It is built by CI from what
+is committed under
+[`history_analyzer/runs/`](history_analyzer/runs/README.md); nothing appears
+there that is not in this tree. **Every run is a self-assessment and its
+conclusions do not travel** — see [what that means for a reader from
+outside](#what-it-has-produced).
+
 Its first tool is a **GitHub history analyzer**. The longer-term ambition is to
 provide deeper analyses across Eunoia and develop into the ecosystem's
 **“judicial” branch**: examining its work, testing claims against evidence, and

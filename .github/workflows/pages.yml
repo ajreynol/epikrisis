@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Check the converter refuses what it cannot render, and loses nothing
         run: python3 -m unittest discover -s history_analyzer/tests
       - name: Check every report still matches its evidence
@@ -63,6 +63,12 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # `enablement` turns Pages on if it is off. The first deploy of this
+      # workflow failed because the repository had Pages disabled, and a
+      # workflow that cannot set up the thing it deploys to is a step somebody
+      # has to remember.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - id: deployment
         uses: actions/deploy-pages@v4
