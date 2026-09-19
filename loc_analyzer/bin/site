@@ -55,7 +55,7 @@ def language_table(data, sources):
 def language_page(data):
     sources = {s["id"]: s for s in data["sources"]}
     languages = ("Python", "C++", "Lean", "C/C++ headers", "SMT-LIB", "Eunoia",
-                 "Java", "Shell", "Markdown", "Plain text")
+                 "Java", "Shell", "Markdown")
     rows = []
     for src in data["sources"]:
         groups = {r["language"]: r for r in src["languages"]}

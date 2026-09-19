@@ -60,7 +60,7 @@ removed, and extensionless scripts use their recorded shebang interpreter.
 Documentation without a recognized file type remains **Other text**.
 
 The repository comparison gives Python, C++, Lean, shared C/C++ headers,
-SMT-LIB, Eunoia, Java, Shell, Markdown and plain text their own columns.
+SMT-LIB, Eunoia, Java, Shell and Markdown their own columns.
 Expand an **Other types** percentage to see the remaining types and their
 individual shares of the repository. The table scrolls horizontally on smaller
 screens, with repository names kept visible.
