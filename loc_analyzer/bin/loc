@@ -6,21 +6,14 @@ import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import re
+import shlex
 import subprocess
 import sys
 
 HERE = Path(__file__).resolve().parents[1]
-VERSION = 1
-RULES = {
-    "unit": "physical lines, including blank lines and comments; final unterminated line counts",
-    "documentation": "regular UTF-8 text files ending in .md, case-insensitive",
-    "implementation": "all other regular UTF-8 text files, including tests, configuration and data",
-    "binary": "files containing NUL bytes or not decodable as UTF-8 are skipped",
-    "scope": "tracked files at the recorded commit; working-tree changes are not read",
-    "links": "symlinks and submodules are recorded but not followed or counted",
-}
+VERSION = 2
 CATEGORIES = ("implementation", "documentation")
-SKIPPED = ("binary", "symlink", "submodule", "excluded")
+SKIPPED = ("binary", "symlink", "submodule", "excluded", "ignored")
 LANGUAGE_SUFFIXES = {
     "Python": [".py", ".pyi", ".pyw"],
     "C++": [".cpp", ".cc", ".cxx", ".c++", ".hpp", ".hh", ".hxx", ".ipp", ".tpp", ".C", ".H"],
@@ -30,7 +23,9 @@ LANGUAGE_SUFFIXES = {
     "Rust": [".rs"], "Go": [".go"], "Ruby": [".rb"], "Perl": [".pl", ".pm"],
     "Shell": [".sh", ".bash", ".zsh", ".fish"], "Emacs Lisp": [".el"],
     "Eunoia": [".eo", ".eos"], "SMT-LIB": [".smt2", ".smt"],
-    "Markdown": [".md"], "reStructuredText": [".rst"],
+    "SyGuS": [".sy"], "LFSC": [".plf"], "CPC": [".cpc", ".proof"],
+    "TPTP": [".p", ".ax"], "CodeQL": [".ql", ".qll"],
+    "Markdown": [".md", ".markdown", ".mdx"], "reStructuredText": [".rst"], "AsciiDoc": [".adoc"],
     "TeX / BibTeX": [".tex", ".bib", ".sty", ".cls"],
     "JSON / JSONL": [".json", ".jsonl"], "YAML": [".yml", ".yaml"], "TOML": [".toml"],
     "CSV / TSV": [".csv", ".tsv"], "HTML": [".html", ".htm"], "CSS": [".css"],
@@ -40,33 +35,132 @@ LANGUAGE_SUFFIXES = {
 }
 LANGUAGE_FILENAMES = {"CMakeLists.txt": "CMake", "Makefile": "Make", "GNUmakefile": "Make",
                       "makefile": "Make", "Dockerfile": "Dockerfile"}
+LANGUAGE_PATH_PATTERNS = {"src/theory/*/rewrites": "Rewrite rules",
+                          "src/theory/*/rewrites-*": "Rewrite rules"}
+SOURCE_LANGUAGES = (
+    "Python", "C++", "C", "C/C++ headers", "Lean", "Cython", "Java", "JavaScript",
+    "TypeScript", "Rust", "Go", "Ruby", "Perl", "Shell", "Emacs Lisp", "Eunoia",
+    "SMT-LIB", "SyGuS", "LFSC", "CPC", "TPTP", "CodeQL", "HTML", "CSS", "CMake", "Make",
+)
+SOURCE_SUFFIXES = sorted({s.lower() for label in SOURCE_LANGUAGES for s in LANGUAGE_SUFFIXES[label]})
+DOC_SUFFIXES = [".md", ".markdown", ".mdx", ".rst", ".tex", ".bib", ".sty", ".cls", ".adoc"]
+DOC_DIRS = ["docs", "prompts", "licenses"]
+DOC_NAMES = ["readme", "license", "licence", "copying", "authors", "changelog", "news", "install", "thanks"]
+METADATA_NAMES = [".gitignore", ".gitattributes", ".gitmodules", ".gitkeep", ".editorconfig"]
+SCRIPT_INTERPRETERS = {"python": "Python", "python3": "Python", "python2": "Python",
+                       "sh": "Shell", "bash": "Shell", "dash": "Shell", "zsh": "Shell",
+                       "fish": "Shell", "ksh": "Shell", "perl": "Perl", "ruby": "Ruby",
+                       "node": "JavaScript", "nodejs": "JavaScript"}
+RULES = {
+    "version": 2,
+    "unit": "physical lines, including blank lines and comments; final unterminated line counts",
+    "policy": "assume the shared Eunoia repository layout, including nested tool directories",
+    "precedence": "explicit exclusions; links; binary detection; JSON/metadata; documentation; source/scripts; other text",
+    "documentation": "text under any docs/, prompts/ or licenses/ directory, documentation suffixes, or README/license-style filenames",
+    "implementation": "recognized source/build filenames, path patterns and suffixes, including tests; extensionless scripts with recognized shebangs",
+    "ignored": "JSON/JSONL anywhere, .github/ contents, repository metadata, and other data/configuration or unrecognized text",
+    "templates": "strip trailing .in and .template suffixes before applying JSON, metadata, documentation and source rules",
+    "binary": "files containing NUL bytes or not decodable as UTF-8 are skipped",
+    "scope": "tracked files at the recorded commit; working-tree changes are not read; generated and vendored source follows the same rules",
+    "links": "symlinks and submodules are recorded but not followed or counted",
+    "source_suffixes": SOURCE_SUFFIXES,
+    "source_filenames": sorted(LANGUAGE_FILENAMES),
+    "source_path_patterns": LANGUAGE_PATH_PATTERNS,
+    "documentation_suffixes": DOC_SUFFIXES,
+    "documentation_directories": DOC_DIRS,
+    "documentation_names": DOC_NAMES,
+    "metadata_names": METADATA_NAMES,
+    "script_interpreters": SCRIPT_INTERPRETERS,
+}
+METHOD = ("Physical lines at pinned commits, including blanks and comments. "
+          "The shared repository layout is assumed: docs/ and prompts/ directories, including nested "
+          "tool directories, count only as documentation, alongside licenses and recognized documentation files. "
+          "Implementation counts recognized source, build files and scripts, including tests. "
+          "JSON/JSONL, CI and repository metadata, other data/configuration and unrecognized text "
+          "are ignored. Binary files, symlinks and submodules are skipped. "
+          "Counts describe size, not quality or effort.")
 LANGUAGE_RULES = {
-    "version": 1,
-    "classification": "filename first, then extension; .C and .H mean C++; other suffixes ignore case",
+    "version": 2,
+    "classification": "filename/path pattern first, then extension, then recorded interpreter for extensionless scripts; unwrap .in/.template; .C and .H mean C++; other suffixes ignore case",
     "headers": ".h files are C/C++ headers, reported separately from C and C++",
-    "unknown": "unrecognized and extensionless files are Other text; contents and shebangs are not inspected",
-    "scope": "physical lines, including comments, blanks, tests, generated files and vendored files",
+    "unknown": "counted documentation without a recognized type is Other text; unrecognized implementation text is ignored",
+    "scope": "only counted implementation and documentation; ignored files contribute to neither denominator",
     "percent_total": "share of all counted text lines in the selected repository or combined corpus",
-    "percent_implementation": "share of non-Markdown lines in the same scope; Markdown has no value",
+    "percent_implementation": "implementation lines of this language divided by all implementation lines; documentation-only groups have no value",
     "aggregation": "combined percentages use summed lines, not an average of repository percentages",
     "suffixes": LANGUAGE_SUFFIXES,
     "filenames": LANGUAGE_FILENAMES,
+    "path_patterns": LANGUAGE_PATH_PATTERNS,
 }
 
 
-def language(path):
+def untemplate(path):
+    while PurePosixPath(path).suffix.lower() in (".in", ".template"):
+        path = path.rsplit(".", 1)[0]
+    return path
+
+
+def script_language(data):
+    """Recognize an interpreter, without executing the shebang or requiring +x."""
+    if not data.startswith(b"#!"):
+        return None
+    try:
+        words = shlex.split(data.split(b"\n", 1)[0][2:].decode("utf-8"))
+    except (UnicodeDecodeError, ValueError):
+        return None
+    if not words:
+        return None
+    name = PurePosixPath(words[0]).name
+    if name == "env":
+        words = words[1:]
+        while words and (words[0].startswith("-") or "=" in words[0]):
+            if words.pop(0) in ("-u", "--unset", "-C", "--chdir") and words:
+                words.pop(0)
+        if not words:
+            return None
+        name = PurePosixPath(words[0]).name
+    if re.fullmatch(r"python[23](?:\.\d+)?", name):
+        return "Python"
+    return SCRIPT_INTERPRETERS.get(name)
+
+
+def classify(path, interpreter=None):
+    """Classify regular text; documentation paths always take precedence over code."""
+    path = PurePosixPath(untemplate(path))
+    suffix, name = path.suffix.lower(), path.name.lower()
+    if suffix in (".json", ".jsonl"):
+        return "ignored", "json"
+    if ".github" in path.parts[:-1] or name in METADATA_NAMES:
+        return "ignored", "repository-metadata"
+    if (any(p in DOC_DIRS for p in path.parts[:-1])
+            or suffix in DOC_SUFFIXES or name in DOC_SUFFIXES
+            or name.split(".", 1)[0] in DOC_NAMES or name.endswith("-readme")):
+        return "documentation", None
+    if (path.name in LANGUAGE_FILENAMES or suffix in SOURCE_SUFFIXES
+            or any(path.match(pattern) for pattern in LANGUAGE_PATH_PATTERNS)):
+        return "implementation", None
+    if not suffix and interpreter in SCRIPT_INTERPRETERS.values():
+        return "implementation", None
+    return "ignored", "data-or-unrecognized-text"
+
+
+def language(path, interpreter=None):
+    path = untemplate(path)
     if path.lower().endswith(".md"):
         return "Markdown"
     name = PurePosixPath(path).name
     if name in LANGUAGE_FILENAMES:
         return LANGUAGE_FILENAMES[name]
+    for pattern, label in LANGUAGE_PATH_PATTERNS.items():
+        if PurePosixPath(path).match(pattern):
+            return label
     suffix = PurePosixPath(path).suffix
     if suffix not in (".C", ".H"):
         suffix = suffix.lower()
     for label, suffixes in LANGUAGE_SUFFIXES.items():
         if suffix in suffixes:
             return label
-    return "Other text"
+    return interpreter if not suffix and interpreter else "Other text"
 
 
 def language_summary(corpus, records):
@@ -76,23 +170,26 @@ def language_summary(corpus, records):
         implementation = sum(r["lines"] for r in rows if r["category"] == "implementation")
         groups = {}
         for row in rows:
-            groups.setdefault(language(row["path"]), []).append(row)
+            groups.setdefault(language(row["path"], row.get("interpreter")), []).append(row)
         result = []
         for label, files in groups.items():
             lines = sum(r["lines"] for r in files)
+            impl_lines = sum(r["lines"] for r in files if r["category"] == "implementation")
             largest = sorted(files, key=lambda r: (-r["lines"], r["source"], r["path"]))[:5]
             result.append({"language": label, "files": len(files), "lines": lines,
+                           "implementation_lines": impl_lines, "documentation_lines": lines - impl_lines,
                            "percent_total": round(100 * lines / total, 6) if total else None,
-                           "percent_implementation": round(100 * lines / implementation, 6)
-                           if implementation and label != "Markdown" else None,
+                           "percent_implementation": round(100 * impl_lines / implementation, 6)
+                           if implementation and any(r["category"] == "implementation" for r in files) else None,
                            "largest_files": [{k: r[k] for k in ("source", "path", "lines", "object")}
                                              for r in largest]})
         return {"total_lines": total, "implementation_lines": implementation,
                 "languages": sorted(result, key=lambda r: (-r["lines"], r["language"]))}
 
     counted = [r for r in records if r["category"] in CATEGORIES]
-    return {"schema_version": 1, "subject": corpus["subject"], "run": corpus["run"],
+    return {"schema_version": 2, "subject": corpus["subject"], "run": corpus["run"],
             "files_digest": corpus["files_digest"], "rules": LANGUAGE_RULES,
+            "counting_rules": corpus["rules"],
             "totals": distribution(counted),
             "sources": [dict(src, **distribution([r for r in counted if r["source"] == src["id"]]))
                         for src in corpus["sources"]]}
@@ -188,14 +285,20 @@ def count_tree(src, checkouts, exclude):
                         data = proc.stdout.read(size)
                         if len(data) != size or proc.stdout.read(1) != b"\n":
                             raise ValueError(f"incomplete blob {oid}")
-                        cache[oid] = (size, text_lines(data))
-                    size, lines = cache[oid]
+                        cache[oid] = (size, text_lines(data), script_language(data))
+                    size, lines, interpreter = cache[oid]
                     row["bytes"] = size
                     if lines is None:
                         row["category"] = "binary"
                     else:
-                        row.update(category="documentation" if path.lower().endswith(".md")
-                                   else "implementation", lines=lines)
+                        if interpreter and not PurePosixPath(untemplate(path)).suffix:
+                            row["interpreter"] = interpreter
+                        category, reason = classify(path, row.get("interpreter"))
+                        row["category"] = category
+                        if reason:
+                            row["reason"] = reason
+                        else:
+                            row["lines"] = lines
                 records.append(row)
         finally:
             proc.stdin.close()
@@ -217,12 +320,13 @@ def summarize(corpus, records):
         seen.add(key)
         out = by[row["source"]]
         category = row["category"]
+        if category in (*CATEGORIES, "ignored"):
+            expected, reason = classify(row["path"], row.get("interpreter"))
+            if category != expected or row.get("reason") != reason:
+                raise ValueError(f"wrong category or reason: {key}")
         if category in CATEGORIES:
             if type(row["lines"]) is not int or row["lines"] < 0:
                 raise ValueError(f"invalid line count: {key}")
-            expected = "documentation" if row["path"].lower().endswith(".md") else "implementation"
-            if category != expected:
-                raise ValueError(f"wrong category: {key}")
             out[category]["files"] += 1
             out[category]["lines"] += row["lines"]
         else:
@@ -239,14 +343,13 @@ def summarize(corpus, records):
 
 
 def report(corpus, counts):
+    recounted = (f" Recounted with counting rules v{RULES['version']}: `{corpus['recounted_at']}`."
+                 if "recounted_at" in corpus else "")
     lines = [f"# LOC analysis — {corpus['subject']}", "",
              f"Generated by `loc_analyzer` from pinned Git trees. Run: `{corpus['run']}`. "
-             f"Recorded: `{corpus['recorded_at']}`.", "",
-             "Counts are physical lines, including blanks and comments. Documentation is "
-             "UTF-8 text in `.md` files (case-insensitive); implementation is all other "
-             "UTF-8 text, including tests, configuration and data. Binary files, symlinks "
-             "and submodules are skipped. These counts describe repository size, not quality or effort.", "",
-             "| Repository | Branch | Implementation | Documentation (.md) | Total | Pin |",
+             f"Recorded: `{corpus['recorded_at']}`." + recounted, "",
+             METHOD, "",
+             "| Repository | Branch | Implementation | Documentation | Total | Pin |",
              "| --- | --- | ---: | ---: | ---: | --- |"]
     for s in counts["sources"]:
         link = s["origin"].rstrip("/") + "/commit/" + s["commit"]
@@ -256,16 +359,17 @@ def report(corpus, counts):
     t = counts["totals"]
     lines += [f"| **Total** | | **{t['implementation']:,}** | **{t['documentation']:,}** | "
               f"**{t['total_lines']:,}** | |", "", "## Skipped entries", "",
-              "| Repository | Binary / non-UTF-8 | Symlinks | Submodules | Excluded paths |",
-              "| --- | ---: | ---: | ---: | ---: |"]
+              "| Repository | Binary / non-UTF-8 | Symlinks | Submodules | Excluded paths | Ignored text |",
+              "| --- | ---: | ---: | ---: | ---: | ---: |"]
     for s in counts["sources"]:
         lines.append("| " + s["id"] + " | " + " | ".join(str(s["skipped"][k]) for k in SKIPPED) + " |")
     lines += ["", "## Evidence", "",
               "[Manifest and counting rules](corpus.json) · [Repository totals](loc.json) · "
               "[Per-file evidence](files.jsonl).", "",
               "Only committed files at the named pins are counted. Duplicate blobs at different "
-              "paths count once per path. Generated and vendored text is included unless a path "
-              "is explicitly excluded in the manifest.", "",
+              "paths count once per path. Generated and vendored source follows the same rules. "
+              "Ignored text remains in the per-file evidence with a reason, but contributes no lines. "
+              "The manifest records the exact source and documentation rules.", "",
               "Excluded paths: " + (", ".join(f"`{p}`" for p in corpus["exclude"]) or "none") + ".", ""]
     return "\n".join(lines)
 
@@ -300,26 +404,46 @@ def run_analysis(name, checkouts, stamp):
               "rules": RULES, "exclude": config.get("exclude", []),
               "sources": [pin(s, checkouts) for s in sources]}
     records = [r for src in corpus["sources"] for r in count_tree(src, checkouts, corpus["exclude"])]
+    write_run(rd, corpus, records)
+
+
+def write_run(rd, corpus, records):
     raw = "".join(json.dumps(row, sort_keys=True) + "\n" for row in records).encode()
     corpus["files_digest"] = hashlib.sha256(raw).hexdigest()
     counts = summarize(corpus, records)
-    rd.mkdir(parents=True)
+    rd.mkdir(parents=True, exist_ok=True)
     (rd / "files.jsonl").write_bytes(raw)
     for name, value in [("corpus.json", corpus), ("loc.json", counts)]:
         (rd / name).write_text(json.dumps(value, indent=2, sort_keys=True) + "\n")
     (rd / "report.md").write_text(report(corpus, counts))
-    print(f"wrote {rd}: {len(sources)} repositories, {counts['totals']['total_lines']:,} lines")
+    print(f"wrote {rd}: {len(corpus['sources'])} repositories, {counts['totals']['total_lines']:,} lines")
+
+
+def recount_analysis(name, checkouts, stamp):
+    """Explicitly revise a snapshot's measurement while preserving its commit pins."""
+    rd = HERE / "runs" / identifier(name) / identifier(stamp)
+    corpus = json.loads((rd / "corpus.json").read_text())
+    if corpus["subject"] != name or corpus["run"] != stamp:
+        raise ValueError("snapshot identity does not match its directory")
+    if hashlib.sha256((rd / "files.jsonl").read_bytes()).hexdigest() != corpus["files_digest"]:
+        raise ValueError("per-file evidence digest does not match the manifest")
+    # Read every tree before touching the snapshot; branch tips are never consulted.
+    records = [r for src in corpus["sources"] for r in count_tree(src, checkouts, corpus["exclude"])]
+    corpus.update(schema_version=VERSION, rules=RULES,
+                  recounted_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                  previous_files_digest=corpus["files_digest"])
+    write_run(rd, corpus, records)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("subjects")
-    for command in ("run", "check", "languages"):
+    for command in ("run", "recount", "check", "languages"):
         cmd = commands.add_parser(command)
         cmd.add_argument("subject")
         if command != "languages":
-            cmd.add_argument("--from", dest="checkouts", type=Path, required=command == "run")
+            cmd.add_argument("--from", dest="checkouts", type=Path, required=command in ("run", "recount"))
         cmd.add_argument("--run", required=command != "run", default=date.today().isoformat())
     args = parser.parse_args()
     try:
@@ -329,6 +453,8 @@ def main():
                 print(path.stem + ": " + ", ".join(s["id"] for s in sources))
         elif args.command == "run":
             run_analysis(args.subject, args.checkouts, args.run)
+        elif args.command == "recount":
+            recount_analysis(args.subject, args.checkouts, args.run)
         elif args.command == "languages":
             rd = HERE / "runs" / identifier(args.subject) / identifier(args.run)
             print(json.dumps(languages_for_run(rd), indent=2, sort_keys=True))

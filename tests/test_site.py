@@ -73,8 +73,11 @@ class SharedSite(unittest.TestCase):
             for src, expected in zip(data["sources"], counts["sources"]):
                 self.assertEqual(src["commit"], expected["commit"])
                 self.assertEqual(sum(g["lines"] for g in src["languages"]), expected["total_lines"])
-                self.assertEqual(sum(g["lines"] for g in src["languages"] if g["language"] != "Markdown"),
+                self.assertEqual(sum(g["implementation_lines"] for g in src["languages"]),
                                  expected["implementation"]["lines"])
+                self.assertEqual(sum(g["documentation_lines"] for g in src["languages"]),
+                                 expected["documentation"]["lines"])
+                self.assertNotIn("JSON / JSONL", [g["language"] for g in src["languages"]])
                 self.assertIn(f'id="repo-{src["id"]}"', page)
                 self.assertIn(f'href="#repo-{src["id"]}"', page)
                 for group in src["languages"]:
@@ -84,6 +87,20 @@ class SharedSite(unittest.TestCase):
             raw = subprocess.check_output(["python3", str(ROOT / "loc_analyzer/bin/loc"), "languages",
                                            data["subject"], "--run", data["run"]], text=True)
             self.assertEqual(json.loads(raw), data)
+
+    def test_public_reports_use_policy_counts_and_current_denominators(self):
+        for path in [self.out / "index.html", self.out / "loc/index.html",
+                     *self.out.glob("loc/*/*/index.html")]:
+            page = path.read_text()
+            self.assertIn("JSON/JSONL", page)
+            self.assertNotIn("documentation (.md)", page)
+            for name in ("aisthesis", "eschaton"):
+                self.assertRegex(page, rf'>{name}</a>.*?<td>0</td>')
+        for path in self.out.glob("loc/*/*/languages.html"):
+            page = path.read_text()
+            self.assertIn("% of implementation", page)
+            self.assertNotIn("non-Markdown", page)
+            self.assertNotIn("<th>JSON / JSONL</th>", page)
 
     def test_build_cannot_replace_analyzers_or_repository(self):
         for path in (ROOT, ROOT / "loc_analyzer", ROOT / "history_analyzer", ROOT.parent):

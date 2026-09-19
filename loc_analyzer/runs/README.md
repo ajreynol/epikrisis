@@ -2,7 +2,10 @@
 
 Each snapshot counts the committed trees at the pins in its `corpus.json`.
 The report is generated from per-file evidence and can be reproduced with the
-checkouts. See the [LOC analyzer README](../README.md) for the counting rules.
+checkouts. Reports use counting rules v2: documentation follows the shared
+layout, while JSON, repository metadata and other data files are ignored.
+An explicit recount records its timestamp and preserves the snapshot's pins.
+See the [LOC analyzer README](../README.md) for the counting rules.
 
 | Subject | Snapshot | Report | Evidence |
 | --- | --- | --- | --- |

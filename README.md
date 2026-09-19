@@ -11,7 +11,7 @@ where their recorded accounts differ from the work in their Git histories.
 | Analysis | What it shows | Guide |
 | --- | --- | --- |
 | [History](https://ajreynol.github.io/epikrisis/history.html) | Commit activity, changes over time, and retrospective reports. | [History analyzer](history_analyzer/README.md) |
-| [Lines of code](https://ajreynol.github.io/epikrisis/loc/) | Repository size, implementation and Markdown documentation, and language percentages. | [LOC analyzer](loc_analyzer/README.md) |
+| [Lines of code](https://ajreynol.github.io/epikrisis/loc/) | Repository size, implementation and documentation, and language percentages. | [LOC analyzer](loc_analyzer/README.md) |
 
 Both analyses cover the ecosystem's repositories, including **cvc5 and ethos on
 `main`**, and identify the commits behind their results. The language breakdown
@@ -24,7 +24,8 @@ tool. They help us examine our work; their conclusions are not evidence that
 these practices work elsewhere. Reports separate evidence from judgement so
 readers can inspect the basis for an assessment and challenge it.
 
-LOC reports measure physical text lines, including comments, tests and data.
+LOC reports measure physical lines of source, scripts and documentation,
+including comments and tests. JSON, CI metadata and other data files are excluded.
 They describe size and composition, not quality or effort. The analyzer guides
 explain the methods and their limits.
 

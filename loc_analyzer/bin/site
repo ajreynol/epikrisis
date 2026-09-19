@@ -14,15 +14,13 @@ _spec = importlib.util.spec_from_loader(_loader.name, _loader)
 counter = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(counter)
 
-METHOD = ("Physical lines at pinned commits, including blanks and comments. "
-          "Documentation counts .md files; implementation counts other UTF-8 text, "
-          "including tests, configuration and data. Binary files, symlinks and "
-          "submodules are skipped. Counts describe size, not quality or effort.")
+METHOD = counter.METHOD
 LANGUAGE_METHOD = (
-    "Languages and file types are identified by filename and extension. Percentages use physical "
-    "lines, including blanks and comments. Tests, generated files and vendored text are included. "
-    "Unrecognized and extensionless files, including scripts, remain Other text; file contents "
-    "and shebangs are not inspected. Shared .h headers are separate from C and C++. "
+    "Languages and file types are identified by filename and extension, unwrapping .in/.template "
+    "suffixes; extensionless scripts use their recorded shebang interpreter. Percentages use counted "
+    "physical lines, including blanks and comments. JSON/JSONL, CI metadata and other ignored files "
+    "contribute no lines. Documentation paths may contain source-language examples, which remain "
+    "documentation. Shared .h headers are separate from C and C++. "
     "Shares are based on lines, not bytes.")
 
 
@@ -45,17 +43,19 @@ def language_table(data, sources):
         rows.append(f'<tr><td>{html.escape(group["language"])}'
                     '<details><summary>Largest files</summary><ul>' + "".join(files) + '</ul></details></td>'
                     f'<td>{group["files"]:,}</td><td>{group["lines"]:,}</td>'
+                    f'<td>{group["implementation_lines"]:,}</td><td>{group["documentation_lines"]:,}</td>'
                     f'<td>{percent(group["percent_total"])}</td>'
                     f'<td>{percent(group["percent_implementation"])}</td></tr>')
     return ('<div class="tw"><table class="language-counts"><thead><tr><th>language / file type</th>'
-            '<th>files</th><th>lines</th><th>% of all text</th><th>% of non-Markdown</th>'
+            '<th>files</th><th>lines</th><th>implementation</th><th>documentation</th>'
+            '<th>% of counted lines</th><th>% of implementation</th>'
             '</tr></thead><tbody>' + "".join(rows) + '</tbody></table></div>')
 
 
 def language_page(data):
     sources = {s["id"]: s for s in data["sources"]}
     languages = ("Python", "C++", "Lean", "C/C++ headers", "SMT-LIB", "Eunoia",
-                 "Java", "Markdown", "JSON / JSONL", "Plain text")
+                 "Java", "Markdown", "Plain text")
     rows = []
     for src in data["sources"]:
         groups = {r["language"]: r for r in src["languages"]}
@@ -76,16 +76,16 @@ def language_page(data):
     body = (f'<h1>Languages and file types</h1><p>{html.escape(data["subject"])} · '
             f'snapshot {html.escape(data["run"])} · {data["totals"]["total_lines"]:,} counted lines.</p>'
             f'<p>{LANGUAGE_METHOD}</p>'
-            '<p><strong>Reading the percentages:</strong> “All text” includes Markdown, source, '
-            'configuration and data. “Non-Markdown” uses the implementation total from the LOC summary; '
-            'it still includes tests and data. Each repository uses its own denominator. '
+            '<p><strong>Reading the percentages:</strong> “Counted lines” includes implementation and '
+            'documentation. “Implementation” divides only a language’s implementation lines by the '
+            'implementation total from the LOC summary. Each repository uses its own denominator. '
             'Combined shares divide summed lines, rather than averaging repository percentages. '
-            'A dash means no denominator or, for Markdown, no applicable implementation share. '
+            'A dash means no denominator or a documentation-only language group. '
             'Displayed percentages are rounded.</p>'
             '<p><a href="index.html">LOC summary and commit pins</a> · '
             '<a href="languages.json">Download language counts and classification rules (JSON)</a> · '
             '<a href="files.jsonl">Per-file evidence</a></p>'
-            '<h2>Repository comparison</h2><p>Share of all counted text in each repository. '
+            '<h2>Repository comparison</h2><p>Share of all counted lines in each repository. '
             '“Other types” includes types outside the named columns. Expand its percentage to see '
             'the remaining types and their shares of the repository, including unclassified Other text. '
             'Select a repository for its full breakdown. Scroll the table horizontally on smaller screens.</p>'
@@ -93,13 +93,13 @@ def language_page(data):
             'aria-label="Repository language percentages"><table class="language-comparison">'
             '<thead><tr><th>repository</th>'
             + "".join(f'<th>{html.escape(label)}</th>' for label in languages)
-            + '<th>other types</th><th>all text lines</th></tr></thead><tbody>'
+            + '<th>other types</th><th>counted lines</th></tr></thead><tbody>'
             + "".join(rows) + '</tbody></table></div>'
             '<h2>All repositories combined</h2>' + language_table(data["totals"], sources))
     for src in data["sources"]:
         url = src["origin"].rstrip("/") + "/commit/" + src["commit"]
         body += (f'<section id="repo-{html.escape(src["id"])}"><h2>{html.escape(src["id"])}</h2>'
-                 f'<p>{src["total_lines"]:,} text lines · {src["implementation_lines"]:,} non-Markdown lines · '
+                 f'<p>{src["total_lines"]:,} counted lines · {src["implementation_lines"]:,} implementation lines · '
                  f'{html.escape(src["ref"])} at <a href="{html.escape(url)}">'
                  f'<code>{src["commit"][:12]}</code></a>.</p>'
                  + language_table(src, sources) + '</section>')
@@ -118,7 +118,7 @@ def table(counts):
     totals = counts["totals"]
     return ('<div class="tw"><table class="loc-counts"><thead><tr>'
             '<th>repository / branch</th><th>implementation</th>'
-            '<th>documentation (.md)</th><th>total lines</th><th>pin</th>'
+            '<th>documentation</th><th>total lines</th><th>pin</th>'
             '</tr></thead><tbody>' + "".join(rows) + '</tbody><tfoot><tr><th>Total</th>'
             + "".join(f'<td><strong>{totals[k]:,}</strong></td>'
                       for k in ("implementation", "documentation", "total_lines"))
@@ -127,8 +127,8 @@ def table(counts):
 
 def stats(counts):
     totals = counts["totals"]
-    values = [(totals["implementation"], "implementation lines (other text)"),
-              (totals["documentation"], "documentation lines (.md)"),
+    values = [(totals["implementation"], "implementation lines"),
+              (totals["documentation"], "documentation lines"),
               (len(counts["sources"]), "repositories at recorded commits")]
     return '<div class="stats">' + "".join(
         f'<div class="stat d"><b>{n:,}</b><span>{label}</span></div>'
@@ -162,17 +162,21 @@ def build(out, page):
             f'<tr><td>{html.escape(s["id"])}</td>'
             + "".join(f'<td>{s["skipped"][k]:,}</td>' for k in counter.SKIPPED) + '</tr>'
             for s in counts["sources"])
+        recounted = (f'<p>Recounted with counting rules v{corpus["rules"]["version"]}: '
+                     f'<code>{html.escape(corpus["recounted_at"])}</code>. Repository pins are unchanged.</p>'
+                     if "recounted_at" in corpus else "")
         body = (f'<h1>LOC analysis — {html.escape(corpus["subject"])}</h1>'
                 f'<p>Snapshot {html.escape(corpus["run"])}. Recorded '
                 f'<code>{html.escape(corpus["recorded_at"])}</code>.</p>'
-                f'<p>{METHOD}</p>' + stats(counts)
+                + recounted + f'<p>{METHOD}</p>' + stats(counts)
                 + '<p class="cta"><a href="languages.html">Explore language percentages: '
                   'Python, C++, Lean and more &rarr;</a></p>' + table(counts)
                 + '<h2>Skipped entries</h2><div class="tw"><table><thead><tr>'
                 '<th>repository</th><th>binary / non-UTF-8</th><th>symlinks</th>'
-                '<th>submodules</th><th>excluded paths</th></tr></thead><tbody>'
+                '<th>submodules</th><th>excluded paths</th><th>ignored text</th></tr></thead><tbody>'
                 + skipped + '</tbody></table></div>'
-                + '<p>Generated and vendored text is included unless explicitly excluded. '
+                + '<p>Generated and vendored source follows the same counting rules. '
+                'Ignored files remain in the evidence with a reason. '
                 'Excluded paths: ' + html.escape(", ".join(corpus["exclude"]) or "none") + '.</p>'
                 + '<h2>Evidence</h2><p><a href="corpus.json">Manifest and counting rules</a> · '
                 '<a href="loc.json">Repository totals</a> · '

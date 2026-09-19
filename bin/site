@@ -36,7 +36,7 @@ def build(out):
                   '<a class="card" href="history.html"><h3>History analysis</h3>'
                   '<p>Commits, changes and reports across pinned repository histories.</p></a>'
                   '<a class="card" href="loc/index.html"><h3>LOC analysis</h3>'
-                  '<p>Implementation and Markdown documentation at each repository pin.</p>'
+                  '<p>Implementation and documentation at each repository pin.</p>'
                   f'<span class="where">{counts["totals"]["total_lines"]:,} lines · '
                   f'{len(counts["sources"])} repositories</span></a></div></section>')
     mast = ('<div class="mast"><div class="eyebrow">Evidence for the Eunoia ecosystem</div>'

@@ -65,7 +65,7 @@ is the same line this section draws.
 
 [`../loc_analyzer/`](../loc_analyzer/) holds the repository-size census. It
 shares the history census's repository set and measures implementation and
-Markdown documentation at its own recorded commits.
+documentation at its own recorded commits, following the shared repository layout.
 
 | document | what it is for |
 | --- | --- |
