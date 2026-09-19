@@ -13,8 +13,9 @@ where their recorded accounts differ from the work in their Git histories.
 | [History](https://ajreynol.github.io/epikrisis/history.html) | Commit activity, changes over time, and retrospective reports. | [History analyzer](history_analyzer/README.md) |
 | [Lines of code](https://ajreynol.github.io/epikrisis/loc/) | Repository size, implementation and documentation, and language percentages. | [LOC analyzer](loc_analyzer/README.md) |
 
-Both analyses cover the ecosystem's repositories, including **cvc5 and ethos on
-`main`**, and identify the commits behind their results. The language breakdown
+Both analyses include **eunoia and paideia**, alongside the ecosystem's other
+repositories and **cvc5 and ethos on `main`**, and identify the commits behind
+their results. The language breakdown
 includes per-repository comparisons and links to the largest files.
 
 ## Reading the results

@@ -107,6 +107,20 @@ class SharedSite(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "ignored site/"):
                 site.build(path)
 
+    def test_new_projects_reach_both_analyses_at_the_same_pins(self):
+        history = json.loads((ROOT / "history_analyzer/runs/eunoia-ecosystem-s2/2026-09-19/corpus.json").read_text())
+        loc = json.loads((ROOT / "loc_analyzer/runs/eunoia-ecosystem/2026-09-19/corpus.json").read_text())
+        history_pins = {s["id"]: s["commit"] for s in history["sources"] + history["commit_tracking"]["sources"]}
+        self.assertEqual(history_pins, {s["id"]: s["commit"] for s in loc["sources"]})
+        self.assertTrue({"eunoia", "paideia"}.issubset(history_pins))
+        self.assertEqual(len(history_pins), 14)
+        home = (self.out / "index.html").read_text()
+        language = (self.out / "loc/eunoia-ecosystem/2026-09-19/languages.html").read_text()
+        for name in ("eunoia", "paideia"):
+            self.assertIn(history_pins[name], home)
+            self.assertIn(f'id="repo-{name}"', language)
+        self.assertIn("source_selection", history)
+
 
 if __name__ == "__main__":
     unittest.main()

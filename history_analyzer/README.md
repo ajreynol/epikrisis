@@ -79,10 +79,19 @@ formats.
 
 ## Ecosystem runs and commit tracking
 
-The [Stretch 2 subject](subjects/eunoia-ecosystem-s2.json) takes its assessed
-source list from the ecosystem register. For a new ecosystem subject,
+The [current ecosystem subject](subjects/eunoia-ecosystem-s2.json) combines the
+register's members with explicitly requested coverage of **eunoia and paideia**.
+Analysis inclusion does not assign membership: the selection records each
+requested project's status from the committed register, including an unlisted
+project. For a new ecosystem subject,
 [`subjects/derive_sources.py`](subjects/derive_sources.py) derives the list from
-kanon's `scripts/ecosystem/ecosystem.json`; its usage is documented in the script.
+kanon's committed `scripts/ecosystem/ecosystem.json`; its usage is documented in
+the script. The generated subject records the register digest and pins every
+source's `main` branch. New run manifests preserve this selection provenance.
+
+The September 19 census includes both new projects in commit totals, window
+counts and event/claim evidence. Its quantitative note complements the earlier
+assessments, which remain attached to their original pins and repository sets.
 
 All supplied ecosystem subjects also track **cvc5 and ethos on `main`**. Supply
 full checkouts named `cvc5` and `ethos` alongside the assessed repositories.

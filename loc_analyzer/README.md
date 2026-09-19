@@ -106,7 +106,9 @@ not select a historical date.
 
 The [ecosystem subject](subjects/eunoia-ecosystem.json) shares the history
 census's repository list, including cvc5 and ethos, and pins `main` in each
-checkout. Supply directories or symlinks named after the repository IDs under
+checkout. It also includes the explicitly requested eunoia and paideia projects;
+the September 19 snapshot covers fourteen repositories. Supply directories or
+symlinks named after the repository IDs under
 `--from`. The checked-out branch may differ: `main` means `refs/heads/main`, and
 a missing branch fails rather than falling back to `HEAD`. Full history is not
 needed for LOC, but the pinned commit and all its tree objects must be available.

@@ -1,0 +1,216 @@
+{
+  "commit_tracking": {
+    "method": "collected with pin",
+    "recorded": "2026-09-19",
+    "sources": [
+      {
+        "commit": "dbf176dfb71b272ffbfdee06888dace73fee5aa8",
+        "commits": 14099,
+        "first_commit": "2009-09-26",
+        "id": "cvc5",
+        "last_commit": "2026-09-19",
+        "origin": "https://github.com/cvc5/cvc5",
+        "ref": "main"
+      },
+      {
+        "commit": "39f2f90c0c93b7b71e327c3c8e524b9da039d45b",
+        "commits": 1061,
+        "first_commit": "2023-07-18",
+        "id": "ethos",
+        "last_commit": "2026-09-18",
+        "origin": "https://github.com/cvc5/ethos",
+        "ref": "main"
+      }
+    ]
+  },
+  "date_field": "committer date, --date=short, as git reports it",
+  "detectors_implemented": [
+    "ai-attribution",
+    "message-join",
+    "reversal",
+    "listed",
+    "joined",
+    "status-change",
+    "delisted",
+    "transplant",
+    "birth",
+    "death",
+    "rewrite",
+    "release",
+    "governance",
+    "apparatus",
+    "quiet",
+    "repo-added",
+    "relation"
+  ],
+  "detectors_not_implemented": {
+    "dependency": "needs per-manifest parsing; the demo would only be able to say that a manifest changed, which `governance` already says",
+    "hands": "deleted 2026-09-02, not unwritten. It counted distinct committers per window; `questions.md` asks nothing about people or rates of work, so every candidate it ever produced was dropped. Removing a detector whose output no question can use is what this project says to do before raising a limit"
+  },
+  "exclude": [
+    "deps/",
+    "checkers/",
+    ".lake/"
+  ],
+  "kind": "ecosystem",
+  "not_in_corpus": [
+    "cvc5 and ethos have commit counts and main-branch pins in commit_tracking. They are outside the primary analysis corpus; events, claims and assessments do not cover them. Ethos compiler work on ethosEoc3 is outside the tracked main history.",
+    "child projects are not separate sources. Each is read inside its parent's tree at the parent's pin, so a child that moved between parents appears here as a directory arriving and a directory leaving, and never as one event.",
+    "issue trackers, pull requests and discussion threads, for every source, by design",
+    "anything unpublished, absolutely",
+    "any window. This tool reports over whole histories up to the pin and has no --since. A stretch-scoped figure cannot be derived by this pipeline, which is the limitation recorded as D4."
+  ],
+  "pinned": "2026-09-19",
+  "questions_digest": "39075bf556d8885fa355332ae4203fc1d5b6ef588734ef51112d6bf0f5b75a55",
+  "self": true,
+  "source_selection": {
+    "by": "history_analyzer/subjects/derive_sources.py",
+    "count": 12,
+    "explicit_inclusions": [
+      {
+        "id": "eunoia",
+        "registered_status": "unlisted"
+      },
+      {
+        "id": "paideia",
+        "registered_status": "candidate"
+      }
+    ],
+    "from": "kanon scripts/ecosystem/ecosystem.json",
+    "member_count": 10,
+    "note": "Members are derived from the committed register; eunoia and paideia are explicitly requested coverage. Analysis inclusion does not establish or change a project's ecosystem footing.",
+    "register_digest": "2210d94f1864eda1cfc63dc77d5552085455e6b59b63beaf9b4ebdf6294bf90d",
+    "rule": "status in {member, president}, plus explicitly requested project coverage"
+  },
+  "sources": [
+    {
+      "commit": "262c93d2c0bab8b527ab65bc7b63e44ac40a3524",
+      "commits": 11,
+      "first_commit": "2026-09-14",
+      "id": "aisthesis",
+      "last_commit": "2026-09-18",
+      "origin": "https://github.com/ajreynol/aisthesis",
+      "ref": "main"
+    },
+    {
+      "commit": "06bd7872ea5ce24bf4d264bf5e6958ed8edee3c2",
+      "commits": 266,
+      "first_commit": "2026-08-29",
+      "id": "anoieu",
+      "last_commit": "2026-09-18",
+      "origin": "https://github.com/ajreynol/anoieu",
+      "ref": "main"
+    },
+    {
+      "commit": "1f88a99b81f4416ffa8edd11f159fca3dd44c48d",
+      "commits": 62,
+      "first_commit": "2026-08-30",
+      "id": "dokimasia",
+      "last_commit": "2026-09-19",
+      "origin": "https://github.com/ajreynol/dokimasia",
+      "ref": "main"
+    },
+    {
+      "commit": "19a98da4b462985a1818fe9e43242797b2d1c632",
+      "commits": 47,
+      "first_commit": "2026-09-01",
+      "id": "epikrisis",
+      "last_commit": "2026-09-19",
+      "origin": "https://github.com/ajreynol/epikrisis",
+      "ref": "main"
+    },
+    {
+      "commit": "772923914e9e4f62cc2744e203dba5c332d982fc",
+      "commits": 17,
+      "first_commit": "2026-09-16",
+      "id": "eschaton",
+      "last_commit": "2026-09-18",
+      "origin": "https://github.com/ajreynol/eschaton",
+      "ref": "main"
+    },
+    {
+      "commit": "50532e03f62052100df5eaf7361acec7fc8a1001",
+      "commits": 103,
+      "first_commit": "2026-08-29",
+      "id": "eudaimonia",
+      "last_commit": "2026-09-19",
+      "origin": "https://github.com/ajreynol/eudaimonia",
+      "ref": "main"
+    },
+    {
+      "commit": "10edbf27194e48a1d2bca0da3924ad7d26fb449b",
+      "commits": 5,
+      "first_commit": "2026-09-19",
+      "id": "eunoia",
+      "last_commit": "2026-09-19",
+      "origin": "https://github.com/ajreynol/eunoia",
+      "ref": "main"
+    },
+    {
+      "commit": "8437526a14a7fae0a0de16fbc5d90250b0cea2ed",
+      "commits": 134,
+      "first_commit": "2026-09-02",
+      "id": "kanon",
+      "last_commit": "2026-09-19",
+      "origin": "https://github.com/ajreynol/kanon",
+      "ref": "main"
+    },
+    {
+      "commit": "74ea664a222d962f45ba3fee8511e1e5ad93b4b8",
+      "commits": 54,
+      "first_commit": "2026-08-31",
+      "id": "koine",
+      "last_commit": "2026-09-19",
+      "origin": "https://github.com/ajreynol/koine",
+      "ref": "main"
+    },
+    {
+      "commit": "c8165b2afd321ce8d4b168c270b1fb53388e16da",
+      "commits": 714,
+      "first_commit": "2026-03-03",
+      "id": "logos",
+      "last_commit": "2026-09-18",
+      "origin": "https://github.com/cvc5/logos",
+      "ref": "main"
+    },
+    {
+      "commit": "7ccb92d14df3871d7ecaff3d1162810ce6564264",
+      "commits": 11,
+      "first_commit": "2026-09-18",
+      "id": "paideia",
+      "last_commit": "2026-09-19",
+      "origin": "https://github.com/ajreynol/paideia",
+      "ref": "main"
+    },
+    {
+      "commit": "e68bcc1d53ea6e36f1031fb9c875511858066839",
+      "commits": 46,
+      "first_commit": "2026-09-14",
+      "id": "tachyon",
+      "last_commit": "2026-09-19",
+      "origin": "https://github.com/ajreynol/tachyon",
+      "ref": "main"
+    }
+  ],
+  "subject": "eunoia-ecosystem-s2",
+  "thresholds": {
+    "ai_min_commits_month": 10,
+    "ai_share_threshold": 0.25,
+    "delta_lag_days": 7,
+    "governance_lines": 40,
+    "join_min_commits_month": 10,
+    "join_none_threshold": 0.5,
+    "min_commits_prefix": 3,
+    "prefix_depth": 1,
+    "quiet_median_multiple": 6.0,
+    "quiet_min_days": 3,
+    "reversal_min_lines": 40,
+    "reversal_window_hours": 24,
+    "rewrite_churn_ratio": 1.0,
+    "rewrite_window_days": 7,
+    "session_gap_minutes": 90,
+    "transplant_min_files": 3
+  },
+  "thresholds_changed_after_events": false,
+  "tool_version": "0.1.0-demo"
+}

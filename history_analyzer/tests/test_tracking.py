@@ -129,9 +129,32 @@ class TrackingCoverage(unittest.TestCase):
                                      str(path), "future"], check=True,
                                     capture_output=True, text=True)
         subject = json.loads(result.stdout)
-        self.assertEqual([s["id"] for s in subject["sources"]], ["kanon"])
+        self.assertEqual([s["id"] for s in subject["sources"]], ["eunoia", "kanon", "paideia"])
+        self.assertTrue(all(s["ref"] == "main" for s in subject["sources"]))
+        self.assertEqual(subject["_source_list_derived"]["member_count"], 1)
+        self.assertEqual(subject["_source_list_derived"]["explicit_inclusions"], [
+            {"id": "eunoia", "registered_status": "unlisted"},
+            {"id": "paideia", "registered_status": "unlisted"}])
         self.assertEqual([(s["id"], s["ref"]) for s in subject["tracked_sources"]],
                          [("cvc5", "main"), ("ethos", "main")])
+
+    def test_requested_projects_are_included_once_without_promoting_candidates(self):
+        register = {n: {"status": status, "url": f"https://example.org/{n}"}
+                    for n, status in (("kanon", "president"), ("eunoia", "member"),
+                                      ("paideia", "candidate"), ("unrequested", "candidate"),
+                                      ("cvc5", "foundation"), ("ethos", "candidate"))}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "register.json"
+            path.write_text(json.dumps(register))
+            result = subprocess.run(["python3", str(ROOT / "subjects/derive_sources.py"),
+                                     str(path), "future"], check=True, capture_output=True, text=True)
+        subject = json.loads(result.stdout)
+        self.assertEqual([s["id"] for s in subject["sources"]], ["eunoia", "kanon", "paideia"])
+        self.assertEqual(subject["_source_list_derived"]["member_count"], 2)
+        self.assertEqual(subject["_source_list_derived"]["explicit_inclusions"][1],
+                         {"id": "paideia", "registered_status": "candidate"})
+        self.assertEqual(next(s["origin"] for s in subject["sources"] if s["id"] == "eunoia"),
+                         "https://example.org/eunoia")
 
     def test_latest_figure_context_matches_main_branch_manifest(self):
         rd = ROOT / "runs/eunoia-ecosystem-s2/2026-09-18"

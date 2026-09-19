@@ -303,6 +303,8 @@ def cmd_pin(a):
         "detectors_not_implemented": NOT_IMPLEMENTED,
         "not_in_corpus": s.get("not_in_corpus", []),
     }
+    if "_source_list_derived" in s:
+        corpus["source_selection"] = s["_source_list_derived"]
     if tracked:
         corpus["commit_tracking"] = {
             "method": "collected with pin", "recorded": date.today().isoformat(),

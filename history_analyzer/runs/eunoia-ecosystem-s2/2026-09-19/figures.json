@@ -1,0 +1,83 @@
+{
+  "_why": "Commit-window counts at the same main-branch pins as corpus.json. The shared table and charts use this evidence for all fourteen repositories.",
+  "recorded_at": "2026-09-19T13:23:23+00:00",
+  "series": [
+    {
+      "id": "stretch1",
+      "label": "Stretch 1, anoieu's term",
+      "provenance": "counted from pinned Git history",
+      "command": "git rev-list --count --since-as-filter=2026-08-29T00:00:00-05:00 --until=2026-09-15T16:15:45-05:00 <pin>",
+      "note": "Committer timestamps; explicit time zones. The windows do not overlap. Every reachable commit is visited, including history with out-of-order timestamps.",
+      "values": {
+        "aisthesis": 1,
+        "anoieu": 241,
+        "dokimasia": 43,
+        "epikrisis": 23,
+        "eschaton": 0,
+        "eudaimonia": 71,
+        "eunoia": 0,
+        "kanon": 20,
+        "koine": 13,
+        "logos": 15,
+        "paideia": 0,
+        "tachyon": 12
+      },
+      "colour": "stretch1"
+    },
+    {
+      "id": "stretch2",
+      "label": "Stretch 2, since the handoff",
+      "provenance": "counted from pinned Git history",
+      "command": "git rev-list --count --since-as-filter=2026-09-15T16:15:46-05:00 --until=2026-09-19T13:23:23+00:00 <pin>",
+      "note": "Committer timestamps; explicit time zones. The windows do not overlap. Every reachable commit is visited, including history with out-of-order timestamps.",
+      "values": {
+        "aisthesis": 10,
+        "anoieu": 25,
+        "dokimasia": 19,
+        "epikrisis": 24,
+        "eschaton": 17,
+        "eudaimonia": 32,
+        "eunoia": 5,
+        "kanon": 114,
+        "koine": 41,
+        "logos": 3,
+        "paideia": 11,
+        "tachyon": 34
+      },
+      "colour": "stretch2"
+    }
+  ],
+  "figures": [
+    {
+      "name": "overview",
+      "heading": "Commits across all fourteen repositories",
+      "panels": [
+        "stretch1",
+        "stretch2"
+      ],
+      "include_tracked": true
+    }
+  ],
+  "context": {
+    "repositories": [
+      {
+        "id": "cvc5",
+        "pin": "dbf176dfb71b272ffbfdee06888dace73fee5aa8",
+        "ref": "main",
+        "all_time": 14099,
+        "stretch1": 22,
+        "stretch2": 13,
+        "command": "Use the corresponding series command at this pin."
+      },
+      {
+        "id": "ethos",
+        "pin": "39f2f90c0c93b7b71e327c3c8e524b9da039d45b",
+        "ref": "main",
+        "all_time": 1061,
+        "stretch1": 5,
+        "stretch2": 1,
+        "command": "Use the corresponding series command at this pin."
+      }
+    ]
+  }
+}

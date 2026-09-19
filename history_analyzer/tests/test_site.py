@@ -127,23 +127,29 @@ class Site(unittest.TestCase):
     def test_homepage_table_tiles_and_both_chart_themes_include_tracked_repositories(self):
         idx = open(os.path.join(self.out, "index.html")).read()
         table = re.search(r'<table id="commit-overview">(.*?)</table>', idx, re.S).group(1)
-        for name, counts in [("cvc5", ["14,093", "22", "7"]),
-                             ("ethos", ["1,060", "5", "0"])]:
-            row = re.search(rf'{name} \(main\)</a></td>(.*?)</tr>', table, re.S).group(1)
+        for label, counts in [("cvc5 (main)", ["14,099", "22", "13"]),
+                              ("ethos (main)", ["1,061", "5", "1"]),
+                              ("eunoia", ["5", "0", "5"]),
+                              ("paideia", ["11", "0", "11"])]:
+            row = re.search(re.escape(label) + r'</a></td>(.*?)</tr>', table, re.S).group(1)
             self.assertEqual(re.findall(r'<td>(.*?)</td>', row), counts)
-        for total in ("466", "228", "16,508"):
+        for total in ("466", "349", "16,630"):
             self.assertIn(f"<b>{total}</b>", idx)
             self.assertIn(f"<strong>{total}</strong>", table)
         for mode in ("light", "dark"):
-            p = os.path.join(self.out, "eunoia-ecosystem-s2/2026-09-18", f"overview-{mode}.svg")
+            p = os.path.join(self.out, "eunoia-ecosystem-s2/2026-09-19", f"overview-{mode}.svg")
             svg = ET.parse(p).getroot()
             labels = [el.text for el in svg.iter("{http://www.w3.org/2000/svg}text")]
             self.assertEqual(labels.count("cvc5"), 2)
             self.assertEqual(labels.count("ethos"), 2)
+            self.assertEqual(labels.count("eunoia"), 2)
+            self.assertEqual(labels.count("paideia"), 2)
             self.assertIn("cvc5 22", svg.attrib["aria-label"])
-            self.assertIn("cvc5 7", svg.attrib["aria-label"])
+            self.assertIn("cvc5 13", svg.attrib["aria-label"])
             self.assertIn("ethos 5", svg.attrib["aria-label"])
-            self.assertIn("ethos 0", svg.attrib["aria-label"])
+            self.assertIn("ethos 1", svg.attrib["aria-label"])
+            self.assertIn("eunoia 5", svg.attrib["aria-label"])
+            self.assertIn("paideia 11", svg.attrib["aria-label"])
 
     def test_nothing_is_dropped_from_a_source_document(self):
         for r in site.runs():

@@ -9,6 +9,7 @@ See the [LOC analyzer README](../README.md) for the counting rules.
 
 | Subject | Snapshot | Report | Evidence |
 | --- | --- | --- | --- |
+| Eunoia ecosystem, including eunoia, paideia, cvc5 and ethos `main` | 2026-09-19 | [LOC report](eunoia-ecosystem/2026-09-19/report.md) | [Manifest](eunoia-ecosystem/2026-09-19/corpus.json), [totals](eunoia-ecosystem/2026-09-19/loc.json), [per-file counts](eunoia-ecosystem/2026-09-19/files.jsonl) |
 | Eunoia ecosystem, including cvc5 and ethos `main` | 2026-09-18 | [LOC report](eunoia-ecosystem/2026-09-18/report.md) | [Manifest](eunoia-ecosystem/2026-09-18/corpus.json), [totals](eunoia-ecosystem/2026-09-18/loc.json), [per-file counts](eunoia-ecosystem/2026-09-18/files.jsonl) |
 
 The [published LOC index](https://ajreynol.github.io/epikrisis/loc/) discovers

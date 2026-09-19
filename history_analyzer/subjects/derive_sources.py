@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Emit an ecosystem subject whose source list is derived from the register.
+"""Emit an ecosystem subject from the register and explicit coverage requests.
 
 The defect this exists against, measured rather than asserted: a subject whose
 sources are hand-written falls behind the register silently, and the cost is not
@@ -11,8 +11,8 @@ whole-history view hides it. See ../docs/notes.md.
 
 The register is already inside the corpus: `kanon scripts/ecosystem/ecosystem.json`
 is what `inventory` reads, and membership is decided there and nowhere else. This
-reads the same file and writes the source list from it, so the denominator cannot
-drift from the thing that defines it.
+reads the same file and adds the explicitly requested projects below. Inclusion
+in an analysis does not assign ecosystem membership; the selection records both.
 
 Stdlib only, like the analyzer. It is not part of the analyzer: `epikrisis budget`
 parses bin/epikrisis alone, so nothing here is metered by it -- which is recorded
@@ -22,6 +22,7 @@ in ../docs/notes.md rather than relied on.
 
 Regenerate rather than edit. A hand-edit to the output is the defect returning.
 """
+import hashlib
 import json
 import sys
 
@@ -30,15 +31,21 @@ import sys
 # is outside the member set, and `child` is never a checkout of its own.
 UNDER_POLICY = {"member", "president"}
 TRACKED = ("cvc5", "ethos")
+# Explicitly requested analysis coverage, independent of registry footing.
+INCLUDED = {"eunoia": "https://github.com/ajreynol/eunoia",
+            "paideia": "https://github.com/ajreynol/paideia"}
 
 
 def main():
     if len(sys.argv) != 3:
         raise SystemExit(__doc__.strip().splitlines()[-3].strip())
     reg_path, subject_id = sys.argv[1], sys.argv[2]
-    reg = json.load(open(reg_path))
+    with open(reg_path, "rb") as f:
+        raw = f.read()
+    reg = json.loads(raw)
     members = sorted(n for n, e in reg.items()
                      if isinstance(e, dict) and e.get("status") in UNDER_POLICY)
+    names = sorted(set(members) | INCLUDED.keys())
 
     out = {
         "subject": subject_id,
@@ -46,21 +53,25 @@ def main():
         "self": True,
         "_source_list_derived": {
             "from": "kanon scripts/ecosystem/ecosystem.json",
-            "rule": "status in {member, president}",
+            "rule": "status in {member, president}, plus explicitly requested project coverage",
             "by": "history_analyzer/subjects/derive_sources.py",
-            "count": len(members),
-            "note": ("derived rather than hand-written. The defect it is against "
-                     "is a subject whose denominator falls behind the register "
-                     "while still reporting a total as though it covered the "
-                     "ecosystem."),
+            "count": len(names),
+            "member_count": len(members),
+            "register_digest": hashlib.sha256(raw).hexdigest(),
+            "explicit_inclusions": [{"id": n, "registered_status": reg.get(n, {}).get("status", "unlisted")}
+                                    for n in INCLUDED],
+            "note": ("Members are derived from the committed register; eunoia and "
+                     "paideia are explicitly requested coverage. Analysis inclusion "
+                     "does not establish or change a project's ecosystem footing."),
         },
-        "sources": [{"id": n, "origin": reg[n].get("url", "")} for n in members],
+        "sources": [{"id": n, "origin": reg.get(n, {}).get("url") or INCLUDED.get(n, ""),
+                     "ref": "main"} for n in names],
         "tracked_sources": [{"id": n, "origin": reg[n]["url"], "ref": "main"}
                             for n in TRACKED],
         "exclude": ["deps/", "checkers/", ".lake/"],
         "not_in_corpus": [
             ("cvc5 and ethos have commit counts and main-branch pins in "
-             "commit_tracking. They are outside the assessed member corpus; "
+             "commit_tracking. They are outside the primary analysis corpus; "
              "events, claims and assessments do not cover them. Ethos compiler "
              "work on ethosEoc3 is outside the tracked main history."),
             ("child projects are not separate sources. Each is read inside its "

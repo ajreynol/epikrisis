@@ -43,7 +43,8 @@ def build(out):
             '<h1>epikrisis — repository analyses</h1><div class="lede"><p>'
             'Two analyses of the same repository family: how its history develops, '
             'and how much implementation and documentation each tree contains. '
-            'Both include cvc5 and ethos on main and publish their commit pins.</p></div></div>')
+            'Both include eunoia and paideia, track cvc5 and ethos on main, '
+            'and publish their commit pins.</p></div></div>')
     # Keep the existing history table and charts directly on the homepage.
     body = "\n".join([mast, navigation, parts[1], loc_summary, *parts[2:]])
     (out / "index.html").write_text(history.page(

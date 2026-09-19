@@ -4,51 +4,83 @@
   "self": true,
   "_source_list_derived": {
     "from": "kanon scripts/ecosystem/ecosystem.json",
-    "rule": "status in {member, president}",
+    "rule": "status in {member, president}, plus explicitly requested project coverage",
     "by": "history_analyzer/subjects/derive_sources.py",
-    "count": 10,
-    "note": "derived rather than hand-written. The defect it is against is a subject whose denominator falls behind the register while still reporting a total as though it covered the ecosystem."
+    "count": 12,
+    "member_count": 10,
+    "register_digest": "2210d94f1864eda1cfc63dc77d5552085455e6b59b63beaf9b4ebdf6294bf90d",
+    "explicit_inclusions": [
+      {
+        "id": "eunoia",
+        "registered_status": "unlisted"
+      },
+      {
+        "id": "paideia",
+        "registered_status": "candidate"
+      }
+    ],
+    "note": "Members are derived from the committed register; eunoia and paideia are explicitly requested coverage. Analysis inclusion does not establish or change a project's ecosystem footing."
   },
   "sources": [
     {
       "id": "aisthesis",
-      "origin": "https://github.com/ajreynol/aisthesis"
+      "origin": "https://github.com/ajreynol/aisthesis",
+      "ref": "main"
     },
     {
       "id": "anoieu",
-      "origin": "https://github.com/ajreynol/anoieu"
+      "origin": "https://github.com/ajreynol/anoieu",
+      "ref": "main"
     },
     {
       "id": "dokimasia",
-      "origin": "https://github.com/ajreynol/dokimasia"
+      "origin": "https://github.com/ajreynol/dokimasia",
+      "ref": "main"
     },
     {
       "id": "epikrisis",
-      "origin": "https://github.com/ajreynol/epikrisis"
+      "origin": "https://github.com/ajreynol/epikrisis",
+      "ref": "main"
     },
     {
       "id": "eschaton",
-      "origin": "https://github.com/ajreynol/eschaton"
+      "origin": "https://github.com/ajreynol/eschaton",
+      "ref": "main"
     },
     {
       "id": "eudaimonia",
-      "origin": "https://github.com/ajreynol/eudaimonia"
+      "origin": "https://github.com/ajreynol/eudaimonia",
+      "ref": "main"
+    },
+    {
+      "id": "eunoia",
+      "origin": "https://github.com/ajreynol/eunoia",
+      "ref": "main"
     },
     {
       "id": "kanon",
-      "origin": "https://github.com/ajreynol/kanon"
+      "origin": "https://github.com/ajreynol/kanon",
+      "ref": "main"
     },
     {
       "id": "koine",
-      "origin": "https://github.com/ajreynol/koine"
+      "origin": "https://github.com/ajreynol/koine",
+      "ref": "main"
     },
     {
       "id": "logos",
-      "origin": "https://github.com/cvc5/logos"
+      "origin": "https://github.com/cvc5/logos",
+      "ref": "main"
+    },
+    {
+      "id": "paideia",
+      "origin": "https://github.com/ajreynol/paideia",
+      "ref": "main"
     },
     {
       "id": "tachyon",
-      "origin": "https://github.com/ajreynol/tachyon"
+      "origin": "https://github.com/ajreynol/tachyon",
+      "ref": "main"
     }
   ],
   "tracked_sources": [
@@ -69,7 +101,7 @@
     ".lake/"
   ],
   "not_in_corpus": [
-    "cvc5 and ethos have commit counts and main-branch pins in commit_tracking. They are outside the assessed member corpus; events, claims and assessments do not cover them. Ethos compiler work on ethosEoc3 is outside the tracked main history.",
+    "cvc5 and ethos have commit counts and main-branch pins in commit_tracking. They are outside the primary analysis corpus; events, claims and assessments do not cover them. Ethos compiler work on ethosEoc3 is outside the tracked main history.",
     "child projects are not separate sources. Each is read inside its parent's tree at the parent's pin, so a child that moved between parents appears here as a directory arriving and a directory leaving, and never as one event.",
     "issue trackers, pull requests and discussion threads, for every source, by design",
     "anything unpublished, absolutely",

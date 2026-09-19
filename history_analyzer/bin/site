@@ -567,8 +567,8 @@ def main():
             'The method does.</p><div class="cards">%s</div></section>' % cards)
 
     parts.append(
-        '<section><h2>Everything else</h2><p class="sec-blurb">Twelve runs are '
-        'committed and most were never written up: a pin and its candidate '
+        f'<section><h2>Everything else</h2><p class="sec-blurb">{len(built)} runs are '
+        'committed; some contain only a pin and its candidate '
         'events, kept so a later reader can tell what was looked at. '
         '<a href="runs.html">The full listing</a> says which carry prose, and '
         'links the evidence behind each.</p></section>')
@@ -589,7 +589,7 @@ def main():
                'each run; the cutoff and full pins are in its manifest. '
                'Newest first.</p>'
                '<div class="tw"><table><thead><tr><th>subject</th><th>pinned</th>'
-               '<th>assessed sources</th><th>assessed commits</th>'
+               '<th>analysis sources</th><th>analysis commits</th>'
                '<th>tracked commits</th><th>what there is to read</th>'
                '</tr></thead><tbody>%s</tbody></table></div>' % "".join(rows))
     open(os.path.join(out, "runs.html"), "w").write(

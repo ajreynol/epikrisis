@@ -1,0 +1,221 @@
+{
+  "exclude": [],
+  "files_digest": "4151a6d4f8ffcd9e2c2f66a1a3f6a4c6bd49e5fcbd4060e47a9098030c935649",
+  "recorded_at": "2026-09-19T13:21:46+00:00",
+  "rules": {
+    "binary": "files containing NUL bytes or not decodable as UTF-8 are skipped",
+    "documentation": "text under any docs/, prompts/ or licenses/ directory, documentation suffixes, or README/license-style filenames",
+    "documentation_directories": [
+      "docs",
+      "prompts",
+      "licenses"
+    ],
+    "documentation_names": [
+      "readme",
+      "license",
+      "licence",
+      "copying",
+      "authors",
+      "changelog",
+      "news",
+      "install",
+      "thanks"
+    ],
+    "documentation_suffixes": [
+      ".md",
+      ".markdown",
+      ".mdx",
+      ".rst",
+      ".tex",
+      ".bib",
+      ".sty",
+      ".cls",
+      ".adoc"
+    ],
+    "ignored": "JSON/JSONL anywhere, .github/ contents, repository metadata, and other data/configuration or unrecognized text",
+    "implementation": "recognized source/build filenames, path patterns and suffixes, including tests; extensionless scripts with recognized shebangs",
+    "links": "symlinks and submodules are recorded but not followed or counted",
+    "metadata_names": [
+      ".gitignore",
+      ".gitattributes",
+      ".gitmodules",
+      ".gitkeep",
+      ".editorconfig"
+    ],
+    "policy": "assume the shared Eunoia repository layout, including nested tool directories",
+    "precedence": "explicit exclusions; links; binary detection; JSON/metadata; documentation; source/scripts; other text",
+    "scope": "tracked files at the recorded commit; working-tree changes are not read; generated and vendored source follows the same rules",
+    "script_interpreters": {
+      "bash": "Shell",
+      "dash": "Shell",
+      "fish": "Shell",
+      "ksh": "Shell",
+      "node": "JavaScript",
+      "nodejs": "JavaScript",
+      "perl": "Perl",
+      "python": "Python",
+      "python2": "Python",
+      "python3": "Python",
+      "ruby": "Ruby",
+      "sh": "Shell",
+      "zsh": "Shell"
+    },
+    "source_filenames": [
+      "CMakeLists.txt",
+      "Dockerfile",
+      "GNUmakefile",
+      "Makefile",
+      "makefile"
+    ],
+    "source_path_patterns": {
+      "src/theory/*/rewrites": "Rewrite rules",
+      "src/theory/*/rewrites-*": "Rewrite rules"
+    },
+    "source_suffixes": [
+      ".ax",
+      ".bash",
+      ".c",
+      ".c++",
+      ".cc",
+      ".cjs",
+      ".cmake",
+      ".cpc",
+      ".cpp",
+      ".css",
+      ".cxx",
+      ".el",
+      ".eo",
+      ".eos",
+      ".fish",
+      ".go",
+      ".h",
+      ".hh",
+      ".hpp",
+      ".htm",
+      ".html",
+      ".hxx",
+      ".ipp",
+      ".java",
+      ".js",
+      ".jsx",
+      ".lean",
+      ".mjs",
+      ".mk",
+      ".p",
+      ".pl",
+      ".plf",
+      ".pm",
+      ".proof",
+      ".pxd",
+      ".pxi",
+      ".py",
+      ".pyi",
+      ".pyw",
+      ".pyx",
+      ".ql",
+      ".qll",
+      ".rb",
+      ".rs",
+      ".sh",
+      ".smt",
+      ".smt2",
+      ".sy",
+      ".tpp",
+      ".ts",
+      ".tsx",
+      ".zsh"
+    ],
+    "templates": "strip trailing .in and .template suffixes before applying JSON, metadata, documentation and source rules",
+    "unit": "physical lines, including blank lines and comments; final unterminated line counts",
+    "version": 2
+  },
+  "run": "2026-09-19",
+  "schema_version": 2,
+  "sources": [
+    {
+      "commit": "262c93d2c0bab8b527ab65bc7b63e44ac40a3524",
+      "id": "aisthesis",
+      "origin": "https://github.com/ajreynol/aisthesis",
+      "ref": "main"
+    },
+    {
+      "commit": "06bd7872ea5ce24bf4d264bf5e6958ed8edee3c2",
+      "id": "anoieu",
+      "origin": "https://github.com/ajreynol/anoieu",
+      "ref": "main"
+    },
+    {
+      "commit": "dbf176dfb71b272ffbfdee06888dace73fee5aa8",
+      "id": "cvc5",
+      "origin": "https://github.com/cvc5/cvc5",
+      "ref": "main"
+    },
+    {
+      "commit": "1f88a99b81f4416ffa8edd11f159fca3dd44c48d",
+      "id": "dokimasia",
+      "origin": "https://github.com/ajreynol/dokimasia",
+      "ref": "main"
+    },
+    {
+      "commit": "19a98da4b462985a1818fe9e43242797b2d1c632",
+      "id": "epikrisis",
+      "origin": "https://github.com/ajreynol/epikrisis",
+      "ref": "main"
+    },
+    {
+      "commit": "772923914e9e4f62cc2744e203dba5c332d982fc",
+      "id": "eschaton",
+      "origin": "https://github.com/ajreynol/eschaton",
+      "ref": "main"
+    },
+    {
+      "commit": "39f2f90c0c93b7b71e327c3c8e524b9da039d45b",
+      "id": "ethos",
+      "origin": "https://github.com/cvc5/ethos",
+      "ref": "main"
+    },
+    {
+      "commit": "50532e03f62052100df5eaf7361acec7fc8a1001",
+      "id": "eudaimonia",
+      "origin": "https://github.com/ajreynol/eudaimonia",
+      "ref": "main"
+    },
+    {
+      "commit": "10edbf27194e48a1d2bca0da3924ad7d26fb449b",
+      "id": "eunoia",
+      "origin": "https://github.com/ajreynol/eunoia",
+      "ref": "main"
+    },
+    {
+      "commit": "8437526a14a7fae0a0de16fbc5d90250b0cea2ed",
+      "id": "kanon",
+      "origin": "https://github.com/ajreynol/kanon",
+      "ref": "main"
+    },
+    {
+      "commit": "74ea664a222d962f45ba3fee8511e1e5ad93b4b8",
+      "id": "koine",
+      "origin": "https://github.com/ajreynol/koine",
+      "ref": "main"
+    },
+    {
+      "commit": "c8165b2afd321ce8d4b168c270b1fb53388e16da",
+      "id": "logos",
+      "origin": "https://github.com/cvc5/logos",
+      "ref": "main"
+    },
+    {
+      "commit": "7ccb92d14df3871d7ecaff3d1162810ce6564264",
+      "id": "paideia",
+      "origin": "https://github.com/ajreynol/paideia",
+      "ref": "main"
+    },
+    {
+      "commit": "e68bcc1d53ea6e36f1031fb9c875511858066839",
+      "id": "tachyon",
+      "origin": "https://github.com/ajreynol/tachyon",
+      "ref": "main"
+    }
+  ],
+  "subject": "eunoia-ecosystem"
+}

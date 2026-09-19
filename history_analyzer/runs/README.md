@@ -1,14 +1,15 @@
-# Runs — the committed evidence, and the four things written from it
+# Runs — committed evidence and reports
 
-**Twelve runs are in this directory and four of them carry prose.** The rest are
+**Thirteen runs are in this directory and five of them carry prose.** The rest are
 evidence: a pin, its candidates, and nothing anybody wrote. This page exists
 because the difference is invisible from the directory listing, and opening
-twelve folders to find the four with something to read is the cost it removes.
+thirteen folders to find the five with something to read is the cost it removes.
 
 ## Start here
 
 | what to read | what it is |
 | --- | --- |
+| **[September 19 census — eunoia and paideia included](eunoia-ecosystem-s2/2026-09-19/note.md)** | Fourteen repositories, matching history and LOC pins, whole-history and window counts, and refreshed event/claim evidence. A quantitative census; the earlier assessments retain their original scope. |
 | **[Stretch 2 — case study](eunoia-ecosystem-s2/2026-09-18/case-study.md)** | A stress test of the analyzer at the register's full size, with the per-repository commit census for kanon's term, the nine defects the run exposed, five things worth measuring next, and advice. **Not a report**, which is what lets it carry the last two. |
 | **[Snapshot history — Stretch 1 and Stretch 2](eunoia-ecosystem-s2/2026-09-18/stretches.md)** | The two terms side by side at one pin: 439 commits across Stretch 1's eighteen days against 221 across Stretch 2's four, the eleven days Stretch 1 carried no commit at all, and the thirteen days of it that no record publishes. Every window is hand-read, because the pipeline has none. |
 | [Stretch 2 — report](eunoia-ecosystem-s2/2026-09-18/report.md) | The report proper for the same run: ten sources, 1,355 commits, Q1–Q8, eleven assessments. Held to [`judgement.md`](../docs/judgement.md) and validated by `check`. |
@@ -33,6 +34,7 @@ report exists and `check` has accepted it.
 
 | run | sources | commits | candidates | depth | stages | prose |
 | --- | ---: | ---: | ---: | ---: | --- | --- |
+| `eunoia-ecosystem-s2/2026-09-19` | 12 | 1,470 | 655 | 1 | 1–4 | census note |
 | `eunoia-ecosystem-s2/2026-09-18` | 10 | 1,355 | 554 | 1 | **1–6** | report + case study |
 | `eunoia-ecosystem/2026-09-02-census` | 5 | 1,019 | 253 | 1 | 1–2 | note |
 | `eunoia-ecosystem/2026-09-01-status` | 5 | 890 | 147 | 1 | 1–4 | — |
@@ -67,7 +69,7 @@ for d in history_analyzer/runs/*/*/; do
 done
 ```
 
-Twelve rows, four with prose, or this page is stale.
+Thirteen rows, five with prose, or this page is stale.
 
 ## How a run is presented
 
