@@ -42,6 +42,8 @@ The [documentation index](docs/README.md) links to the methods, known limitation
 and contributor guides. Browse the [history reports](history_analyzer/runs/README.md)
 and [LOC snapshots](loc_analyzer/runs/README.md) for the committed results and evidence.
 Setup and usage instructions live in the analyzer guides above.
+The [ecosystem report publisher](ecosystem_report/README.md) builds their shared
+public site.
 
 ## The name
 

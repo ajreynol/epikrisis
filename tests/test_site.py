@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-loader = importlib.machinery.SourceFileLoader("shared_site", str(ROOT / "bin/site"))
+loader = importlib.machinery.SourceFileLoader("shared_site", str(ROOT / "ecosystem_report/site"))
 spec = importlib.util.spec_from_loader(loader.name, loader)
 site = importlib.util.module_from_spec(spec)
 loader.exec_module(site)

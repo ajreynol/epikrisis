@@ -72,8 +72,9 @@ Twelve rows, four with prose, or this page is stale.
 ## How a run is presented
 
 **Published at [ajreynol.github.io/epikrisis](https://ajreynol.github.io/epikrisis/).**
-`bin/site` builds it from this directory and CI deploys it; the built site is a
-`.gitignore`d artifact, because a generated copy of the evidence living in the
+[`ecosystem_report/site`](../../ecosystem_report/site) builds it from this
+directory and CI deploys it; the built site is a `.gitignore`d artifact,
+because a generated copy of the evidence living in the
 tree is one more thing to go stale. **The converter refuses any markdown it has
 not been taught** rather than guessing — a renderer that quietly drops a table row
 produces a page that reads correctly and is wrong, which is the failure this

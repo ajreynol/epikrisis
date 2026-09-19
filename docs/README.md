@@ -14,12 +14,13 @@ Every document in this repository, and what each one is for. The charter,
 true of the repository; a tool's own documents live under that tool, so a
 reader who has found the tool has found its documentation and a tool that is
 retired takes its pages with it. History and LOC analysis have their own
-directories, run artifacts and documentation; [`../bin/site`](../bin/site)
-builds their shared public site.
+directories, run artifacts and documentation;
+[`../ecosystem_report/site`](../ecosystem_report/site) builds their shared public site.
 
 | document | what it is for |
 | --- | --- |
 | [`discussion.md`](discussion.md) | Correspondence with other repositories: what is open, to whom, and what settles it. Not a findings ledger. |
+| [`../ecosystem_report/README.md`](../ecosystem_report/README.md) | The shared report publisher: inputs, building the public site and deployment. |
 
 ## The GitHub history analyzer
 

@@ -156,14 +156,15 @@ the classifier; validation requires matching schema and counting rules.
 ## Publish and maintain
 
 ```sh
-python3 bin/site site
+python3 ecosystem_report/site site
 python3 -m unittest discover -s loc_analyzer/tests
 python3 -m unittest discover -s tests
 ```
 
-The shared builder renders both analyses. Preview `site/index.html` for the
-homepage or `site/loc/index.html` for LOC snapshots. It validates the stored LOC
-counts before rendering and copies the evidence beside each public report.
+The [shared builder](../ecosystem_report/site) renders both analyses. Preview
+`site/index.html` for the homepage or `site/loc/index.html` for LOC snapshots.
+It validates the stored LOC counts before rendering and copies the evidence
+beside each public report.
 It also generates `languages.html` and downloadable `languages.json` for every
 snapshot, with links from the homepage, LOC index and snapshot summary. New runs
 receive these pages automatically.

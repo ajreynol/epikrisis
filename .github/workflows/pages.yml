@@ -9,7 +9,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'bin/site'
+      - 'ecosystem_report/**'
       - 'loc_analyzer/**'
       - 'tests/**'
       - 'history_analyzer/bin/site'
@@ -22,7 +22,7 @@ on:
       - '.github/workflows/pages.yml'
   pull_request:
     paths:
-      - 'bin/site'
+      - 'ecosystem_report/**'
       - 'loc_analyzer/**'
       - 'tests/**'
       - 'history_analyzer/bin/site'
@@ -57,7 +57,7 @@ jobs:
               "$(basename "$(dirname "$d")")" --run "$(basename "$d")"
           done
       - name: Build the site
-        run: python3 bin/site site
+        run: python3 ecosystem_report/site site
       - name: Upload
         uses: actions/upload-pages-artifact@v4
         with:

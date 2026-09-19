@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the shared GitHub Pages site for history and LOC analysis."""
+"""Build the ecosystem's public reports from the history and LOC analyses."""
 import importlib.machinery
 import importlib.util
 from pathlib import Path

@@ -104,12 +104,12 @@ missing tracked counts and mismatched pins.
 ## Build the reports site
 
 ```sh
-python3 bin/site site
+python3 ecosystem_report/site site
 ```
 
 Open `site/index.html` to preview both analyses, `site/history.html` for history,
 or `site/runs.html` for the full history listing. The generated `site/` directory
-is ignored by Git. The [shared builder](../bin/site) renders
+is ignored by Git. The [shared builder](../ecosystem_report/site) renders
 run Markdown, copies report figures and regenerates the homepage charts from
 the same evidence as its table and summary totals. It also builds the parallel
 [LOC analysis](../loc_analyzer/README.md) under `site/loc/`.
